@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/someuser/someproject#readme",
   "dependencies": {
-    "mythix": "^1.0.1",
+    "mythix": "^1.0.2",
     "nife": "^1.2.2",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
