@@ -6,6 +6,6 @@ module.exports = Object.assign({
   environment:  process.env.NODE_ENV || 'development',
   database,
   logger: {
-    level: Logger.LEVEL_DEBUG,
+    level: Logger.DEBUG,
   },
 }, sensitive);
