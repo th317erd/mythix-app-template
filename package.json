@@ -14,8 +14,7 @@
     "type": "git",
     "url": "git+https://github.com/someuser/someproject.git"
   },
-  "keywords": [
-  ],
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
@@ -23,6 +22,7 @@
   },
   "homepage": "https://github.com/someuser/someproject#readme",
   "dependencies": {
+    "mythix": "^1.0.1",
     "nife": "^1.2.2",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
