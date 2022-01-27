@@ -1,0 +1,35 @@
+{
+  "name": "<<<APP_NAME>>>",
+  "version": "1.0.0",
+  "description": "<<<APP_NAME>>>",
+  "main": "app/index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/jasmine",
+    "makemigrations": "mythix-cli makemigrations --name initial",
+    "migrate": "mythix-cli migrate",
+    "shell": "mythix-cli shell",
+    "start": "node --inspect app/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/someuser/someproject.git"
+  },
+  "keywords": [
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/someuser/someproject/issues"
+  },
+  "homepage": "https://github.com/someuser/someproject#readme",
+  "dependencies": {
+    "nife": "^1.2.2",
+    "pg": "^8.7.1",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.13.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "jasmine": "^4.0.2"
+  }
+}

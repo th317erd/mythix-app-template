@@ -1,2 +1,3 @@
-# mythix-app-template
-Application template for mythix projects
+# <<<APP_NAME>>>
+
+<<<APP_NAME>>> README

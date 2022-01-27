@@ -1,0 +1,7 @@
+module.exports = {
+  salt:       '<<<RANDOM_SHA256>>>',
+  httpServer: {
+    host: 'localhost',
+    port: 8001,
+  },
+};
