@@ -1,14 +1,15 @@
 {
   "name": "<<<APP_NAME>>>",
   "version": "1.0.0",
-  "description": "<<<APP_NAME>>>",
+  "description": "<<<APP_DISPLAY_NAME>>>",
   "main": "app/index.js",
   "scripts": {
-    "test": "./node_modules/.bin/jasmine",
+    "coverage": "clear ; node ./node_modules/.bin/nyc ./node_modules/.bin/jasmine",
     "makemigrations": "mythix-cli makemigrations --name initial",
     "migrate": "mythix-cli migrate",
     "shell": "mythix-cli shell",
-    "start": "node --inspect app/index.js"
+    "start": "node --inspect app/index.js",
+    "test": "./node_modules/.bin/jasmine"
   },
   "repository": {
     "type": "git",
@@ -22,14 +23,37 @@
   },
   "homepage": "https://github.com/someuser/someproject#readme",
   "dependencies": {
-    "mythix": "^1.0.2",
-    "nife": "^1.2.2",
-    "pg": "^8.7.1",
+    "@aws-sdk/client-s3": "^3.198.0",
+    "cookie-parser": "^1.4.6",
+    "form-data": "^4.0.0",
+    "luxon": "^3.0.4",
+    "mjml": "^4.13.0",
+    "mythix": "^2.8.11",
+    "mythix-orm": "^1.8.2",
+    "mythix-orm-postgresql": "^1.7.4",
+    "mythix-orm-sqlite": "^1.7.2",
+    "mythix-twt": "^1.0.1",
+    "nife": "^1.12.1",
+    "pg": "^8.8.0",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.13.0",
-    "uuid": "^8.3.2"
+    "sequelize": "^6.25.3",
+    "uuid": "^9.0.0",
+    "xid-js": "^1.0.1"
   },
   "devDependencies": {
-    "jasmine": "^4.0.2"
+    "jasmine": "^4.4.0",
+    "nyc": "^15.1.0"
+  },
+  "nyc": {
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "spec/**",
+      "app/application.js",
+      "app/routes.js",
+      "app/config/**"
+    ]
   }
 }

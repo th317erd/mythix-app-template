@@ -1,13 +1,35 @@
-const { CryptoUtils } = require('mythix');
-
-function hashUserToken(salt, token) {
-  return CryptoUtils.SHA256(`${salt}${token}`);
-}
+const {
+  toBase64,
+  convertBase64ToURLSafe,
+  convertBase64FromURLSafe,
+  toURLSafeBase64,
+  fromURLSafeBase64,
+  getSaltProperties,
+  generateSalt,
+  encrypt,
+  decrypt,
+  hashToken,
+  randomBytes,
+  randomHash,
+  MD5,
+  SHA256,
+  SHA512,
+} = require('mythix');
 
 module.exports = {
-  randomBytes:  CryptoUtils.randomBytes,
-  randomHash:   CryptoUtils.randomHash,
-  SHA256:       CryptoUtils.SHA256,
-  SHA512:       CryptoUtils.SHA512,
-  hashUserToken,
+  toBase64,
+  convertBase64ToURLSafe,
+  convertBase64FromURLSafe,
+  toURLSafeBase64,
+  fromURLSafeBase64,
+  getSaltProperties,
+  generateSalt,
+  encrypt,
+  decrypt,
+  hashToken,
+  randomBytes,
+  randomHash,
+  MD5,
+  SHA256,
+  SHA512,
 };

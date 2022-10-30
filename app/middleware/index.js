@@ -1,5 +1,8 @@
-const AuthMiddleware = require('./auth-middleware');
+const {
+  authMiddleware,
+} = require('./auth-middleware');
 
-module.exports = Object.assign(module.exports,
-  AuthMiddleware,
-);
+module.exports = {
+  // auth-middleware
+  authMiddleware,
+};

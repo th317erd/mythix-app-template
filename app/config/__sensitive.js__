@@ -1,5 +1,31 @@
 module.exports = {
-  salt:       '<<<RANDOM_SHA256>>>',
+  development: {
+    salt: '<<<HELPERS:GENERATE_SALT>>>',
+    aws: {
+      s3: {
+        accessKeyID:      'yourAccessKeyID',
+        secretAccessKey:  'yourSecretKey',
+      },
+    },
+    mailer: {
+      domain: 'mail.smtp.com',
+      apiKey: 'youMailerAPIKey',
+    },
+  },
+  test: {
+    salt: '<<<HELPERS:GENERATE_SALT>>>',
+    // Needed simply so config verification doesn't fail during tests
+    aws: {
+      s3: {
+        accessKeyID:      'yourAccessKeyID',
+        secretAccessKey:  'yourSecretKey',
+      },
+    },
+    mailer: {
+      domain: 'mail.smtp.com',
+      apiKey: 'youMailerAPIKey',
+    },
+  },
   httpServer: {
     host: 'localhost',
     port: 8001,

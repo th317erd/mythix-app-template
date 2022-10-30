@@ -1,49 +1,120 @@
-const Nife              = require('nife');
-const { HTTPErrors }    = require('mythix');
-const { hashUserToken } = require('../utils');
+'use strict';
+
+const Nife                = require('nife');
+const { HTTPErrors }      = require('mythix');
+const { PermissionBase }  = require('../permissions');
 
 const {
+  HTTPBaseError,
   HTTPUnauthorizedError,
+  HTTPForbiddenError,
   HTTPInternalServerError,
+  HTTPBadRequestError,
 } = HTTPErrors;
 
-// Please update this auth middleware to match
-// how you wish to authenticate your users
+// This middleware ensures the user is authenticated.
+// If the user is not authenticated then a 401 Unauthorized
+// error will be thrown. This middleware also checks
+// the users permissions against the specified OrganizationID
+// (which is almost always required for all requests), and
+// if the user is not a member of the Organization specified,
+// then this will throw a 403 Forbidden error.
+// It first checks the "Authorization" header to see if
+// a proper "Token {token}" auth token was provided.
+// If the Authorization header is empty, then it will
+// fallback to checking the cookie, and authenticate
+// from that.
+// If everything checks out, then the "user"
+// property will be set upon the "request" itself.
+
 async function authMiddleware(request, response, next) {
-  var application = request.mythixApplication;
-  var salt        = application.getConfigValue('salt', '');
-  var authHeader  = request.headers['authorization'];
+  const getOrganizationID = () => {
+    // Try to pull from the header
+    let organizationIDHeader = request.headers['x-organization-id'];
+    if (!Nife.isEmpty(organizationIDHeader))
+      return organizationIDHeader;
 
-  if (Nife.isEmpty(authHeader))
-    throw new HTTPUnauthorizedError();
+    // Try to pull from query params
+    let organizationIDQueryParam = (request.query || {})['organizationID'];
+    if (!Nife.isEmpty(organizationIDQueryParam))
+      return organizationIDQueryParam;
 
-  authHeader = ('' + authHeader).trim();
+    let organizationIDParam = Nife.get(request, 'params.organizationID');
+    if (!Nife.isEmpty(organizationIDParam))
+      return organizationIDParam;
 
-  var token;
-  authHeader.replace(/^Token ([0-9a-f-]{36})$/, (m, authToken) => {
-    token = authToken;
-  });
+    // Try to pull from body
+    let body = request.body;
+    if (body && !Nife.isEmpty(body.organizationID))
+      return body.organizationID;
+  };
 
-  if (!token)
-    throw new HTTPUnauthorizedError();
+  let application = request.mythixApplication;
+  let authHeader  = request.headers['authorization'];
+  let authToken;
 
-  const User  = application.getModel('User');
-  var hash    = hashUserToken(salt, token);
+  if (!Nife.isEmpty(authHeader)) {
+    authHeader = ('' + authHeader).trim();
+
+    authHeader.replace(/^Bearer ([0-9a-zA-Z+/=_.-]+)$/, (m, _authToken) => {
+      authToken = _authToken;
+    });
+  } else {
+    if (request.cookies)
+      authToken = request.cookies[mythixApplication.getAuthTokenCookieName()];
+  }
+
+  let { User } = application.getModels();
+  let user;
+  let scope;
+  let claims;
 
   try {
-    user = await User.first({
-      authToken: hash,
-    });
+    let result = await User.validateSessionToken(authToken);
+    user = result.user;
+    scope = result.scope;
+    claims = result.claims;
+    claims.scope = scope;
+  } catch (error) {
+    throw new HTTPUnauthorizedError();
+  }
 
-    if (!user || user.authToken !== hash)
-      throw new HTTPUnauthorizedError();
+  try {
+    let organizationID = getOrganizationID();
+    if (Nife.isNotEmpty(organizationID))
+      user.setCurrentOrganizationID(organizationID);
 
+    // If the route doesn't require an OrganizationID,
+    // then skip permission checking against the organization.
+    if (scope !== 'system' && scope !== 'admin' && Nife.get(request, 'route.requiresOrgID') !== false) {
+      if (Nife.isEmpty(organizationID))
+        throw new HTTPBadRequestError(null, '"organizationID" is required');
+
+      let permitted = await PermissionBase.permissible(application, user, 'view:Organization', organizationID);
+      if (PermissionBase.isDenial(permitted)) {
+        if (permitted instanceof Error)
+          throw new HTTPForbiddenError(null, permitted.message);
+        else
+          throw new HTTPForbiddenError();
+      }
+    }
+
+    // Assign the "user" to "request", so
+    // it can be accessed in controllers
     request.user = user;
+    request.currentSessionToken = authToken;
+    request.authTokenClaims = claims;
 
+    // Call next middleware
     next();
   } catch (error) {
+    // Re-throw error if it is an HTTPError
+    if (error instanceof HTTPBaseError)
+      throw error;
+
+    // Otherwise... oopsie!
     application.getLogger().error(error);
-    throw new HTTPInternalServerError(null, error.message);
+    throw new HTTPInternalServerError();
   }
 }
 

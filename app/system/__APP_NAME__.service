@@ -1,0 +1,26 @@
+[Unit]
+Description=<<<APP_NAME>>>
+After=network.target
+
+[Service]
+Type=exec
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/opt/<<<APP_NAME>>>/current
+ExecStart=/opt/<<<APP_NAME>>>/<<<APP_NAME>>>.sh
+PIDFile=/var/run/<<<APP_NAME>>>.pid
+RemainAfterExit=no
+Restart=on-failure
+RestartSec=5s
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=<<<APP_NAME>>>
+# file size
+LimitFSIZE=infinity
+# cpu time
+LimitCPU=infinity
+# virtual memory size
+LimitAS=infinity
+
+[Install]
+WantedBy=multi-user.target
