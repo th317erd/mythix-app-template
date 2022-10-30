@@ -1,3 +1,5 @@
+const { CryptoUtils } = require('mythix');
+
 const {
   toBase64,
   convertBase64ToURLSafe,
@@ -14,7 +16,7 @@ const {
   MD5,
   SHA256,
   SHA512,
-} = require('mythix');
+} = CryptoUtils;
 
 module.exports = {
   toBase64,

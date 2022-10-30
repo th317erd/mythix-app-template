@@ -5,7 +5,6 @@
   "main": "app/index.js",
   "scripts": {
     "coverage": "clear ; node ./node_modules/.bin/nyc ./node_modules/.bin/jasmine",
-    "makemigrations": "mythix-cli makemigrations --name initial",
     "migrate": "mythix-cli migrate",
     "shell": "mythix-cli shell",
     "start": "node --inspect app/index.js",
