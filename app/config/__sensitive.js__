@@ -1,6 +1,6 @@
 module.exports = {
   development: {
-    salt: '<<<HELPERS:GENERATE_SALT>>>',
+    salt: '<<<GENERATE_SALT>>>',
     aws: {
       s3: {
         accessKeyID:      'yourAccessKeyID',
@@ -13,7 +13,7 @@ module.exports = {
     },
   },
   test: {
-    salt: '<<<HELPERS:GENERATE_SALT>>>',
+    salt: '<<<GENERATE_SALT>>>',
     // Needed simply so config verification doesn't fail during tests
     aws: {
       s3: {
