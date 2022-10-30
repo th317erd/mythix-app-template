@@ -60,8 +60,9 @@ async function authMiddleware(request, response, next) {
       authToken = _authToken;
     });
   } else {
+    let cookieName = application.getAuthTokenCookieName();
     if (request.cookies)
-      authToken = request.cookies[mythixApplication.getAuthTokenCookieName()];
+      authToken = request.cookies[cookieName];
   }
 
   let { User } = application.getModels();

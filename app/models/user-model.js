@@ -4,7 +4,12 @@ const FileSystem          = require('node:fs');
 const { DateTime }        = require('luxon');
 const Nife                = require('nife');
 const TWT                 = require('mythix-twt');
-const { defineModel }     = require('mythix');
+
+const {
+  defineModel,
+  CryptoUtils,
+} = require('mythix');
+
 const graphicsMagick      = require('gm');
 const { TaggableBase }    = require('./taggable-base');
 const { PermissionBase }  = require('../permissions');
@@ -495,7 +500,7 @@ module.exports = defineModel('User', ({ Parent, Types }) => {
 
       let urls = await resizeAndUploadAvatars(
         fileName,
-        Utils.MD5(`${this.id}:${organizationID}`),
+        CryptoUtils.MD5(`${this.id}:${organizationID}`),
         fileContents,
       );
 

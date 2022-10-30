@@ -1,7 +1,12 @@
 'use strict';
 
 const { DateTime}     = require('luxon');
-const { defineModel } = require('mythix');
+const TWT             = require('mythix-twt');
+const {
+  defineModel,
+  CryptoUtils,
+} = require('mythix');
+
 const { ModelBase }   = require('./model-base');
 const Utils           = require('../utils');
 
@@ -52,10 +57,10 @@ module.exports = defineModel('InvalidToken', ({ Parent, Types }) => {
 
       // Blacklist token
       try {
-        let claims = Utils.verifyTWT(token, app.getSalt());
+        let claims = TWT.verifyTWT(token, app.getSalt());
 
         await InvalidToken.create({
-          tokenHash:  Utils.MD5(token),
+          tokenHash:  CryptoUtils.MD5(token),
           // eslint-disable-next-line no-magic-numbers
           purgeAt:    (claims.expiresAt + 120) * 1000.0,
         });
@@ -67,7 +72,7 @@ module.exports = defineModel('InvalidToken', ({ Parent, Types }) => {
         InvalidToken,
       } = this.getModels();
 
-      let tokenHash = Utils.MD5(token);
+      let tokenHash = CryptoUtils.MD5(token);
       return await InvalidToken.where.tokenHash.EQ(tokenHash).exists();
     }
   };

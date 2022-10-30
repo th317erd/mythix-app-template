@@ -62,8 +62,7 @@ class Application extends Mythix.Application {
   }
 
   getAuthTokenCookieName() {
-    let app = this.getApplication();
-    return `${app.getApplicationName().replace(/[^a-zA-Z0-9]+/g, '-').replace(/^[^a-zA-Z0-9]+/, '').replace(/[^a-zA-Z0-9]+$/, '')}-auth-token`;
+    return `${this.getApplicationName().replace(/[^a-zA-Z0-9]+/g, '-').replace(/^[^a-zA-Z0-9]+/, '').replace(/[^a-zA-Z0-9]+$/, '')}-auth-token`;
   }
 
   async createDatabaseConnection(dbConfig) {

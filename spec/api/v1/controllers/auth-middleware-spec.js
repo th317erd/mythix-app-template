@@ -4,14 +4,16 @@
 /* global describe, beforeAll, afterAll, afterEach, expect, jasmine, spyOn */
 
 const Nife = require('nife');
+const TWT = require('mythix-twt');
+
 const {
   createTestApplication,
   createFactories,
   createRunners,
   URL_SAFE_BASE64_REGEXP,
 } = require('../../../support/application');
+
 const Permissions = require('../../../../app/permissions');
-const Utils = require('../../../../app/utils');
 
 describe('AuthMiddleware', function() {
   let app;
@@ -130,7 +132,7 @@ describe('AuthMiddleware', function() {
         organizationID: organization.id,
       },
       headers: {
-        'cookie': `<<<APP_NAME>>>-auth-token=${sessionToken};`,
+        'cookie': `${app.getAuthTokenCookieName()}=${sessionToken};`,
       },
     });
 
@@ -158,7 +160,7 @@ describe('AuthMiddleware', function() {
     jasmine.clock().install();
     jasmine.clock().mockDate(new Date(0));
 
-    let sessionToken = Utils.generateTWT(
+    let sessionToken = TWT.generateTWT(
       {
         s:    'u',
         u:    user.id,
@@ -190,7 +192,7 @@ describe('AuthMiddleware', function() {
     jasmine.clock().install();
     jasmine.clock().mockDate(new Date(0));
 
-    let sessionToken = Utils.generateTWT(
+    let sessionToken = TWT.generateTWT(
       {
         s:    'u',
         u:    'USR_cd06dx7qqwpgbh6yqp3g',

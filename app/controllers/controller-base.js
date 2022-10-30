@@ -258,6 +258,33 @@ class ControllerBase extends Mythix.ControllerBase {
     return MythixORMUtils.generateQueryFromFilter(this.getDBConnection(), Model, filter);
   }
 
+  // This will fetch the specified user from the DB.
+  // If the user is not found, it will fallback to
+  // the "defaultValue" provided.
+  async getTargetUser(targetUserID, defaultValue) {
+    let app = this.getApplication();
+    let User = app.getModel('User');
+    let user;
+
+    if (Nife.isNotEmpty(targetUserID)) {
+      if (!Utils.isValidID(targetUserID))
+        this.throwNotFoundError('User not found', 'user-not-found');
+
+      user = await User.$.id.EQ(targetUserID).first();
+      if (!user)
+        this.throwNotFoundError('User not found', 'user-not-found');
+    }
+
+    if (!user) {
+      if (defaultValue && defaultValue instanceof User)
+        return defaultValue;
+
+      this.throwNotFoundError('User not found', 'user-not-found');
+    }
+
+    return user;
+  }
+
   getAndVerifyRequestFiles() {
     let app               = this.getApplication();
     let httpServer        = app.getHTTPServer();

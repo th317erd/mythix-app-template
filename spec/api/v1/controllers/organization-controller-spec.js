@@ -7,7 +7,10 @@
 const Path = require('node:path');
 const FileSystem = require('node:fs');
 const FormData = require('form-data');
+const { CryptoUtils } = require('mythix');
+
 const Utils = require('../../../../app/utils');
+
 const {
   createTestApplication,
   createFactories,
@@ -704,183 +707,6 @@ describe('OrganizationController', function() {
       generateHighLevelRoleTests(highLevelRoles[i]);
   });
 
-  describe('searchTeamsAndUsers', () => {
-    it('should fail if user is not logged in', async () => {
-      let { organization } = await factory.users.createWithOrganization();
-
-      let result = await app.post(`/api/v1/organization/${organization.id}/searchTeamsAndUsers`);
-      expect(result.statusCode).toEqual(401);
-      expect(result.body).toEqual('Unauthorized');
-    });
-
-    it('should succeed', async () => {
-      let { user, organization } = await factory.users.createAndLogin();
-
-      let { user: user1 } = await factory.users.create({
-        data: {
-          email:      'member+user1@example.com',
-          firstName:  'User1',
-          lastName:   'Member',
-        },
-        organization,
-        userRole: 'member',
-      });
-
-      let { user: user2 } = await factory.users.create({
-        data: {
-          email:      'member+user2@example.com',
-          firstName:  'User2',
-          lastName:   'Member',
-        },
-        organization,
-        userRole: 'member',
-      });
-
-      let { user: user3 } = await factory.users.create({
-        data: {
-          email:      'admin+user3@example.com',
-          firstName:  'User3',
-          lastName:   'Admin',
-        },
-        organization,
-        userRole: 'admin',
-      });
-
-      let { user: user4 } = await factory.users.create({
-        data: {
-          email:      'superadmin+user4@example.com',
-          firstName:  'User4',
-          lastName:   'SuperAdmin',
-        },
-        organization,
-        userRole: 'superadmin',
-      });
-
-      let { team: team1 } = await factory.teams.create({
-        user,
-        organization,
-        data: {
-          name:   'Team 1',
-          emails: [
-            user1.email,
-            user2.email,
-            user3.email,
-          ],
-        },
-      });
-
-      let { team: team2 } = await factory.teams.create({
-        user,
-        organization,
-        data: {
-          name:   'Team 2',
-          emails: [
-            user3.email,
-            user4.email,
-          ],
-        },
-      });
-
-      let result = await app.post(`/api/v1/organization/${organization.id}/searchTeamsAndUsers`);
-      expect(result.statusCode).toEqual(200);
-      let data = result.body.data;
-
-      expect(data.teams).toBeInstanceOf(Array);
-      expect(data.teams.length).toEqual(2);
-      expect(data.teams.map((team) => team.name)).toEqual([
-        'Team 1',
-        'Team 2',
-      ]);
-
-      expect(data.users).toBeInstanceOf(Array);
-      expect(data.users.length).toEqual(4);
-      expect(data.users.map((user) => user.email)).toEqual([
-        'member+user1@example.com',
-        'member+user2@example.com',
-        'admin+user3@example.com',
-        'superadmin+user4@example.com',
-      ]);
-      expect(data.users[0].teamIDs).toEqual([
-        team1.id,
-      ]);
-      expect(data.users[1].teamIDs).toEqual([
-        team1.id,
-      ]);
-      expect(data.users[2].teamIDs).toEqual([
-        team1.id,
-        team2.id,
-      ]);
-
-      // Should be able to filter on team name
-      result = await app.post(`/api/v1/organization/${organization.id}/searchTeamsAndUsers`, {
-        data: {
-          filter: {
-            teams: {
-              name: 'Team 1',
-            },
-          },
-        },
-      });
-      expect(result.statusCode).toEqual(200);
-      data = result.body.data;
-
-      expect(data.teams).toBeInstanceOf(Array);
-      expect(data.teams.length).toEqual(1);
-      expect(data.teams.map((team) => team.name)).toEqual([
-        'Team 1',
-      ]);
-
-      expect(data.users).toBeInstanceOf(Array);
-      expect(data.users.length).toEqual(3);
-      expect(data.users.map((user) => user.email)).toEqual([
-        'member+user1@example.com',
-        'member+user2@example.com',
-        'admin+user3@example.com',
-      ]);
-      expect(data.users[0].teamIDs).toEqual([
-        team1.id,
-      ]);
-      expect(data.users[1].teamIDs).toEqual([
-        team1.id,
-      ]);
-      expect(data.users[2].teamIDs).toEqual([
-        team1.id,
-      ]);
-
-      // Should be able to filter on users
-      result = await app.post(`/api/v1/organization/${organization.id}/searchTeamsAndUsers`, {
-        data: {
-          filter: {
-            users: {
-              lastName: 'SuperAdmin',
-            },
-          },
-        },
-      });
-      expect(result.statusCode).toEqual(200);
-      data = result.body.data;
-
-      expect(data.teams).toBeInstanceOf(Array);
-      expect(data.teams.length).toEqual(1);
-      expect(data.teams.map((team) => team.name)).toEqual([
-        'Team 2',
-      ]);
-
-      expect(data.users).toBeInstanceOf(Array);
-      expect(data.users.length).toEqual(2);
-      expect(data.users.map((user) => user.email)).toEqual([
-        'admin+user3@example.com',
-        'superadmin+user4@example.com',
-      ]);
-      expect(data.users[0].teamIDs).toEqual([
-        team2.id,
-      ]);
-      expect(data.users[1].teamIDs).toEqual([
-        team2.id,
-      ]);
-    });
-  });
-
   describe('updateAvatar', () => {
     const testFilePath = Path.resolve(__dirname, '..', '..', '..', 'support', 'media', 'test.png');
 
@@ -896,7 +722,7 @@ describe('OrganizationController', function() {
       let { user } = await factory.users.createAndLogin();
 
       let aws = app.getAWS();
-      let fileName = Utils.MD5(`${user.id}:${user.getCurrentOrganizationID()}`);
+      let fileName = CryptoUtils.MD5(`${user.id}:${user.getCurrentOrganizationID()}`);
 
       spyOn(aws, 'uploadToS3').and.callFake(async (options) => {
         expect(options.folder).toEqual('user-avatars');
@@ -906,10 +732,11 @@ describe('OrganizationController', function() {
         return `https://<<<APP_NAME>>>.com/${options.folder}/${options.fileName}`;
       });
 
+      let fileContents = FileSystem.readFileSync(testFilePath).toString('base64');
       let result = await app.post(`/api/v1/organization/${user.getCurrentOrganizationID()}/user/${user.id}/updateUserAvatar`, {
         data: {
           fileName: 'test.png',
-          file:     FileSystem.readFileSync(testFilePath).toString('base64'),
+          file:     fileContents,
         },
       });
 
@@ -924,11 +751,11 @@ describe('OrganizationController', function() {
 
       expect(aws.uploadToS3.calls.count()).toEqual(3);
       expect(Buffer.isBuffer(aws.uploadToS3.calls.argsFor(0)[0].content)).toEqual(true);
-      expect(aws.uploadToS3.calls.argsFor(0)[0].content.length).toEqual(1221);
+      expect(aws.uploadToS3.calls.argsFor(0)[0].content.length).toEqual(3006);
       expect(Buffer.isBuffer(aws.uploadToS3.calls.argsFor(1)[0].content)).toEqual(true);
-      expect(aws.uploadToS3.calls.argsFor(1)[0].content.length).toEqual(8546);
+      expect(aws.uploadToS3.calls.argsFor(1)[0].content.length).toEqual(15333);
       expect(Buffer.isBuffer(aws.uploadToS3.calls.argsFor(2)[0].content)).toEqual(true);
-      expect(aws.uploadToS3.calls.argsFor(2)[0].content.length).toEqual(30919);
+      expect(aws.uploadToS3.calls.argsFor(2)[0].content.length).toEqual(42240);
 
       let orgUserLink = await user.getOrganizationUserLink(user.getCurrentOrganizationID());
       expect(orgUserLink).toBeInstanceOf(models.OrganizationUserLink);
@@ -940,7 +767,7 @@ describe('OrganizationController', function() {
       let { user } = await factory.users.createAndLogin();
 
       let aws = app.getAWS();
-      let fileName = Utils.MD5(`${user.id}:${user.getCurrentOrganizationID()}`);
+      let fileName = CryptoUtils.MD5(`${user.id}:${user.getCurrentOrganizationID()}`);
 
       spyOn(aws, 'uploadToS3').and.callFake(async (options) => {
         expect(options.folder).toEqual('user-avatars');
@@ -969,11 +796,11 @@ describe('OrganizationController', function() {
 
       expect(aws.uploadToS3.calls.count()).toEqual(3);
       expect(Buffer.isBuffer(aws.uploadToS3.calls.argsFor(0)[0].content)).toEqual(true);
-      expect(aws.uploadToS3.calls.argsFor(0)[0].content.length).toEqual(1221);
+      expect(aws.uploadToS3.calls.argsFor(0)[0].content.length).toEqual(3006);
       expect(Buffer.isBuffer(aws.uploadToS3.calls.argsFor(1)[0].content)).toEqual(true);
-      expect(aws.uploadToS3.calls.argsFor(1)[0].content.length).toEqual(8546);
+      expect(aws.uploadToS3.calls.argsFor(1)[0].content.length).toEqual(15333);
       expect(Buffer.isBuffer(aws.uploadToS3.calls.argsFor(2)[0].content)).toEqual(true);
-      expect(aws.uploadToS3.calls.argsFor(2)[0].content.length).toEqual(30919);
+      expect(aws.uploadToS3.calls.argsFor(2)[0].content.length).toEqual(42240);
 
       let orgUserLink = await user.getOrganizationUserLink(user.getCurrentOrganizationID());
       expect(orgUserLink).toBeInstanceOf(models.OrganizationUserLink);

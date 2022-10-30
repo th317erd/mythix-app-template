@@ -76,7 +76,7 @@ const TestApplication = TestUtils.createTestApplication(_TestApplicationShim);
 async function createTestApplication() {
   let app = new TestApplication({
     logger: {
-      level: 0,
+      level: (process.env.MYTHIX_LOG_LEVEL) ? parseInt(process.env.MYTHIX_LOG_LEVEL, 10) : 0,
     },
   });
 

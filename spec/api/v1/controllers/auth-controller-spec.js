@@ -2,6 +2,8 @@
 
 /* global describe, beforeAll, afterAll, afterEach, expect, jasmine, spyOn */
 
+const TWT = require('mythix-twt');
+
 const {
   createTestApplication,
   createFactories,
@@ -9,7 +11,6 @@ const {
   PREFIXED_XID_REGEXP,
   URL_SAFE_BASE64_REGEXP,
 } = require('../../../support/application');
-const Utils = require('../../../../app/utils');
 
 describe('AuthController', function() {
   let app;
@@ -67,7 +68,7 @@ describe('AuthController', function() {
         jasmine.clock().install();
         jasmine.clock().mockDate(new Date(0));
 
-        let magicToken = Utils.generateTWT(
+        let magicToken = TWT.generateTWT(
           {
             s:    'u',
             u:    'USR_cd06dx7qqwpgbh6yqp3g',
@@ -89,7 +90,7 @@ describe('AuthController', function() {
         jasmine.clock().install();
         jasmine.clock().mockDate(new Date(Date.now() + 130000));
 
-        let magicToken = Utils.generateTWT(
+        let magicToken = TWT.generateTWT(
           {
             s:    'u',
             u:    'USR_cd06dx7qqwpgbh6yqp3g',
@@ -108,7 +109,7 @@ describe('AuthController', function() {
       });
 
       it('should fail if user not found', async () => {
-        let magicToken = Utils.generateTWT(
+        let magicToken = TWT.generateTWT(
           {
             s:    'u',
             u:    'bad_id',
@@ -135,7 +136,7 @@ describe('AuthController', function() {
         expect(result.headers['x-session-token']).toMatch(URL_SAFE_BASE64_REGEXP);
 
         let cookie = result.headers['set-cookie'];
-        expect((/^<<<APP_NAME>>>-auth-token=[A-Za-z0-9_=-]+(%3D)*;/).test(cookie)).toEqual(true);
+        expect((new RegExp(`^${app.getAuthTokenCookieName()}=[A-Za-z0-9_=-]+(%3D)*;`)).test(cookie)).toEqual(true);
         expect((/Max-Age=2592000;/).test(cookie)).toEqual(true);
         expect((/Domain=test\.<<<APP_NAME>>>\.com;/).test(cookie)).toEqual(true);
         expect((/Path=\/;/).test(cookie)).toEqual(true);
@@ -179,7 +180,7 @@ describe('AuthController', function() {
         jasmine.clock().install();
         jasmine.clock().mockDate(new Date(0));
 
-        let magicToken = Utils.generateTWT(
+        let magicToken = TWT.generateTWT(
           {
             s:    'u',
             u:    'USR_cd06dx7qqwpgbh6yqp3g',
@@ -201,7 +202,7 @@ describe('AuthController', function() {
         jasmine.clock().install();
         jasmine.clock().mockDate(new Date(Date.now() + 130000));
 
-        let magicToken = Utils.generateTWT(
+        let magicToken = TWT.generateTWT(
           {
             s:    'u',
             u:    'USR_cd06dx7qqwpgbh6yqp3g',
@@ -220,7 +221,7 @@ describe('AuthController', function() {
       });
 
       it('should fail if user not found', async () => {
-        let magicToken = Utils.generateTWT(
+        let magicToken = TWT.generateTWT(
           {
             s:    'u',
             u:    'bad_id',
@@ -246,7 +247,7 @@ describe('AuthController', function() {
         expect(result.headers['x-session-token']).toMatch(URL_SAFE_BASE64_REGEXP);
 
         let cookie = result.headers['set-cookie'];
-        expect((/^<<<APP_NAME>>>-auth-token=[A-Za-z0-9_=-]+(%3D)*;/).test(cookie)).toEqual(true);
+        expect((new RegExp(`^${app.getAuthTokenCookieName()}=[A-Za-z0-9_=-]+(%3D)*;`)).test(cookie)).toEqual(true);
         expect((/Max-Age=2592000;/).test(cookie)).toEqual(true);
         expect((/Domain=test\.<<<APP_NAME>>>\.com;/).test(cookie)).toEqual(true);
         expect((/Path=\/;/).test(cookie)).toEqual(true);
@@ -282,7 +283,7 @@ describe('AuthController', function() {
         expect(loggedOutResult.statusCode).toEqual(401);
 
         let cookie = result.headers['set-cookie'];
-        expect((/^<<<APP_NAME>>>-auth-token=null;/).test(cookie)).toEqual(true);
+        expect((new RegExp(`^${app.getAuthTokenCookieName()}=[A-Za-z0-9_=-]+(%3D)*;`)).test(cookie)).toEqual(true);
         expect((/Max-Age=0;/).test(cookie)).toEqual(true);
         expect((/Domain=test\.<<<APP_NAME>>>\.com;/).test(cookie)).toEqual(true);
         expect((/Path=\/;/).test(cookie)).toEqual(true);
