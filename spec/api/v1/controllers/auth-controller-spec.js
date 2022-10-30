@@ -315,7 +315,7 @@ describe('AuthController', function() {
         let emailBodyMatch = notification.content.match(/<a\s+href\s*=\s*"([^"]+)"[^>]*>\s*Sign in to <<<APP_DISPLAY_NAME>>>\s*<\/a>/);
         expect(emailBodyMatch).toBeInstanceOf(Array);
         expect(emailBodyMatch.length).toEqual(2);
-        expect((/^https:\/\/local\.<<<APP_NAME>>>\.com\/api\/v1\/auth\/authenticate\?magicToken=[A-Za-z0-9_=-]+$/).test(emailBodyMatch[1])).toEqual(true);
+        expect((/^https:\/\/test\.<<<APP_NAME>>>\.com\/api\/v1\/auth\/authenticate\?magicToken=[A-Za-z0-9_=-]+$/).test(emailBodyMatch[1])).toEqual(true);
       });
     });
   });

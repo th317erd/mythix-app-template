@@ -96,7 +96,7 @@ describe('UserModel', function() {
         emailBodyMatch = m;
       });
 
-      expect((/https:\/\/local\.<<<APP_NAME>>>\.com\/api\/v1\/auth\/authenticate\?magicToken=[A-Za-z0-9_=-]+/).test(emailBodyMatch)).toEqual(true);
+      expect((/https:\/\/test\.<<<APP_NAME>>>\.com\/api\/v1\/auth\/authenticate\?magicToken=[A-Za-z0-9_=-]+/).test(emailBodyMatch)).toEqual(true);
     });
   });
 
