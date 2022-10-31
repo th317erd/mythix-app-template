@@ -10,8 +10,8 @@ module.exports = defineCommand('shell', ({ Parent }) => {
       // Inject into "context" to expose globals in the shell
       // or customize your shell startup however you desire here
       Object.assign(context, {
+        seedDB: seedDB.bind(context.application, context.application),
         Utils,
-        seedDB,
       });
     }
   };
