@@ -1,6 +1,6 @@
 const Nife        = require('nife');
-const database    = {};//require('./db-config');
-const sensitive   = {};//require('./sensitive');
+const database    = require('./db-config');
+const sensitive   = require('./sensitive');
 const { Logger }  = require('mythix');
 
 module.exports = Nife.extend(true, {

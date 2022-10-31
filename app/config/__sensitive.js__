@@ -1,29 +1,31 @@
 module.exports = {
-  development: {
-    salt: '<<<GENERATE_SALT>>>',
-    aws: {
-      s3: {
-        accessKeyID:      'yourAccessKeyID',
-        secretAccessKey:  'yourSecretKey',
+  application: {
+    development: {
+      salt: '<<<GENERATE_SALT>>>',
+      aws: {
+        s3: {
+          accessKeyID:      'yourAccessKeyID',
+          secretAccessKey:  'yourSecretKey',
+        },
+      },
+      mailer: {
+        domain: 'mail.smtp.com',
+        apiKey: 'youMailerAPIKey',
       },
     },
-    mailer: {
-      domain: 'mail.smtp.com',
-      apiKey: 'youMailerAPIKey',
-    },
-  },
-  test: {
-    salt: '<<<GENERATE_SALT>>>',
-    // Needed simply so config verification doesn't fail during tests
-    aws: {
-      s3: {
-        accessKeyID:      'yourAccessKeyID',
-        secretAccessKey:  'yourSecretKey',
+    test: {
+      salt: '<<<GENERATE_SALT>>>',
+      // Needed simply so config verification doesn't fail during tests
+      aws: {
+        s3: {
+          accessKeyID:      'yourAccessKeyID',
+          secretAccessKey:  'yourSecretKey',
+        },
       },
-    },
-    mailer: {
-      domain: 'mail.smtp.com',
-      apiKey: 'youMailerAPIKey',
+      mailer: {
+        domain: 'mail.smtp.com',
+        apiKey: 'youMailerAPIKey',
+      },
     },
   },
   httpServer: {

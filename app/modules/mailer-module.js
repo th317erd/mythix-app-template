@@ -65,7 +65,7 @@ class MailerModule extends Modules.BaseModule {
     let mailerConfig = Nife.extend(true, {
       domain:   'mail.somedomain.com',
       username: 'api',
-      key:      app.getConfigValue('app.{environment}.smtp.apiKey'),
+      key:      app.getConfigValue('application.{environment}.mailer.apiKey'),
     });
 
     return mailerConfig;
