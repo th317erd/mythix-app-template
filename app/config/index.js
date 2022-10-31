@@ -9,4 +9,20 @@ module.exports = Nife.extend(true, {
   logger: {
     level: Logger.DEBUG,
   },
+  application: {
+    development: {
+      domain:             '<<<APP_NAME>>>.com',
+      appRootURL:         'https://<<<APP_NAME>>>.com/',
+      mfaPageURL:         'https://<<<APP_NAME>>>.com/pages/mfa',
+      afterLoginPageURL:  'https://<<<APP_NAME>>>.com/pages/home',
+      magicLinkURL:       'https://<<<APP_NAME>>>.com/login',
+      getHelpURL:         'https://gethelp.com/',
+      aws: {
+        s3: {
+          bucket: '<<<APP_NAME>>>-staging',
+          region: 'us-west-1',
+        },
+      },
+    },
+  },
 }, sensitive);

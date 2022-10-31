@@ -1,4 +1,8 @@
 module.exports = {
+  httpServer: {
+    host: 'localhost',
+    port: 8001,
+  },
   application: {
     development: {
       salt: '<<<GENERATE_SALT>>>',
@@ -13,23 +17,5 @@ module.exports = {
         apiKey: 'youMailerAPIKey',
       },
     },
-    test: {
-      salt: '<<<GENERATE_SALT>>>',
-      // Needed simply so config verification doesn't fail during tests
-      aws: {
-        s3: {
-          accessKeyID:      'yourAccessKeyID',
-          secretAccessKey:  'yourSecretKey',
-        },
-      },
-      mailer: {
-        domain: 'mail.smtp.com',
-        apiKey: 'youMailerAPIKey',
-      },
-    },
-  },
-  httpServer: {
-    host: 'localhost',
-    port: 8001,
   },
 };
