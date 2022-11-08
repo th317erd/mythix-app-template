@@ -404,7 +404,7 @@ describe('UserModel', function() {
       expect(args.length).toEqual(2);
 
       let queryEngine   = args[0];
-      let queryContext  = queryEngine._getRawQueryContext();
+      let queryContext  = queryEngine.getOperationContext();
       expect(queryContext.limit).toEqual(20);
       expect(queryContext.offset).toEqual(0);
       expect(queryContext.order).toEqual([ '+Organization:name' ]);
@@ -423,7 +423,7 @@ describe('UserModel', function() {
       expect(args.length).toEqual(2);
 
       let queryEngine   = args[0];
-      let queryContext  = queryEngine._getRawQueryContext();
+      let queryContext  = queryEngine.getOperationContext();
       expect(queryContext.limit).toEqual(100);
       expect(queryContext.offset).toEqual(50);
       expect(queryContext.order).toEqual([ '-Organization:id' ]);
