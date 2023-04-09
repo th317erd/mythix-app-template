@@ -255,7 +255,7 @@ class ControllerBase extends Mythix.ControllerBase {
     if (Nife.isEmpty(filter))
       return;
 
-    return MythixORMUtils.generateQueryFromFilter(this.getDBConnection(), Model, filter);
+    return MythixORMUtils.generateQueryFromFilter(this.getConnection(), Model, filter);
   }
 
   // This will fetch the specified user from the DB.

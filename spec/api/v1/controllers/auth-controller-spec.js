@@ -18,7 +18,7 @@ describe('AuthController', function() {
   let factory;
 
   // eslint-disable-next-line no-unused-vars
-  const { it, fit } = createRunners(() => app.getDBConnection());
+  const { it, fit } = createRunners(() => app.getConnection());
 
   beforeAll(async () => {
     app = await createTestApplication();
@@ -42,13 +42,13 @@ describe('AuthController', function() {
   describe('authenticate', () => {
     describe('GET', () => {
       it('should fail without a magicToken', async () => {
-        let result = await app.get('/api/v1/auth/authenticate');
+        let result = await app.get('/api/v1/auth/login');
         expect(result.statusCode).toEqual(400);
         expect(result.body).toEqual('"magicToken" parameter required');
       });
 
       it('should fail with a bad magicToken', async () => {
-        let result = await app.get('/api/v1/auth/authenticate?magicToken=derp');
+        let result = await app.get('/api/v1/auth/login?magicToken=derp');
         expect(result.statusCode).toEqual(401);
         expect(result.body).toEqual('Specified token is invalid');
       });
@@ -59,7 +59,7 @@ describe('AuthController', function() {
 
         let { sessionToken } = await user.generateSessionToken();
 
-        let result = await app.get(`/api/v1/auth/authenticate?magicToken=${sessionToken}`, { followRedirect: false });
+        let result = await app.get(`/api/v1/auth/login?magicToken=${sessionToken}`, { followRedirect: false });
         expect(result.statusCode).toEqual(302);
         expect(result.headers['location']).toEqual(`https://test.<<<APP_NAME>>>.com/pages/mfa?magicToken=${sessionToken}`);
       });
@@ -81,7 +81,7 @@ describe('AuthController', function() {
 
         jasmine.clock().uninstall();
 
-        let result = await app.get(`/api/v1/auth/authenticate?magicToken=${magicToken}`);
+        let result = await app.get(`/api/v1/auth/login?magicToken=${magicToken}`);
         expect(result.statusCode).toEqual(401);
         expect(result.body).toEqual('Specified token is invalid');
       });
@@ -103,7 +103,7 @@ describe('AuthController', function() {
 
         jasmine.clock().uninstall();
 
-        let result = await app.get(`/api/v1/auth/authenticate?magicToken=${magicToken}`);
+        let result = await app.get(`/api/v1/auth/login?magicToken=${magicToken}`);
         expect(result.statusCode).toEqual(401);
         expect(result.body).toEqual('Specified token is invalid');
       });
@@ -120,7 +120,7 @@ describe('AuthController', function() {
           { encodedSecret: app.getSalt() },
         );
 
-        let result = await app.get(`/api/v1/auth/authenticate?magicToken=${magicToken}`);
+        let result = await app.get(`/api/v1/auth/login?magicToken=${magicToken}`);
         expect(result.statusCode).toEqual(404);
         expect(result.body).toEqual('User not found');
       });
@@ -129,7 +129,7 @@ describe('AuthController', function() {
         let { user } = await factory.users.create();
         let { sessionToken } = await user.generateSessionToken();
 
-        let result = await app.get(`/api/v1/auth/authenticate?magicToken=${sessionToken}`);
+        let result = await app.get(`/api/v1/auth/login?magicToken=${sessionToken}`);
         expect(result.statusCode).toEqual(302);
         expect(result.headers['location']).toEqual('https://test.<<<APP_NAME>>>.com/pages/home');
 
@@ -151,13 +151,13 @@ describe('AuthController', function() {
 
     describe('POST', () => {
       it('should fail without a magicToken', async () => {
-        let result = await app.post('/api/v1/auth/authenticate');
+        let result = await app.post('/api/v1/auth/login');
         expect(result.statusCode).toEqual(400);
         expect(result.body).toEqual('"magicToken" parameter required');
       });
 
       it('should fail with a bad magicToken', async () => {
-        let result = await app.post('/api/v1/auth/authenticate', { data: { magicToken: 'derp' } });
+        let result = await app.post('/api/v1/auth/login', { data: { magicToken: 'derp' } });
         expect(result.statusCode).toEqual(401);
         expect(result.body).toEqual('Specified token is invalid');
       });
@@ -168,7 +168,7 @@ describe('AuthController', function() {
 
         let { sessionToken } = await user.generateSessionToken();
 
-        let result = await app.post('/api/v1/auth/authenticate', { data: { magicToken: sessionToken }, followRedirect: false });
+        let result = await app.post('/api/v1/auth/login', { data: { magicToken: sessionToken }, followRedirect: false });
         expect(result.statusCode).toEqual(200);
         expect(result.body.data).toEqual({
           needsMFA:     true,
@@ -193,7 +193,7 @@ describe('AuthController', function() {
 
         jasmine.clock().uninstall();
 
-        let result = await app.post('/api/v1/auth/authenticate', { data: { magicToken } });
+        let result = await app.post('/api/v1/auth/login', { data: { magicToken } });
         expect(result.statusCode).toEqual(401);
         expect(result.body).toEqual('Specified token is invalid');
       });
@@ -215,7 +215,7 @@ describe('AuthController', function() {
 
         jasmine.clock().uninstall();
 
-        let result = await app.post('/api/v1/auth/authenticate', { data: { magicToken } });
+        let result = await app.post('/api/v1/auth/login', { data: { magicToken } });
         expect(result.statusCode).toEqual(401);
         expect(result.body).toEqual('Specified token is invalid');
       });
@@ -232,7 +232,7 @@ describe('AuthController', function() {
           { encodedSecret: app.getSalt() },
         );
 
-        let result = await app.post('/api/v1/auth/authenticate', { data: { magicToken } });
+        let result = await app.post('/api/v1/auth/login', { data: { magicToken } });
         expect(result.statusCode).toEqual(404);
         expect(result.body).toEqual('User not found');
       });
@@ -241,7 +241,7 @@ describe('AuthController', function() {
         let { user } = await factory.users.create();
         let { sessionToken } = await user.generateSessionToken();
 
-        let result = await app.post('/api/v1/auth/authenticate', { data: { magicToken: sessionToken } });
+        let result = await app.post('/api/v1/auth/login', { data: { magicToken: sessionToken } });
         expect(result.statusCode).toEqual(200);
 
         expect(result.headers['x-session-token']).toMatch(URL_SAFE_BASE64_REGEXP);
@@ -297,7 +297,7 @@ describe('AuthController', function() {
   describe('requestLogin', () => {
     describe('POST', () => {
       it('should fail to find non-existent user', async () => {
-        let result = await app.post('/api/v1/auth/sendMagicLink', { data: { email: 'none@nothing.com' } });
+        let result = await app.post('/api/v1/auth/send-magic-link', { data: { email: 'none@nothing.com' } });
         expect(result.statusCode).toEqual(404);
         expect(result.body).toEqual('User "none@nothing.com" not found');
       });
@@ -305,17 +305,17 @@ describe('AuthController', function() {
       it('should succeed', async () => {
         let { user } = await factory.users.create();
 
-        let result = await app.post('/api/v1/auth/sendMagicLink', { data: { email: user.email } });
+        let result = await app.post('/api/v1/auth/send-magic-link', { data: { email: user.email } });
         expect(result.statusCode).toEqual(200);
         expect(result.body).toEqual({ data: { success: true } });
 
         let notification = await models.Notification.first();
         expect(notification.subject).toEqual('<<<APP_DISPLAY_NAME>>> Magic Login Link');
 
-        let emailBodyMatch = notification.content.match(/<a\s+href\s*=\s*"([^"]+)"[^>]*>\s*Sign in to <<<APP_DISPLAY_NAME>>>\s*<\/a>/);
+        let emailBodyMatch = notification.content.match(/<a\s+href\s*=\s*"(https:\/\/test\.<<<APP_NAME>>>\.com\/api\/v1\/auth\/login[^"]+)/i);
         expect(emailBodyMatch).toBeInstanceOf(Array);
         expect(emailBodyMatch.length).toEqual(2);
-        expect((/^https:\/\/test\.<<<APP_NAME>>>\.com\/api\/v1\/auth\/authenticate\?magicToken=[A-Za-z0-9_=-]+$/).test(emailBodyMatch[1])).toEqual(true);
+        expect((/^https:\/\/test\.<<<APP_NAME>>>\.com\/api\/v1\/auth\/login\?magicToken=[A-Za-z0-9_=-]+$/).test(emailBodyMatch[1])).toEqual(true);
       });
     });
   });
@@ -327,7 +327,7 @@ describe('AuthController', function() {
         let { user } = await factory.users.create();
 
         // Send the login link to email
-        let result = await app.post('/api/v1/auth/sendMagicLink', { data: { email: user.email } });
+        let result = await app.post('/api/v1/auth/send-magic-link', { data: { email: user.email } });
         expect(result.statusCode).toEqual(200);
         expect(result.body).toEqual({ data: { success: true } });
 
@@ -335,13 +335,13 @@ describe('AuthController', function() {
 
         // Capture the login link from the email arguments
         let notification    = await models.Notification.first();
-        let emailBodyMatch  = notification.content.match(/<a\s+href\s*=\s*"([^"]+)"[^>]*>\s*Sign in to <<<APP_DISPLAY_NAME>>>\s*<\/a>/);
+        let emailBodyMatch  = notification.content.match(/<a\s+href\s*=\s*"(https:\/\/test\.<<<APP_NAME>>>\.com\/api\/v1\/auth\/login[^"]+)/i);
         let magicToken      = emailBodyMatch[1].match(/magicToken=([A-Za-z0-9_=-]+)$/)[1];
 
         expect(magicToken).toMatch(URL_SAFE_BASE64_REGEXP);
 
         // Now authenticate this user using the magic link
-        result = await app.get(`/api/v1/auth/authenticate?magicToken=${magicToken}`, { followRedirect: false });
+        result = await app.get(`/api/v1/auth/login?magicToken=${magicToken}`, { followRedirect: false });
         expect(result.statusCode).toEqual(302);
 
         // The magicToken should have been
@@ -364,20 +364,20 @@ describe('AuthController', function() {
         let { user } = await factory.users.create();
 
         // Send the login link to email
-        let result = await app.post('/api/v1/auth/sendMagicLink', { data: { email: user.email } });
+        let result = await app.post('/api/v1/auth/send-magic-link', { data: { email: user.email } });
         expect(result.statusCode).toEqual(200);
         expect(result.body).toEqual({ data: { success: true } });
 
         // Capture the login link from the email arguments
         let notification    = await models.Notification.first();
-        let emailBodyMatch  = notification.content.match(/<a\s+href\s*=\s*"([^"]+)"[^>]*>\s*Sign in to <<<APP_DISPLAY_NAME>>>\s*<\/a>/);
+        let emailBodyMatch  = notification.content.match(/<a\s+href\s*=\s*"(https:\/\/test\.<<<APP_NAME>>>\.com\/api\/v1\/auth\/login[^"]+)/i);
         let magicToken      = emailBodyMatch[1].match(/magicToken=([A-Za-z0-9_=-]+)$/)[1];
 
         expect(magicToken).toMatch(URL_SAFE_BASE64_REGEXP);
         expect(await models.InvalidToken.count()).toEqual(0);
 
         // Now authenticate this user using the magic link
-        result = await app.post('/api/v1/auth/authenticate', { data: { magicToken } });
+        result = await app.post('/api/v1/auth/login', { data: { magicToken } });
         expect(result.statusCode).toEqual(200);
 
         // The magicToken should have been
@@ -395,7 +395,7 @@ describe('AuthController', function() {
 
   describe('registerUser', () => {
     it('should fail without an email', async () => {
-      let result = await app.post('/api/v1/auth/registerUser');
+      let result = await app.post('/api/v1/auth/register-user');
       expect(result.statusCode).toEqual(400);
       expect(result.body).toEqual('"email" is required');
     });
@@ -403,7 +403,7 @@ describe('AuthController', function() {
     it('should properly handle a server error', async () => {
       spyOn(models.User, 'create').and.rejectWith(new Error('Failed!'));
 
-      let result = await app.post('/api/v1/auth/registerUser', { data: { email: 'test@example.com' } });
+      let result = await app.post('/api/v1/auth/register-user', { data: { email: 'test@example.com' } });
       expect(result.statusCode).toEqual(500);
       expect(result.body).toEqual('Failed to create user');
       expect(result.headers['x-error-code']).toEqual('user-creation-failed');
@@ -412,7 +412,7 @@ describe('AuthController', function() {
     it('should succeed with just an email', async () => {
       expect(await models.User.count()).toEqual(0);
 
-      let result = await app.post('/api/v1/auth/registerUser', { data: { email: 'test@example.com' } });
+      let result = await app.post('/api/v1/auth/register-user', { data: { email: 'test@example.com' } });
       expect(result.statusCode).toEqual(200);
 
       expect(await models.User.count()).toEqual(1);
@@ -429,7 +429,7 @@ describe('AuthController', function() {
     it('should succeed with all attributes', async () => {
       expect(await models.User.count()).toEqual(0);
 
-      let result = await app.post('/api/v1/auth/registerUser', { data: {
+      let result = await app.post('/api/v1/auth/register-user', { data: {
         email:      'test@example.com',
         phone:      '987-654-3210',
         firstName:  'Test',

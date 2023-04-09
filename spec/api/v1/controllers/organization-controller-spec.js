@@ -9,8 +9,6 @@ const FileSystem = require('node:fs');
 const FormData = require('form-data');
 const { CryptoUtils } = require('mythix');
 
-const Utils = require('../../../../app/utils');
-
 const {
   createTestApplication,
   createFactories,
@@ -24,7 +22,7 @@ describe('OrganizationController', function() {
   let models;
 
   // eslint-disable-next-line no-unused-vars
-  const { it, fit } = createRunners(() => app.getDBConnection());
+  const { it, fit } = createRunners(() => app.getConnection());
 
   beforeAll(async () => {
     app = await createTestApplication();
@@ -50,7 +48,7 @@ describe('OrganizationController', function() {
 
   describe('create', () => {
     it('should fail if user is not logged in', async () => {
-      let result = await app.put('/api/v1/organization/');
+      let result = await app.put('/api/v1/organizations');
       expect(result.statusCode).toEqual(401);
       expect(result.body).toEqual('Unauthorized');
     });
@@ -69,7 +67,7 @@ describe('OrganizationController', function() {
         },
         // runner
         async () => {
-          let result = await app.put('/api/v1/organization/', { data: { name: 'Derp' } });
+          let result = await app.put('/api/v1/organizations', { data: { name: 'Derp' } });
           expect(result.statusCode).toEqual(500);
           expect(result.body).toEqual('Failed to create organization');
         },
@@ -81,7 +79,7 @@ describe('OrganizationController', function() {
         return args;
       });
 
-      let result = await app.put('/api/v1/organization/', { data: { name: 'Derp' } });
+      let result = await app.put('/api/v1/organizations', { data: { name: 'Derp' } });
       expect(result.statusCode).toEqual(403);
       expect(result.body).toEqual('Forbidden');
     });
@@ -89,7 +87,7 @@ describe('OrganizationController', function() {
     it('should fail if user is an admin', async () => {
       await factory.users.createAndLogin({ userRole: 'admin' });
 
-      let result = await app.put('/api/v1/organization/', { data: { name: 'Derp' } });
+      let result = await app.put('/api/v1/organizations', { data: { name: 'Derp' } });
       expect(result.statusCode).toEqual(403);
       expect(result.body).toEqual('Forbidden');
     });
@@ -97,7 +95,7 @@ describe('OrganizationController', function() {
     it('should fail if user is a superadmin', async () => {
       await factory.users.createAndLogin({ userRole: 'superadmin' });
 
-      let result = await app.put('/api/v1/organization/', { data: { name: 'Derp' } });
+      let result = await app.put('/api/v1/organizations', { data: { name: 'Derp' } });
       expect(result.statusCode).toEqual(403);
       expect(result.body).toEqual('Forbidden');
     });
@@ -105,7 +103,7 @@ describe('OrganizationController', function() {
     it('should succeed if user is a support user', async () => {
       await factory.users.createAndLogin({ userRole: 'support' });
 
-      let result = await app.put('/api/v1/organization/', { data: { name: 'Derp' } });
+      let result = await app.put('/api/v1/organizations', { data: { name: 'Derp' } });
       expect(result.statusCode).toEqual(200);
 
       let data = result.body.data;
@@ -116,7 +114,7 @@ describe('OrganizationController', function() {
     it('should succeed if user is a masteradmin', async () => {
       await factory.users.createAndLogin({ userRole: 'masteradmin' });
 
-      let result = await app.put('/api/v1/organization/', { data: { name: 'Derp' } });
+      let result = await app.put('/api/v1/organizations', { data: { name: 'Derp' } });
       expect(result.statusCode).toEqual(200);
 
       let data = result.body.data;
@@ -126,129 +124,95 @@ describe('OrganizationController', function() {
   });
 
   describe('update', () => {
-    const generateTests = (method) => {
-      describe(method.toUpperCase(), () => {
-        it('should fail if user is not logged in', async () => {
-          let result = await app[method]('/api/v1/organization/update');
-          expect(result.statusCode).toEqual(401);
-          expect(result.body).toEqual('Unauthorized');
-        });
-
-        it('should fail if bad organization id supplied', async () => {
-          await factory.users.createAndLogin({ userRole: 'superadmin' });
-
-          let result = await app[method]('/api/v1/organization/derp', { data: { name: 'Derp' } });
-          expect(result.statusCode).toEqual(400);
-          expect(result.body).toEqual('"organizationID" parameter required');
-        });
-
-        it('should fail if organization not found', async () => {
-          await factory.users.createAndLogin({ userRole: 'superadmin' });
-
-          let result = await app[method]('/api/v1/organization/ORG_cd08tmtqqwpgbh6yqp5g', { data: { name: 'Derp' } });
-          expect(result.statusCode).toEqual(404);
-          expect(result.body).toEqual('Organization not found');
-        });
-
-        it('should fail if unable to save model', async () => {
-          let { organization } = await factory.users.createAndLogin({ userRole: 'superadmin' });
-
-          await app.hijackModel(
-            'Organization',
-            (Organization) => {
-              return class TestOrganization extends Organization {
-                constructor(...args) {
-                  super(...args);
-
-                  // Force bad save
-                  this.save = async function() {
-                    throw new Error('Failed!');
-                  };
-                }
-              };
-            },
-            // runner
-            async () => {
-              let result = await app[method](`/api/v1/organization/${organization.id}`, { data: { name: 'Derp' } });
-              expect(result.statusCode).toEqual(500);
-              expect(result.body).toEqual('Failed to update organization');
-            },
-          );
-        });
-
-        it('should fail if user is not superadmin level or higher (as member)', async () => {
-          let { organization } = await factory.users.createAndLogin(async (args) => args);
-
-          let result = await app[method](`/api/v1/organization/${organization.id}`, { data: { name: 'Test' } });
-          expect(result.statusCode).toEqual(403);
-          expect(result.body).toEqual('Forbidden');
-        });
-
-        it('should fail if user is not superadmin level or higher (as admin)', async () => {
-          let { organization } = await factory.users.createAndLogin({ userRole: 'admin' });
-
-          let result = await app[method](`/api/v1/organization/${organization.id}`, { data: { name: 'Test' } });
-          expect(result.statusCode).toEqual(403);
-          expect(result.body).toEqual('Forbidden');
-        });
-
-        it('should succeed if user is a superadmin', async () => {
-          let { organization } = await factory.users.createAndLogin({ userRole: 'superadmin' });
-
-          expect(organization.name).toBe('Test');
-
-          let result = await app[method](`/api/v1/organization/${organization.id}`, { data: { name: 'Derp' } });
-          expect(result.statusCode).toEqual(200);
-
-          let data = result.body.data;
-          expect(data.id).toMatch(organization.id);
-          expect(data.name).toEqual('Derp');
-
-          // Reload to ensure the update was persisted
-          organization = await models.Organization.$.id.EQ(organization.id).first();
-          expect(data.name).toEqual('Derp');
-        });
-
-        it('should succeed if user is a support user', async () => {
-          let { organization } = await factory.users.createAndLogin({ userRole: 'support' });
-
-          expect(organization.name).toBe('Test');
-
-          let result = await app[method](`/api/v1/organization/${organization.id}`, { data: { name: 'Derp' } });
-          expect(result.statusCode).toEqual(200);
-
-          let data = result.body.data;
-          expect(data.id).toMatch(organization.id);
-          expect(data.name).toEqual('Derp');
-        });
-
-        it('should succeed if user is a masteradmin', async () => {
-          let { organization } = await factory.users.createAndLogin({ userRole: 'masteradmin' });
-
-          expect(organization.name).toBe('Test');
-
-          let result = await app[method](`/api/v1/organization/${organization.id}`, { data: { name: 'Derp' } });
-          expect(result.statusCode).toEqual(200);
-
-          let data = result.body.data;
-          expect(data.id).toMatch(organization.id);
-          expect(data.name).toEqual('Derp');
-        });
+    describe('PATCH', () => {
+      it('should fail if user is not logged in', async () => {
+        let result = await app.patch('/api/v1/organization/update');
+        expect(result.statusCode).toEqual(401);
+        expect(result.body).toEqual('Unauthorized');
       });
-    };
 
-    const methods = [ 'post', 'patch' ];
-    for (let i = 0, il = methods.length; i < il; i++) {
-      let method = methods[i];
-      generateTests(method);
-    }
+      it('should fail if bad organization id supplied', async () => {
+        await factory.users.createAndLogin({ userRole: 'superadmin' });
+
+        let result = await app.patch('/api/v1/organization/derp', { data: { name: 'Derp' } });
+        expect(result.statusCode).toEqual(400);
+        expect(result.body).toEqual('"organizationID" parameter required');
+      });
+
+      it('should fail if organization not found', async () => {
+        await factory.users.createAndLogin({ userRole: 'superadmin' });
+
+        let result = await app.patch('/api/v1/organization/ORG_cd08tmtqqwpgbh6yqp5g', { data: { name: 'Derp' } });
+        expect(result.statusCode).toEqual(404);
+        expect(result.body).toEqual('Organization not found');
+      });
+
+      it('should fail if user is not superadmin level or higher (as member)', async () => {
+        let { organization } = await factory.users.createAndLogin(async (args) => args);
+
+        let result = await app.patch(`/api/v1/organization/${organization.id}`, { data: { name: 'Test' } });
+        expect(result.statusCode).toEqual(403);
+        expect(result.body).toEqual('Forbidden');
+      });
+
+      it('should fail if user is not superadmin level or higher (as admin)', async () => {
+        let { organization } = await factory.users.createAndLogin({ userRole: 'admin' });
+
+        let result = await app.patch(`/api/v1/organization/${organization.id}`, { data: { name: 'Test' } });
+        expect(result.statusCode).toEqual(403);
+        expect(result.body).toEqual('Forbidden');
+      });
+
+      it('should succeed if user is a superadmin', async () => {
+        let { organization } = await factory.users.createAndLogin({ userRole: 'superadmin' });
+
+        expect(organization.name).toBe('Test');
+
+        let result = await app.patch(`/api/v1/organization/${organization.id}`, { data: { name: 'Derp' } });
+        expect(result.statusCode).toEqual(200);
+
+        let data = result.body.data;
+        expect(data.id).toMatch(organization.id);
+        expect(data.name).toEqual('Derp');
+
+        // Reload to ensure the update was persisted
+        organization = await models.Organization.$.id.EQ(organization.id).first();
+        expect(data.name).toEqual('Derp');
+      });
+
+      it('should succeed if user is a support user', async () => {
+        let { organization } = await factory.users.createAndLogin({ userRole: 'support' });
+
+        expect(organization.name).toBe('Test');
+
+        let result = await app.patch(`/api/v1/organization/${organization.id}`, { data: { name: 'Derp' } });
+        expect(result.statusCode).toEqual(200);
+
+        let data = result.body.data;
+        expect(data.id).toMatch(organization.id);
+        expect(data.name).toEqual('Derp');
+      });
+
+      it('should succeed if user is a masteradmin', async () => {
+        let { organization } = await factory.users.createAndLogin({ userRole: 'masteradmin' });
+
+        expect(organization.name).toBe('Test');
+
+        let result = await app.patch(`/api/v1/organization/${organization.id}`, { data: { name: 'Derp' } });
+        expect(result.statusCode).toEqual(200);
+
+        let data = result.body.data;
+        expect(data.id).toMatch(organization.id);
+        expect(data.name).toEqual('Derp');
+      });
+    });
   });
 
   describe('inviteUser', () => {
     it('should fail if user is not logged in', async () => {
       let { organization } = await factory.organizations.create();
 
-      let result = await app.post(`/api/v1/organization/${organization.id}/inviteUser`);
+      let result = await app.post(`/api/v1/organization/${organization.id}/invite-user`);
       expect(result.statusCode).toEqual(401);
       expect(result.body).toEqual('Unauthorized');
     });
@@ -258,7 +222,7 @@ describe('OrganizationController', function() {
 
       await factory.users.createAndLogin();
 
-      let result = await app.post(`/api/v1/organization/${organization.id}/inviteUser`);
+      let result = await app.post(`/api/v1/organization/${organization.id}/invite-user`);
       expect(result.statusCode).toEqual(403);
       expect(result.body).toEqual('Forbidden');
     });
@@ -266,7 +230,7 @@ describe('OrganizationController', function() {
     it('should fail if user is not allowed to invite a user to the organization (as member)', async () => {
       let { organization } = await factory.users.createAndLogin(fetchValues);
 
-      let result = await app.post(`/api/v1/organization/${organization.id}/inviteUser`);
+      let result = await app.post(`/api/v1/organization/${organization.id}/invite-user`);
       expect(result.statusCode).toEqual(403);
       expect(result.body).toEqual('Forbidden');
     });
@@ -275,7 +239,7 @@ describe('OrganizationController', function() {
       let { user, organization } = await factory.users.createAndLogin(fetchValues);
       await models.Role.createFor(user, 'invite-to-organization', organization);
 
-      let result = await app.post(`/api/v1/organization/${organization.id}/inviteUser`, { data: {} });
+      let result = await app.post(`/api/v1/organization/${organization.id}/invite-user`, { data: {} });
       expect(result.statusCode).toEqual(400);
       expect(result.body).toEqual('"email" is required');
     });
@@ -284,7 +248,7 @@ describe('OrganizationController', function() {
       let { user, organization } = await factory.users.createAndLogin(fetchValues);
       await models.Role.createFor(user, 'invite-to-organization', organization);
 
-      let result = await app.post(`/api/v1/organization/${organization.id}/inviteUser`, { data: { email: 'test+user@example.com' } });
+      let result = await app.post(`/api/v1/organization/${organization.id}/invite-user`, { data: { email: 'test+user@example.com' } });
       expect(result.statusCode).toEqual(200);
 
       let data = result.body.data;
@@ -300,7 +264,7 @@ describe('OrganizationController', function() {
 
       let { user: otherUser } = await factory.users.createWithOrganization({ userData: { email: 'test+user@example.com' } });
 
-      let result = await app.post(`/api/v1/organization/${organization.id}/inviteUser`, { data: { email: otherUser.email } });
+      let result = await app.post(`/api/v1/organization/${organization.id}/invite-user`, { data: { email: otherUser.email } });
       expect(result.statusCode).toEqual(200);
 
       let data = result.body.data;
@@ -316,7 +280,7 @@ describe('OrganizationController', function() {
 
       let { user: otherUser } = await factory.users.createWithOrganization({ userData: { email: 'test+user@example.com' }, organization });
 
-      let result = await app.post(`/api/v1/organization/${organization.id}/inviteUser`, { data: { email: otherUser.email } });
+      let result = await app.post(`/api/v1/organization/${organization.id}/invite-user`, { data: { email: otherUser.email } });
       expect(result.statusCode).toEqual(201);
 
       let data = result.body.data;
@@ -331,7 +295,7 @@ describe('OrganizationController', function() {
 
       let { user: otherUser } = await factory.users.createWithOrganization({ userData: { email: 'test+user@example.com' }, organization });
 
-      let result = await app.post(`/api/v1/organization/${organization.id}/inviteUser`, { data: { email: otherUser.email, roles: [ 'superadmin', 'masteradmin', 'admin', 'support' ] } });
+      let result = await app.post(`/api/v1/organization/${organization.id}/invite-user`, { data: { email: otherUser.email, roles: [ 'superadmin', 'masteradmin', 'admin', 'support' ] } });
       expect(result.statusCode).toEqual(201);
 
       let data = result.body.data;
@@ -346,7 +310,7 @@ describe('OrganizationController', function() {
 
       let { user: otherUser } = await factory.users.create({ data: { email: 'user+to+invite@example.com' } });
 
-      let result = await app.post(`/api/v1/organization/${organization.id}/inviteUser`, { data: { email: otherUser.email, roles: [ 'superadmin', 'masteradmin', 'admin', 'support' ] } });
+      let result = await app.post(`/api/v1/organization/${organization.id}/invite-user`, { data: { email: otherUser.email, roles: [ 'superadmin', 'masteradmin', 'admin', 'support' ] } });
       expect(result.statusCode).toEqual(200);
 
       let data = result.body.data;
@@ -616,35 +580,9 @@ describe('OrganizationController', function() {
 
   describe('list', () => {
     it('should fail if user is not logged in', async () => {
-      let result = await app.get('/api/v1/organization/');
+      let result = await app.get('/api/v1/organizations');
       expect(result.statusCode).toEqual(401);
       expect(result.body).toEqual('Unauthorized');
-    });
-
-    it('should fail if unable to fetch organizations (Forbidden)', async () => {
-      await factory.users.createAndLogin({ userRole: 'superadmin' });
-
-      await app.hijackModel(
-        'User',
-        (User) => {
-          return class TestUser extends User {
-            constructor(...args) {
-              super(...args);
-
-              // Force bad fetch
-              this.searchOrganizations = async function() {
-                throw new Utils.ForbiddenError();
-              };
-            }
-          };
-        },
-        // runner
-        async () => {
-          let result = await app.get('/api/v1/organization/');
-          expect(result.statusCode).toEqual(403);
-          expect(result.body).toEqual('Forbidden');
-        },
-      );
     });
 
     // For "superadmin", "admin", and "member" roles we should be able to
@@ -661,7 +599,7 @@ describe('OrganizationController', function() {
 
         expect(await models.OrganizationUserLink.count()).toEqual(2);
 
-        let result = await app.get('/api/v1/organization/');
+        let result = await app.get('/api/v1/organizations');
         expect(result.statusCode).toEqual(200);
 
         let data = result.body.data;
@@ -687,7 +625,7 @@ describe('OrganizationController', function() {
 
         let { organization } = await factory.users.createAndLogin({ orgData: { name: 'UserOrg' }, userRole });
 
-        let result = await app.get('/api/v1/organization/');
+        let result = await app.get('/api/v1/organizations');
         expect(result.statusCode).toEqual(200);
 
         let data = result.body.data;
@@ -713,7 +651,7 @@ describe('OrganizationController', function() {
     it('should fail if user is not logged in', async () => {
       let { user } = await factory.users.createWithOrganization();
 
-      let result = await app.post(`/api/v1/organization/${user.getCurrentOrganizationID()}/user/${user.id}/updateUserAvatar`);
+      let result = await app.patch(`/api/v1/organization/${user.getCurrentOrganizationID()}/user/${user.id}/avatar`);
       expect(result.statusCode).toEqual(401);
       expect(result.body).toEqual('Unauthorized');
     });
@@ -733,7 +671,7 @@ describe('OrganizationController', function() {
       });
 
       let fileContents = FileSystem.readFileSync(testFilePath).toString('base64');
-      let result = await app.post(`/api/v1/organization/${user.getCurrentOrganizationID()}/user/${user.id}/updateUserAvatar`, {
+      let result = await app.patch(`/api/v1/organization/${user.getCurrentOrganizationID()}/user/${user.id}/avatar`, {
         data: {
           fileName: 'test.png',
           file:     fileContents,
@@ -781,7 +719,7 @@ describe('OrganizationController', function() {
 
       formData.append('file', FileSystem.createReadStream(testFilePath), 'test.png');
 
-      let result = await app.post(`/api/v1/organization/${user.getCurrentOrganizationID()}/user/${user.id}/updateUserAvatar`, {
+      let result = await app.patch(`/api/v1/organization/${user.getCurrentOrganizationID()}/user/${user.id}/avatar`, {
         data: formData,
       });
 
@@ -810,424 +748,380 @@ describe('OrganizationController', function() {
   });
 
   describe('updateUser', () => {
-    const generateTests = (method) => {
-      // Post and Patch should work identically
-      describe(method.toUpperCase(), () => {
-        it('should fail if user is not logged in', async () => {
-          let { organization } = await factory.organizations.create();
-          let result = await app[method](`/api/v1/organization/${organization.id}/user/test`);
-          expect(result.statusCode).toEqual(401);
-          expect(result.body).toEqual('Unauthorized');
-        });
-
-        it('should allow user to update themselves', async () => {
-          let { user, organization } = await factory.users.createAndLogin(fetchValues);
-
-          let result = await app[method](`/api/v1/organization/${organization.id}/user/${user.id}`, { data: { firstName: 'Johny', lastName: 'Bob', phone: '+1-555-555-5555' } });
-          expect(result.statusCode).toEqual(200);
-
-          let data = result.body.data;
-          expect(data.email).toEqual('test1@example.com');
-          expect(data.phone).toEqual('+1-555-555-5555');
-          expect(data.firstName).toEqual('Johny');
-          expect(data.lastName).toEqual('Bob');
-          expect(data.dob).toEqual('2000-01-01'); // This can not be updated via the endpoint
-
-          user = await models.User.$.id.EQ(user.id).first();
-          expect(user.email).toEqual('test1@example.com');
-          expect(user.phone).toEqual('15604520919');
-          expect(user.firstName).toEqual('Test');
-          expect(user.lastName).toEqual('User');
-          expect(user.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2000-01-01'); // This can not be updated via the endpoint
-        });
-
-        it('should fail if unable to save model', async () => {
-          let { user, organization } = await factory.users.createAndLogin(fetchValues);
-
-          await app.hijackModel(
-            'User',
-            (User) => {
-              return class TestUser extends User {
-                constructor(...args) {
-                  super(...args);
-
-                  const originalMethod = this.getOrganizationUserLink;
-
-                  this.getOrganizationUserLink = async function(_organizationID) {
-                    let link = await originalMethod.call(this, _organizationID);
-                    if (link) {
-                      // Force bad save
-                      link.save = async function() {
-                        throw new Error('Failed!');
-                      };
-                    }
-
-                    return link;
-                  };
-                }
-              };
-            },
-            // runner
-            async () => {
-              let result = await app[method](`/api/v1/organization/${organization.id}/user/${user.id}`, { data: { firstName: 'Derp' } });
-              expect(result.statusCode).toEqual(500);
-              expect(result.body).toEqual('Failed to update user');
-            },
-          );
-        });
-
-        it('should fail if user id is not found', async () => {
-          let { organization } = await factory.users.createAndLogin(
-            {
-              userData: {
-                email:      'admin@example.com',
-                phone:      '555-555-5555',
-                firstName:  'Admin',
-                lastName:   'Dude',
-                dob:        '2001-06-01',
-              },
-              userRole: 'admin',
-            },
-          );
-
-          let result = await app[method](`/api/v1/organization/${organization.id}/user/bad-user-id`, { data: { firstName: 'Johny', lastName: 'Bob' } });
-          expect(result.statusCode).toEqual(404);
-          expect(result.body).toEqual('User not found');
-        });
-
-        it('should disallow admin user to update user from another organization', async () => {
-          let { user, organization } = await factory.users.createAndLogin(
-            {
-              userData: {
-                email:      'admin@example.com',
-                phone:      '555-555-5555',
-                firstName:  'Admin',
-                lastName:   'Dude',
-                dob:        '2001-06-01',
-              },
-              userRole: 'admin',
-            },
-          );
-
-          let { user: otherUser } = await factory.users.createWithOrganization();
-
-          let result = await app[method](`/api/v1/organization/${organization.id}/user/${otherUser.id}`, { data: { firstName: 'Johny', lastName: 'Bob' } });
-          expect(result.statusCode).toEqual(403);
-          expect(result.body).toEqual('Forbidden');
-
-          // Ensure that the admin user wasn't updated
-          expect(user.email).toEqual('admin@example.com');
-          expect(user.phone).toEqual('555-555-5555');
-          expect(user.firstName).toEqual('Admin');
-          expect(user.lastName).toEqual('Dude');
-          expect(user.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2001-06-01');
-        });
-
-        it('should disallow admin user to update another admin user from the same organization', async () => {
-          let { user, organization } = await factory.users.createAndLogin(
-            {
-              userData: {
-                email:      'admin@example.com',
-                phone:      '555-555-5555',
-                firstName:  'Admin',
-                lastName:   'Dude',
-                dob:        '2001-06-01',
-              },
-              userRole: 'admin',
-            },
-          );
-
-          let { user: otherUser } = await factory.users.create({ organization, userRole: 'admin' });
-
-          let result = await app[method](`/api/v1/organization/${organization.id}/user/${otherUser.id}`, { data: { firstName: 'Johny', lastName: 'Bob' } });
-          expect(result.statusCode).toEqual(403);
-          expect(result.body).toEqual('Forbidden');
-
-          // Ensure that the admin user wasn't updated
-          expect(user.email).toEqual('admin@example.com');
-          expect(user.phone).toEqual('555-555-5555');
-          expect(user.firstName).toEqual('Admin');
-          expect(user.lastName).toEqual('Dude');
-          expect(user.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2001-06-01');
-        });
-
-        it('should disallow superadmin user to update user from another organization', async () => {
-          let { user, organization } = await factory.users.createAndLogin(
-            {
-              userData: {
-                email:      'superadmin@example.com',
-                phone:      '555-555-5555',
-                firstName:  'Super',
-                lastName:   'Admin',
-                dob:        '2001-06-01',
-              },
-              userRole: 'admin',
-            },
-          );
-
-          let { user: otherUser } = await factory.users.createWithOrganization();
-
-          let result = await app[method](`/api/v1/organization/${organization.id}/user/${otherUser.id}`, { data: { firstName: 'Johny', lastName: 'Bob' } });
-          expect(result.statusCode).toEqual(403);
-          expect(result.body).toEqual('Forbidden');
-
-          // Ensure that the admin user wasn't updated
-          expect(user.email).toEqual('superadmin@example.com');
-          expect(user.phone).toEqual('555-555-5555');
-          expect(user.firstName).toEqual('Super');
-          expect(user.lastName).toEqual('Admin');
-          expect(user.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2001-06-01');
-        });
-
-        it('should allow superadmin user to update admin user of the same organization', async () => {
-          let { user, organization } = await factory.users.createAndLogin(
-            {
-              userData: {
-                email:      'superadmin@example.com',
-                phone:      '555-555-5555',
-                firstName:  'Super',
-                lastName:   'Admin',
-                dob:        '2001-06-01',
-              },
-              userRole: 'superadmin',
-            },
-          );
-
-          let { user: otherUser, organization: otherOrganization } = await factory.users.createWithOrganization({ userRole: 'admin' });
-
-          // Should result in 403 because user isn't in this organization
-          let result = await app[method](`/api/v1/organization/${organization.id}/user/${otherUser.id}`, { data: { firstName: 'Johny', lastName: 'Bob' } });
-          expect(result.statusCode).toEqual(403);
-
-          // Should result in 403 because superadmin doesn't have
-          // permissions in this organization
-          result = await app[method](`/api/v1/organization/${otherOrganization.id}/user/${otherUser.id}`, { data: { firstName: 'Johny', lastName: 'Bob' } });
-          expect(result.statusCode).toEqual(403);
-
-          await otherOrganization.addUser(user, { userRole: 'superadmin' });
-          result = await app[method](`/api/v1/organization/${otherOrganization.id}/user/${otherUser.id}`, { data: { firstName: 'Johny', lastName: 'Bob' } });
-          expect(result.statusCode).toEqual(200);
-
-          // Verify response
-          let data = result.body.data;
-          expect(data.id).toEqual(otherUser.id);
-          expect(data.email).toEqual(otherUser.email);
-          expect(data.phone).toEqual('+1-560-452-0919');
-          expect(data.firstName).toEqual('Johny');
-          expect(data.lastName).toEqual('Bob');
-          expect(data.dob).toEqual('2000-01-01');
-
-          // Load from DB to ensure the updates were stored
-          let loadedUser = await models.User.$.id.EQ(otherUser.id).first();
-          expect(loadedUser.id).toEqual(otherUser.id);
-          expect(loadedUser.email).toEqual(otherUser.email);
-          expect(loadedUser.phone).toEqual('15604520919');
-          expect(loadedUser.firstName).toEqual('Test');
-          expect(loadedUser.lastName).toEqual('User');
-          expect(loadedUser.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2000-01-01');
-
-          // Ensure that the admin user wasn't updated
-          expect(user.email).toEqual('superadmin@example.com');
-          expect(user.phone).toEqual('555-555-5555');
-          expect(user.firstName).toEqual('Super');
-          expect(user.lastName).toEqual('Admin');
-          expect(user.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2001-06-01');
-        });
-
-        it('should allow admin user to update another user of the same organization', async () => {
-          let { user, organization } = await factory.users.createAndLogin(
-            {
-              userData: {
-                email:      'admin@example.com',
-                phone:      '555-555-5555',
-                firstName:  'Admin',
-                lastName:   'Dude',
-                dob:        '2001-06-01',
-              },
-              userRole: 'admin',
-            },
-          );
-
-          let { user: otherUser } = await factory.users.create({ organization });
-
-          let result = await app[method](`/api/v1/organization/${organization.id}/user/${otherUser.id}`, { data: { firstName: 'Johny', lastName: 'Bob' } });
-          expect(result.statusCode).toEqual(200);
-
-          // Verify response
-          let data = result.body.data;
-          expect(data.id).toEqual(otherUser.id);
-          expect(data.email).toEqual(otherUser.email);
-          expect(data.phone).toEqual('+1-560-452-0919');
-          expect(data.firstName).toEqual('Johny');
-          expect(data.lastName).toEqual('Bob');
-          expect(data.dob).toEqual('2000-01-01');
-
-          // Load from DB to ensure the updates were stored
-          let loadedUser = await models.User.$.id.EQ(otherUser.id).first();
-          expect(loadedUser.id).toEqual(otherUser.id);
-          expect(loadedUser.email).toEqual(otherUser.email);
-          expect(loadedUser.phone).toEqual('15604520919');
-          expect(loadedUser.firstName).toEqual('Test');
-          expect(loadedUser.lastName).toEqual('User');
-          expect(loadedUser.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2000-01-01');
-
-          // Ensure that the admin user wasn't updated
-          expect(user.email).toEqual('admin@example.com');
-          expect(user.phone).toEqual('555-555-5555');
-          expect(user.firstName).toEqual('Admin');
-          expect(user.lastName).toEqual('Dude');
-          expect(user.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2001-06-01');
-        });
-
-        it('should allow superadmin user to update another user of the same organization', async () => {
-          let { user, organization } = await factory.users.createAndLogin(
-            {
-              userData: {
-                email:      'superadmin@example.com',
-                phone:      '555-555-5555',
-                firstName:  'Super',
-                lastName:   'Admin',
-                dob:        '2001-06-01',
-              },
-              userRole: 'superadmin',
-            },
-          );
-
-          let { user: otherUser } = await factory.users.create({ organization });
-
-          let result = await app[method](`/api/v1/organization/${organization.id}/user/${otherUser.id}`, { data: { firstName: 'Johny', lastName: 'Bob' } });
-          expect(result.statusCode).toEqual(200);
-
-          // Verify response
-          let data = result.body.data;
-          expect(data.id).toEqual(otherUser.id);
-          expect(data.email).toEqual(otherUser.email);
-          expect(data.phone).toEqual('+1-560-452-0919');
-          expect(data.firstName).toEqual('Johny');
-          expect(data.lastName).toEqual('Bob');
-          expect(data.dob).toEqual('2000-01-01');
-
-          // Load from DB to ensure the updates were stored
-          let loadedUser = await models.User.$.id.EQ(otherUser.id).first();
-          expect(loadedUser.id).toEqual(otherUser.id);
-          expect(loadedUser.email).toEqual(otherUser.email);
-          expect(loadedUser.phone).toEqual('15604520919');
-          expect(loadedUser.firstName).toEqual('Test');
-          expect(loadedUser.lastName).toEqual('User');
-          expect(loadedUser.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2000-01-01');
-
-          // Ensure that the superadmin user wasn't updated
-          expect(user.email).toEqual('superadmin@example.com');
-          expect(user.phone).toEqual('555-555-5555');
-          expect(user.firstName).toEqual('Super');
-          expect(user.lastName).toEqual('Admin');
-          expect(user.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2001-06-01');
-        });
-
-        it('should allow support user to update another user in any organization', async () => {
-          let { user, organization } = await factory.users.createAndLogin(
-            {
-              userData: {
-                email:      'support@example.com',
-                phone:      '555-555-5555',
-                firstName:  'Support',
-                lastName:   'Guy',
-                dob:        '2001-06-01',
-              },
-              userRole: 'support',
-            },
-          );
-
-          let { user: otherUser, organization: otherOrganization } = await factory.users.createWithOrganization();
-
-          // Should be a 404 because the user isn't in this organization
-          let result = await app[method](`/api/v1/organization/${organization.id}/user/${otherUser.id}`, { data: { firstName: 'Johny', lastName: 'Bob' } });
-          expect(result.statusCode).toEqual(404);
-
-          result = await app[method](`/api/v1/organization/${otherOrganization.id}/user/${otherUser.id}`, { data: { firstName: 'Johny', lastName: 'Bob' } });
-          expect(result.statusCode).toEqual(200);
-
-          // Verify response
-          let data = result.body.data;
-          expect(data.id).toEqual(otherUser.id);
-          expect(data.email).toEqual(otherUser.email);
-          expect(data.phone).toEqual('+1-560-452-0919');
-          expect(data.firstName).toEqual('Johny');
-          expect(data.lastName).toEqual('Bob');
-          expect(data.dob).toEqual('2000-01-01');
-
-          // Load from DB to ensure the updates were stored
-          let loadedUser = await models.User.$.id.EQ(otherUser.id).first();
-          expect(loadedUser.id).toEqual(otherUser.id);
-          expect(loadedUser.email).toEqual(otherUser.email);
-          expect(loadedUser.phone).toEqual('15604520919');
-          expect(loadedUser.firstName).toEqual('Test');
-          expect(loadedUser.lastName).toEqual('User');
-          expect(loadedUser.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2000-01-01');
-
-          // Ensure that the support user wasn't updated
-          expect(user.email).toEqual('support@example.com');
-          expect(user.phone).toEqual('555-555-5555');
-          expect(user.firstName).toEqual('Support');
-          expect(user.lastName).toEqual('Guy');
-          expect(user.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2001-06-01');
-        });
-
-        it('should allow masteradmin user to update another user in any organization', async () => {
-          let { user, organization } = await factory.users.createAndLogin(
-            {
-              userData: {
-                email:      'master@example.com',
-                phone:      '555-555-5555',
-                firstName:  'Master',
-                lastName:   'Admin',
-                dob:        '2001-06-01',
-              },
-              userRole: 'masteradmin',
-            },
-          );
-
-          let { user: otherUser, organization: otherOrganization } = await factory.users.createWithOrganization();
-
-          // Should equal 404 because user isn't in this organization
-          let result = await app[method](`/api/v1/organization/${organization.id}/user/${otherUser.id}`, { data: { firstName: 'Johny', lastName: 'Bob' } });
-          expect(result.statusCode).toEqual(404);
-
-          result = await app[method](`/api/v1/organization/${otherOrganization.id}/user/${otherUser.id}`, { data: { firstName: 'Johny', lastName: 'Bob' } });
-          expect(result.statusCode).toEqual(200);
-
-          // Verify response
-          let data = result.body.data;
-          expect(data.id).toEqual(otherUser.id);
-          expect(data.email).toEqual(otherUser.email);
-          expect(data.phone).toEqual('+1-560-452-0919');
-          expect(data.firstName).toEqual('Johny');
-          expect(data.lastName).toEqual('Bob');
-          expect(data.dob).toEqual('2000-01-01');
-
-          // Load from DB to ensure the updates were stored
-          let loadedUser = await models.User.$.id.EQ(otherUser.id).first();
-          expect(loadedUser.id).toEqual(otherUser.id);
-          expect(loadedUser.email).toEqual(otherUser.email);
-          expect(loadedUser.phone).toEqual('15604520919');
-          expect(loadedUser.firstName).toEqual('Test');
-          expect(loadedUser.lastName).toEqual('User');
-          expect(loadedUser.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2000-01-01');
-
-          // Ensure that the masteradmin user wasn't updated
-          expect(user.email).toEqual('master@example.com');
-          expect(user.phone).toEqual('555-555-5555');
-          expect(user.firstName).toEqual('Master');
-          expect(user.lastName).toEqual('Admin');
-          expect(user.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2001-06-01');
-        });
+    describe('PATCH', () => {
+      it('should fail if user is not logged in', async () => {
+        let { organization } = await factory.organizations.create();
+        let result = await app.patch(`/api/v1/organization/${organization.id}/user/test`);
+        expect(result.statusCode).toEqual(401);
+        expect(result.body).toEqual('Unauthorized');
       });
-    };
 
-    const methods = [ 'post', 'patch' ];
-    for (let i = 0, il = methods.length; i < il; i++) {
-      let method = methods[i];
-      generateTests(method);
-    }
+      it('should allow user to update themselves', async () => {
+        let { user, organization } = await factory.users.createAndLogin(fetchValues);
+
+        let result = await app.patch(`/api/v1/organization/${organization.id}/user/${user.id}`, { data: { firstName: 'Johny', lastName: 'Bob', phone: '+1-555-555-5555' } });
+        expect(result.statusCode).toEqual(200);
+
+        let data = result.body.data;
+        expect(data.email).toEqual('test1@example.com');
+        expect(data.phone).toEqual('+1-555-555-5555');
+        expect(data.firstName).toEqual('Johny');
+        expect(data.lastName).toEqual('Bob');
+        expect(data.dob).toEqual('2000-01-01'); // This can not be updated via the endpoint
+
+        user = await models.User.$.id.EQ(user.id).first();
+        expect(user.email).toEqual('test1@example.com');
+        expect(user.phone).toEqual('15604520919');
+        expect(user.firstName).toEqual('Test');
+        expect(user.lastName).toEqual('User');
+        expect(user.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2000-01-01'); // This can not be updated via the endpoint
+      });
+
+      it('should fail if user id is not found', async () => {
+        let { organization } = await factory.users.createAndLogin(
+          {
+            userData: {
+              email:      'admin@example.com',
+              phone:      '555-555-5555',
+              firstName:  'Admin',
+              lastName:   'Dude',
+              dob:        '2001-06-01',
+            },
+            userRole: 'admin',
+          },
+        );
+
+        let result = await app.patch(`/api/v1/organization/${organization.id}/user/bad-user-id`, { data: { firstName: 'Johny', lastName: 'Bob' } });
+        expect(result.statusCode).toEqual(404);
+        expect(result.body).toEqual('User not found');
+      });
+
+      it('should disallow admin user to update user from another organization', async () => {
+        let { user, organization } = await factory.users.createAndLogin(
+          {
+            userData: {
+              email:      'admin@example.com',
+              phone:      '555-555-5555',
+              firstName:  'Admin',
+              lastName:   'Dude',
+              dob:        '2001-06-01',
+            },
+            userRole: 'admin',
+          },
+        );
+
+        let { user: otherUser } = await factory.users.createWithOrganization();
+
+        let result = await app.patch(`/api/v1/organization/${organization.id}/user/${otherUser.id}`, { data: { firstName: 'Johny', lastName: 'Bob' } });
+        expect(result.statusCode).toEqual(403);
+        expect(result.body).toEqual('Forbidden');
+
+        // Ensure that the admin user wasn't updated
+        expect(user.email).toEqual('admin@example.com');
+        expect(user.phone).toEqual('555-555-5555');
+        expect(user.firstName).toEqual('Admin');
+        expect(user.lastName).toEqual('Dude');
+        expect(user.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2001-06-01');
+      });
+
+      it('should disallow admin user to update another admin user from the same organization', async () => {
+        let { user, organization } = await factory.users.createAndLogin(
+          {
+            userData: {
+              email:      'admin@example.com',
+              phone:      '555-555-5555',
+              firstName:  'Admin',
+              lastName:   'Dude',
+              dob:        '2001-06-01',
+            },
+            userRole: 'admin',
+          },
+        );
+
+        let { user: otherUser } = await factory.users.create({ organization, userRole: 'admin' });
+
+        let result = await app.patch(`/api/v1/organization/${organization.id}/user/${otherUser.id}`, { data: { firstName: 'Johny', lastName: 'Bob' } });
+        expect(result.statusCode).toEqual(403);
+        expect(result.body).toEqual('Forbidden');
+
+        // Ensure that the admin user wasn't updated
+        expect(user.email).toEqual('admin@example.com');
+        expect(user.phone).toEqual('555-555-5555');
+        expect(user.firstName).toEqual('Admin');
+        expect(user.lastName).toEqual('Dude');
+        expect(user.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2001-06-01');
+      });
+
+      it('should disallow superadmin user to update user from another organization', async () => {
+        let { user, organization } = await factory.users.createAndLogin(
+          {
+            userData: {
+              email:      'superadmin@example.com',
+              phone:      '555-555-5555',
+              firstName:  'Super',
+              lastName:   'Admin',
+              dob:        '2001-06-01',
+            },
+            userRole: 'admin',
+          },
+        );
+
+        let { user: otherUser } = await factory.users.createWithOrganization();
+
+        let result = await app.patch(`/api/v1/organization/${organization.id}/user/${otherUser.id}`, { data: { firstName: 'Johny', lastName: 'Bob' } });
+        expect(result.statusCode).toEqual(403);
+        expect(result.body).toEqual('Forbidden');
+
+        // Ensure that the admin user wasn't updated
+        expect(user.email).toEqual('superadmin@example.com');
+        expect(user.phone).toEqual('555-555-5555');
+        expect(user.firstName).toEqual('Super');
+        expect(user.lastName).toEqual('Admin');
+        expect(user.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2001-06-01');
+      });
+
+      it('should allow superadmin user to update admin user of the same organization', async () => {
+        let { user, organization } = await factory.users.createAndLogin(
+          {
+            userData: {
+              email:      'superadmin@example.com',
+              phone:      '555-555-5555',
+              firstName:  'Super',
+              lastName:   'Admin',
+              dob:        '2001-06-01',
+            },
+            userRole: 'superadmin',
+          },
+        );
+
+        let { user: otherUser, organization: otherOrganization } = await factory.users.createWithOrganization({ userRole: 'admin' });
+
+        // Should result in 403 because user isn't in this organization
+        let result = await app.patch(`/api/v1/organization/${organization.id}/user/${otherUser.id}`, { data: { firstName: 'Johny', lastName: 'Bob' } });
+        expect(result.statusCode).toEqual(403);
+
+        // Should result in 403 because superadmin doesn't have
+        // permissions in this organization
+        result = await app.patch(`/api/v1/organization/${otherOrganization.id}/user/${otherUser.id}`, { data: { firstName: 'Johny', lastName: 'Bob' } });
+        expect(result.statusCode).toEqual(403);
+
+        await otherOrganization.addUser(user, { userRole: 'superadmin' });
+        result = await app.patch(`/api/v1/organization/${otherOrganization.id}/user/${otherUser.id}`, { data: { firstName: 'Johny', lastName: 'Bob' } });
+        expect(result.statusCode).toEqual(200);
+
+        // Verify response
+        let data = result.body.data;
+        expect(data.id).toEqual(otherUser.id);
+        expect(data.email).toEqual(otherUser.email);
+        expect(data.phone).toEqual('+1-560-452-0919');
+        expect(data.firstName).toEqual('Johny');
+        expect(data.lastName).toEqual('Bob');
+        expect(data.dob).toEqual('2000-01-01');
+
+        // Load from DB to ensure the updates were stored
+        let loadedUser = await models.User.$.id.EQ(otherUser.id).first();
+        expect(loadedUser.id).toEqual(otherUser.id);
+        expect(loadedUser.email).toEqual(otherUser.email);
+        expect(loadedUser.phone).toEqual('15604520919');
+        expect(loadedUser.firstName).toEqual('Test');
+        expect(loadedUser.lastName).toEqual('User');
+        expect(loadedUser.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2000-01-01');
+
+        // Ensure that the admin user wasn't updated
+        expect(user.email).toEqual('superadmin@example.com');
+        expect(user.phone).toEqual('555-555-5555');
+        expect(user.firstName).toEqual('Super');
+        expect(user.lastName).toEqual('Admin');
+        expect(user.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2001-06-01');
+      });
+
+      it('should allow admin user to update another user of the same organization', async () => {
+        let { user, organization } = await factory.users.createAndLogin(
+          {
+            userData: {
+              email:      'admin@example.com',
+              phone:      '555-555-5555',
+              firstName:  'Admin',
+              lastName:   'Dude',
+              dob:        '2001-06-01',
+            },
+            userRole: 'admin',
+          },
+        );
+
+        let { user: otherUser } = await factory.users.create({ organization });
+
+        let result = await app.patch(`/api/v1/organization/${organization.id}/user/${otherUser.id}`, { data: { firstName: 'Johny', lastName: 'Bob' } });
+        expect(result.statusCode).toEqual(200);
+
+        // Verify response
+        let data = result.body.data;
+        expect(data.id).toEqual(otherUser.id);
+        expect(data.email).toEqual(otherUser.email);
+        expect(data.phone).toEqual('+1-560-452-0919');
+        expect(data.firstName).toEqual('Johny');
+        expect(data.lastName).toEqual('Bob');
+        expect(data.dob).toEqual('2000-01-01');
+
+        // Load from DB to ensure the updates were stored
+        let loadedUser = await models.User.$.id.EQ(otherUser.id).first();
+        expect(loadedUser.id).toEqual(otherUser.id);
+        expect(loadedUser.email).toEqual(otherUser.email);
+        expect(loadedUser.phone).toEqual('15604520919');
+        expect(loadedUser.firstName).toEqual('Test');
+        expect(loadedUser.lastName).toEqual('User');
+        expect(loadedUser.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2000-01-01');
+
+        // Ensure that the admin user wasn't updated
+        expect(user.email).toEqual('admin@example.com');
+        expect(user.phone).toEqual('555-555-5555');
+        expect(user.firstName).toEqual('Admin');
+        expect(user.lastName).toEqual('Dude');
+        expect(user.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2001-06-01');
+      });
+
+      it('should allow superadmin user to update another user of the same organization', async () => {
+        let { user, organization } = await factory.users.createAndLogin(
+          {
+            userData: {
+              email:      'superadmin@example.com',
+              phone:      '555-555-5555',
+              firstName:  'Super',
+              lastName:   'Admin',
+              dob:        '2001-06-01',
+            },
+            userRole: 'superadmin',
+          },
+        );
+
+        let { user: otherUser } = await factory.users.create({ organization });
+
+        let result = await app.patch(`/api/v1/organization/${organization.id}/user/${otherUser.id}`, { data: { firstName: 'Johny', lastName: 'Bob' } });
+        expect(result.statusCode).toEqual(200);
+
+        // Verify response
+        let data = result.body.data;
+        expect(data.id).toEqual(otherUser.id);
+        expect(data.email).toEqual(otherUser.email);
+        expect(data.phone).toEqual('+1-560-452-0919');
+        expect(data.firstName).toEqual('Johny');
+        expect(data.lastName).toEqual('Bob');
+        expect(data.dob).toEqual('2000-01-01');
+
+        // Load from DB to ensure the updates were stored
+        let loadedUser = await models.User.$.id.EQ(otherUser.id).first();
+        expect(loadedUser.id).toEqual(otherUser.id);
+        expect(loadedUser.email).toEqual(otherUser.email);
+        expect(loadedUser.phone).toEqual('15604520919');
+        expect(loadedUser.firstName).toEqual('Test');
+        expect(loadedUser.lastName).toEqual('User');
+        expect(loadedUser.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2000-01-01');
+
+        // Ensure that the superadmin user wasn't updated
+        expect(user.email).toEqual('superadmin@example.com');
+        expect(user.phone).toEqual('555-555-5555');
+        expect(user.firstName).toEqual('Super');
+        expect(user.lastName).toEqual('Admin');
+        expect(user.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2001-06-01');
+      });
+
+      it('should allow support user to update another user in any organization', async () => {
+        let { user, organization } = await factory.users.createAndLogin(
+          {
+            userData: {
+              email:      'support@example.com',
+              phone:      '555-555-5555',
+              firstName:  'Support',
+              lastName:   'Guy',
+              dob:        '2001-06-01',
+            },
+            userRole: 'support',
+          },
+        );
+
+        let { user: otherUser, organization: otherOrganization } = await factory.users.createWithOrganization();
+
+        // Should be a 404 because the user isn't in this organization
+        let result = await app.patch(`/api/v1/organization/${organization.id}/user/${otherUser.id}`, { data: { firstName: 'Johny', lastName: 'Bob' } });
+        expect(result.statusCode).toEqual(404);
+
+        result = await app.patch(`/api/v1/organization/${otherOrganization.id}/user/${otherUser.id}`, { data: { firstName: 'Johny', lastName: 'Bob' } });
+        expect(result.statusCode).toEqual(200);
+
+        // Verify response
+        let data = result.body.data;
+        expect(data.id).toEqual(otherUser.id);
+        expect(data.email).toEqual(otherUser.email);
+        expect(data.phone).toEqual('+1-560-452-0919');
+        expect(data.firstName).toEqual('Johny');
+        expect(data.lastName).toEqual('Bob');
+        expect(data.dob).toEqual('2000-01-01');
+
+        // Load from DB to ensure the updates were stored
+        let loadedUser = await models.User.$.id.EQ(otherUser.id).first();
+        expect(loadedUser.id).toEqual(otherUser.id);
+        expect(loadedUser.email).toEqual(otherUser.email);
+        expect(loadedUser.phone).toEqual('15604520919');
+        expect(loadedUser.firstName).toEqual('Test');
+        expect(loadedUser.lastName).toEqual('User');
+        expect(loadedUser.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2000-01-01');
+
+        // Ensure that the support user wasn't updated
+        expect(user.email).toEqual('support@example.com');
+        expect(user.phone).toEqual('555-555-5555');
+        expect(user.firstName).toEqual('Support');
+        expect(user.lastName).toEqual('Guy');
+        expect(user.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2001-06-01');
+      });
+
+      it('should allow masteradmin user to update another user in any organization', async () => {
+        let { user, organization } = await factory.users.createAndLogin(
+          {
+            userData: {
+              email:      'master@example.com',
+              phone:      '555-555-5555',
+              firstName:  'Master',
+              lastName:   'Admin',
+              dob:        '2001-06-01',
+            },
+            userRole: 'masteradmin',
+          },
+        );
+
+        let { user: otherUser, organization: otherOrganization } = await factory.users.createWithOrganization();
+
+        // Should equal 404 because user isn't in this organization
+        let result = await app.patch(`/api/v1/organization/${organization.id}/user/${otherUser.id}`, { data: { firstName: 'Johny', lastName: 'Bob' } });
+        expect(result.statusCode).toEqual(404);
+
+        result = await app.patch(`/api/v1/organization/${otherOrganization.id}/user/${otherUser.id}`, { data: { firstName: 'Johny', lastName: 'Bob' } });
+        expect(result.statusCode).toEqual(200);
+
+        // Verify response
+        let data = result.body.data;
+        expect(data.id).toEqual(otherUser.id);
+        expect(data.email).toEqual(otherUser.email);
+        expect(data.phone).toEqual('+1-560-452-0919');
+        expect(data.firstName).toEqual('Johny');
+        expect(data.lastName).toEqual('Bob');
+        expect(data.dob).toEqual('2000-01-01');
+
+        // Load from DB to ensure the updates were stored
+        let loadedUser = await models.User.$.id.EQ(otherUser.id).first();
+        expect(loadedUser.id).toEqual(otherUser.id);
+        expect(loadedUser.email).toEqual(otherUser.email);
+        expect(loadedUser.phone).toEqual('15604520919');
+        expect(loadedUser.firstName).toEqual('Test');
+        expect(loadedUser.lastName).toEqual('User');
+        expect(loadedUser.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2000-01-01');
+
+        // Ensure that the masteradmin user wasn't updated
+        expect(user.email).toEqual('master@example.com');
+        expect(user.phone).toEqual('555-555-5555');
+        expect(user.firstName).toEqual('Master');
+        expect(user.lastName).toEqual('Admin');
+        expect(user.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2001-06-01');
+      });
+    });
   });
 });

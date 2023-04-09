@@ -21,7 +21,7 @@ describe('AuthMiddleware', function() {
   let factory;
 
   // eslint-disable-next-line no-unused-vars
-  const { it, fit } = createRunners(() => app.getDBConnection());
+  const { it, fit } = createRunners(() => app.getConnection());
 
   beforeAll(async () => {
     app = await createTestApplication();
@@ -46,7 +46,7 @@ describe('AuthMiddleware', function() {
     let { user }          = await factory.users.create();
     let { sessionToken }  = await user.generateSessionToken({ isSeedToken: false });
 
-    let result = await app.post('/api/v1/user/update', {
+    let result = await app.patch(`/api/v1/user/${user.id}`, {
       data: {
         email: 'test@example.com',
       },
@@ -63,7 +63,7 @@ describe('AuthMiddleware', function() {
     let { user, organization } = await factory.users.createWithOrganization(fetchValues);
     let { sessionToken }  = await user.generateSessionToken({ isSeedToken: false });
 
-    let result = await app.post(`/api/v1/user/${user.id}`, {
+    let result = await app.patch(`/api/v1/user/${user.id}`, {
       data: {
         email: 'test@example.com',
       },
@@ -80,7 +80,7 @@ describe('AuthMiddleware', function() {
     let { user, organization } = await factory.users.createWithOrganization(fetchValues);
     let { sessionToken }  = await user.generateSessionToken({ isSeedToken: false });
 
-    let result = await app.post(`/api/v1/user/${user.id}`, {
+    let result = await app.patch(`/api/v1/user/${user.id}`, {
       data: {
         email:          'test@example.com',
         organizationID: organization.id,
@@ -97,7 +97,7 @@ describe('AuthMiddleware', function() {
     let { user, organization } = await factory.users.createWithOrganization(fetchValues);
     let { sessionToken } = await user.generateSessionToken({ isSeedToken: false });
 
-    let result = await app.post(`/api/v1/user/${user.id}?organizationID=${organization.id}`, {
+    let result = await app.patch(`/api/v1/user/${user.id}?organizationID=${organization.id}`, {
       data: {
         email: 'test@example.com',
       },
@@ -113,7 +113,7 @@ describe('AuthMiddleware', function() {
     let { user, organization } = await factory.users.createWithOrganization(fetchValues);
     let { sessionToken: magicToken } = await user.generateSessionToken();
 
-    let result = await app.get(`/api/v1/auth/authenticate?magicToken=${magicToken}`, {
+    let result = await app.get(`/api/v1/auth/login?magicToken=${magicToken}`, {
       data: {
         email: user.email,
       },
@@ -126,7 +126,7 @@ describe('AuthMiddleware', function() {
     let sessionToken = result.headers['x-session-token'];
     expect(sessionToken).toMatch(URL_SAFE_BASE64_REGEXP);
 
-    let userUpdateResult = await app.post(`/api/v1/user/${user.id}`, {
+    let userUpdateResult = await app.patch(`/api/v1/user/${user.id}`, {
       data: {
         email:          'test@example.com',
         organizationID: organization.id,
@@ -142,7 +142,7 @@ describe('AuthMiddleware', function() {
   it('should fail with a bad token', async () => {
     let { user, organization } = await factory.users.createWithOrganization(fetchValues);
 
-    let userUpdateResult = await app.post(`/api/v1/user/${user.id}`, {
+    let userUpdateResult = await app.patch(`/api/v1/user/${user.id}`, {
       data: {
         email:          'test@example.com',
         organizationID: organization.id,
@@ -173,7 +173,7 @@ describe('AuthMiddleware', function() {
 
     jasmine.clock().uninstall();
 
-    let userUpdateResult = await app.post(`/api/v1/user/${user.id}`, {
+    let userUpdateResult = await app.patch(`/api/v1/user/${user.id}`, {
       data: {
         email:          'test@example.com',
         organizationID: organization.id,
@@ -205,7 +205,7 @@ describe('AuthMiddleware', function() {
 
     jasmine.clock().uninstall();
 
-    let userUpdateResult = await app.post(`/api/v1/user/${user.id}`, {
+    let userUpdateResult = await app.patch(`/api/v1/user/${user.id}`, {
       data: {
         email:          'test@example.com',
         organizationID: organization.id,
@@ -224,7 +224,7 @@ describe('AuthMiddleware', function() {
 
     let { organization: otherOrganization } = await factory.organizations.create();
 
-    let userUpdateResult = await app.post(`/api/v1/user/${user.id}`, {
+    let userUpdateResult = await app.patch(`/api/v1/user/${user.id}`, {
       data: {
         email:          'test@example.com',
         organizationID: otherOrganization.id,
@@ -245,7 +245,7 @@ describe('AuthMiddleware', function() {
 
     spyOn(Permissions.PermissionBase, 'permissible').and.resolveTo(new Error('Failed!'));
 
-    let userUpdateResult = await app.post(`/api/v1/user/${user.id}`, {
+    let userUpdateResult = await app.patch(`/api/v1/user/${user.id}`, {
       data: {
         email:          'test@example.com',
         organizationID: otherOrganization.id,
@@ -266,7 +266,7 @@ describe('AuthMiddleware', function() {
 
     spyOn(Permissions.PermissionBase, 'permissible').and.rejectWith(new Error('Failed!'));
 
-    let userUpdateResult = await app.post(`/api/v1/user/${user.id}`, {
+    let userUpdateResult = await app.patch(`/api/v1/user/${user.id}`, {
       data: {
         email:          'test@example.com',
         organizationID: otherOrganization.id,

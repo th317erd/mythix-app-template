@@ -87,7 +87,7 @@ async function createTestApplication() {
         domain:             'test.<<<APP_NAME>>>.com',
         mfaPageURL:         'https://test.<<<APP_NAME>>>.com/pages/mfa',
         afterLoginPageURL:  'https://test.<<<APP_NAME>>>.com/pages/home',
-        magicLinkURL:       'https://test.<<<APP_NAME>>>.com/api/v1/auth/authenticate',
+        magicLinkURL:       'https://test.<<<APP_NAME>>>.com/api/v1/auth/login',
       },
       smtp: {
         domain: 'example.com',

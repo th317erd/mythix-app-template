@@ -24,7 +24,7 @@ describe('UserPermissions', function() {
   let context;
 
   // eslint-disable-next-line no-unused-vars
-  const { it, fit } = createRunners(() => app.getDBConnection());
+  const { it, fit } = createRunners(() => app.getConnection());
 
   const contextProvider = () => context;
 

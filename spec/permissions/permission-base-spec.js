@@ -16,7 +16,7 @@ describe('PermissionBase', function() {
   let factory;
 
   // eslint-disable-next-line no-unused-vars
-  const { it, fit } = createRunners(() => app.getDBConnection());
+  const { it, fit } = createRunners(() => app.getConnection());
 
   beforeAll(async () => {
     app = await createTestApplication();

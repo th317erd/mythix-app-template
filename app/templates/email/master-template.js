@@ -67,18 +67,18 @@ class MasterEmailTemplate {
     return this._application;
   }
 
-  getDBConnection() {
+  getConnection() {
     let app = this.getApplication();
-    return app.getDBConnection();
+    return app.getConnection();
   }
 
   getModel(modelName) {
-    let connection = this.getDBConnection();
+    let connection = this.getConnection();
     return connection.getModel(modelName);
   }
 
   getModels() {
-    let connection = this.getDBConnection();
+    let connection = this.getConnection();
     return connection.getModels();
   }
 

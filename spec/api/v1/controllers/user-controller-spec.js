@@ -19,7 +19,7 @@ describe('UserController', function () {
   let models;
 
   // eslint-disable-next-line no-unused-vars
-  const { it, fit } = createRunners(() => app.getDBConnection());
+  const { it, fit } = createRunners(() => app.getConnection());
 
   beforeAll(async () => {
     app = await createTestApplication();
@@ -47,7 +47,7 @@ describe('UserController', function () {
       it('can add tags to a user', async () => {
         let { user, organization } = await factory.users.createAndLogin();
 
-        let result = await app.post(`/api/v1/user/${user.id}/tags`, {
+        let result = await app.put(`/api/v1/user/${user.id}/tags`, {
           data: {
             tags: ['test1', 'test2'],
           },
@@ -136,149 +136,140 @@ describe('UserController', function () {
   });
 
   describe('update', () => {
-    const generateTests = (method) => {
-      // Post and Patch should work identically
-      describe(method.toUpperCase(), () => {
-        it('should fail if user is not logged in', async () => {
-          let result = await app[method]('/api/v1/user/current');
-          expect(result.statusCode).toEqual(401);
-          expect(result.body).toEqual('Unauthorized');
-        });
-
-        it('should allow user to update themselves', async () => {
-          let { user } = await factory.users.createAndLogin();
-
-          let result = await app[method]('/api/v1/user/current', {
-            data: {
-              firstName:  'Johny',
-              lastName:   'Bob',
-              phone:      '+1-560-452-0919',
-              dob:        '2005-02-02',
-            },
-          });
-
-          expect(result.statusCode).toEqual(200);
-
-          let data = result.body.data;
-          expect(data.email).toEqual('test1@example.com');
-          expect(data.phone).toEqual('+1-560-452-0919');
-          expect(data.firstName).toEqual('Johny');
-          expect(data.lastName).toEqual('Bob');
-          expect(data.dob).toEqual('2005-02-02');
-
-          user = await models.User.$.id.EQ(user.id).first();
-          expect(user.email).toEqual('test1@example.com');
-          expect(user.phone).toEqual('15604520919');
-          expect(user.firstName).toEqual('Johny');
-          expect(user.lastName).toEqual('Bob');
-          expect(user.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2005-02-02');
-        });
-
-        it('should allow support user to update user', async () => {
-          let { user } = await factory.users.createAndLogin({
-            userData: {
-              email:      'support@example.com',
-              phone:      '555-555-5555',
-              firstName:  'Support',
-              lastName:   'Guy',
-              dob:        '2001-06-01',
-            },
-            userRole: 'support',
-          });
-
-          let { user: otherUser } = await factory.users.createWithOrganization();
-
-          let result = await app[method](`/api/v1/user/${otherUser.id}`, {
-            data: {
-              firstName: 'Johny',
-              lastName:  'Bob',
-            },
-          });
-
-          expect(result.statusCode).toEqual(200);
-
-          // Verify response
-          let data = result.body.data;
-          expect(data.id).toEqual(otherUser.id);
-          expect(data.email).toEqual(otherUser.email);
-          expect(data.phone).toEqual('+1-560-452-0919');
-          expect(data.firstName).toEqual('Johny');
-          expect(data.lastName).toEqual('Bob');
-          expect(data.dob).toEqual('2000-01-01');
-
-          // Load from DB to ensure the updates were stored
-          let loadedUser = await models.User.$.id.EQ(otherUser.id).first();
-          expect(loadedUser.id).toEqual(otherUser.id);
-          expect(loadedUser.email).toEqual(otherUser.email);
-          expect(loadedUser.phone).toEqual('15604520919');
-          expect(loadedUser.firstName).toEqual('Johny');
-          expect(loadedUser.lastName).toEqual('Bob');
-          expect(loadedUser.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2000-01-01');
-
-          // Ensure that the admin user wasn't updated
-          expect(user.email).toEqual('support@example.com');
-          expect(user.phone).toEqual('555-555-5555');
-          expect(user.firstName).toEqual('Support');
-          expect(user.lastName).toEqual('Guy');
-          expect(user.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2001-06-01');
-        });
-
-        it('should allow masteradmin user to update another user in any organization', async () => {
-          let { user } = await factory.users.createAndLogin({
-            userData: {
-              email:     'master@example.com',
-              phone:     '555-555-5555',
-              firstName: 'Master',
-              lastName:  'Admin',
-              dob:       '2001-06-01',
-            },
-            userRole: 'masteradmin',
-          });
-
-          let { user: otherUser } = await factory.users.createWithOrganization();
-
-          let result = await app[method](`/api/v1/user/${otherUser.id}`, {
-            data: {
-              firstName: 'Johny',
-              lastName:  'Bob',
-            },
-          });
-
-          expect(result.statusCode).toEqual(200);
-
-          // Verify response
-          let data = result.body.data;
-          expect(data.id).toEqual(otherUser.id);
-          expect(data.email).toEqual(otherUser.email);
-          expect(data.phone).toEqual('+1-560-452-0919');
-          expect(data.firstName).toEqual('Johny');
-          expect(data.lastName).toEqual('Bob');
-          expect(data.dob).toEqual('2000-01-01');
-
-          // Load from DB to ensure the updates were stored
-          let loadedUser = await models.User.$.id.EQ(otherUser.id).first();
-          expect(loadedUser.id).toEqual(otherUser.id);
-          expect(loadedUser.email).toEqual(otherUser.email);
-          expect(loadedUser.phone).toEqual('15604520919');
-          expect(loadedUser.firstName).toEqual('Johny');
-          expect(loadedUser.lastName).toEqual('Bob');
-          expect(loadedUser.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2000-01-01');
-
-          // Ensure that the admin user wasn't updated
-          expect(user.email).toEqual('master@example.com');
-          expect(user.phone).toEqual('555-555-5555');
-          expect(user.firstName).toEqual('Master');
-          expect(user.lastName).toEqual('Admin');
-          expect(user.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2001-06-01');
-        });
+    describe('PATCH', () => {
+      it('should fail if user is not logged in', async () => {
+        let result = await app.patch('/api/v1/user/current');
+        expect(result.statusCode).toEqual(401);
+        expect(result.body).toEqual('Unauthorized');
       });
-    };
 
-    const methods = [ 'post', 'patch' ];
-    for (let i = 0, il = methods.length; i < il; i++) {
-      let method = methods[i];
-      generateTests(method);
-    }
+      it('should allow user to update themselves', async () => {
+        let { user } = await factory.users.createAndLogin();
+
+        let result = await app.patch('/api/v1/user', {
+          data: {
+            firstName:  'Johny',
+            lastName:   'Bob',
+            phone:      '+1-560-452-0919',
+            dob:        '2005-02-02',
+          },
+        });
+
+        expect(result.statusCode).toEqual(200);
+
+        let data = result.body.data;
+        expect(data.email).toEqual('test1@example.com');
+        expect(data.phone).toEqual('+1-560-452-0919');
+        expect(data.firstName).toEqual('Johny');
+        expect(data.lastName).toEqual('Bob');
+        expect(data.dob).toEqual('2005-02-02');
+
+        user = await models.User.$.id.EQ(user.id).first();
+        expect(user.email).toEqual('test1@example.com');
+        expect(user.phone).toEqual('15604520919');
+        expect(user.firstName).toEqual('Johny');
+        expect(user.lastName).toEqual('Bob');
+        expect(user.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2005-02-02');
+      });
+
+      it('should allow support user to update user', async () => {
+        let { user } = await factory.users.createAndLogin({
+          userData: {
+            email:      'support@example.com',
+            phone:      '555-555-5555',
+            firstName:  'Support',
+            lastName:   'Guy',
+            dob:        '2001-06-01',
+          },
+          userRole: 'support',
+        });
+
+        let { user: otherUser } = await factory.users.createWithOrganization();
+
+        let result = await app.patch(`/api/v1/user/${otherUser.id}`, {
+          data: {
+            firstName: 'Johny',
+            lastName:  'Bob',
+          },
+        });
+
+        expect(result.statusCode).toEqual(200);
+
+        // Verify response
+        let data = result.body.data;
+        expect(data.id).toEqual(otherUser.id);
+        expect(data.email).toEqual(otherUser.email);
+        expect(data.phone).toEqual('+1-560-452-0919');
+        expect(data.firstName).toEqual('Johny');
+        expect(data.lastName).toEqual('Bob');
+        expect(data.dob).toEqual('2000-01-01');
+
+        // Load from DB to ensure the updates were stored
+        let loadedUser = await models.User.$.id.EQ(otherUser.id).first();
+        expect(loadedUser.id).toEqual(otherUser.id);
+        expect(loadedUser.email).toEqual(otherUser.email);
+        expect(loadedUser.phone).toEqual('15604520919');
+        expect(loadedUser.firstName).toEqual('Johny');
+        expect(loadedUser.lastName).toEqual('Bob');
+        expect(loadedUser.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2000-01-01');
+
+        // Ensure that the admin user wasn't updated
+        expect(user.email).toEqual('support@example.com');
+        expect(user.phone).toEqual('555-555-5555');
+        expect(user.firstName).toEqual('Support');
+        expect(user.lastName).toEqual('Guy');
+        expect(user.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2001-06-01');
+      });
+
+      it('should allow masteradmin user to update another user in any organization', async () => {
+        let { user } = await factory.users.createAndLogin({
+          userData: {
+            email:     'master@example.com',
+            phone:     '555-555-5555',
+            firstName: 'Master',
+            lastName:  'Admin',
+            dob:       '2001-06-01',
+          },
+          userRole: 'masteradmin',
+        });
+
+        let { user: otherUser } = await factory.users.createWithOrganization();
+
+        let result = await app.patch(`/api/v1/user/${otherUser.id}`, {
+          data: {
+            firstName: 'Johny',
+            lastName:  'Bob',
+          },
+        });
+
+        expect(result.statusCode).toEqual(200);
+
+        // Verify response
+        let data = result.body.data;
+        expect(data.id).toEqual(otherUser.id);
+        expect(data.email).toEqual(otherUser.email);
+        expect(data.phone).toEqual('+1-560-452-0919');
+        expect(data.firstName).toEqual('Johny');
+        expect(data.lastName).toEqual('Bob');
+        expect(data.dob).toEqual('2000-01-01');
+
+        // Load from DB to ensure the updates were stored
+        let loadedUser = await models.User.$.id.EQ(otherUser.id).first();
+        expect(loadedUser.id).toEqual(otherUser.id);
+        expect(loadedUser.email).toEqual(otherUser.email);
+        expect(loadedUser.phone).toEqual('15604520919');
+        expect(loadedUser.firstName).toEqual('Johny');
+        expect(loadedUser.lastName).toEqual('Bob');
+        expect(loadedUser.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2000-01-01');
+
+        // Ensure that the admin user wasn't updated
+        expect(user.email).toEqual('master@example.com');
+        expect(user.phone).toEqual('555-555-5555');
+        expect(user.firstName).toEqual('Master');
+        expect(user.lastName).toEqual('Admin');
+        expect(user.dob.toUTC().toFormat('yyyy-MM-dd')).toEqual('2001-06-01');
+      });
+    });
   });
 
   describe('getCurrentUser', () => {
@@ -294,7 +285,7 @@ describe('UserController', function () {
       // Should work without an organizationID being provided
       app.setDefaultHeader('X-Organization-ID', undefined);
 
-      let result = await app.get('/api/v1/user/current');
+      let result = await app.get('/api/v1/user');
       expect(result.statusCode).toEqual(200);
 
       let data = result.body.data;
@@ -309,7 +300,7 @@ describe('UserController', function () {
       // Should work without an organizationID being provided
       app.setDefaultHeader('X-Organization-ID', undefined);
 
-      let result = await app.get('/api/v1/user/current');
+      let result = await app.get(`/api/v1/user`);
       expect(result.statusCode).toEqual(200);
 
       let data = result.body.data;
@@ -323,7 +314,7 @@ describe('UserController', function () {
     it('should fail if user is not logged in', async () => {
       let { organization } = await factory.users.createWithOrganization();
 
-      let result = await app.post('/api/v1/user/current/setCurrentOrganization', { data: { organizationID: organization.id } });
+      let result = await app.post('/api/v1/user/set-current-organization', { data: { organizationID: organization.id } });
       expect(result.statusCode).toEqual(401);
       expect(result.body).toEqual('Unauthorized');
     });
@@ -342,7 +333,7 @@ describe('UserController', function () {
       let { claims } = await models.User.validateSessionToken(sessionToken, { onlyVerify: true });
       expect(claims.organizationID).toBe(organization.id);
 
-      let result = await app.post('/api/v1/user/current/setCurrentOrganization', { data: { organizationID: organization2.id } });
+      let result = await app.post('/api/v1/user/set-current-organization', { data: { organizationID: organization2.id } });
       expect(result.statusCode).toEqual(403);
       expect(result.body).toEqual('Forbidden');
     });
@@ -363,7 +354,7 @@ describe('UserController', function () {
       let { claims } = await models.User.validateSessionToken(sessionToken, { onlyVerify: true });
       expect(claims.organizationID).toBe(organization.id);
 
-      let result = await app.post('/api/v1/user/current/setCurrentOrganization', { data: { organizationID: organization2.id } });
+      let result = await app.post('/api/v1/user/set-current-organization', { data: { organizationID: organization2.id } });
       expect(result.statusCode).toEqual(200);
 
       let data = result.body.data;
@@ -569,7 +560,7 @@ describe('UserController', function () {
     it('should fail if user is not logged in', async () => {
       await factory.users.create();
 
-      let result = await app.get('/api/v1/user/');
+      let result = await app.get('/api/v1/users');
       expect(result.statusCode).toEqual(401);
       expect(result.body).toEqual('Unauthorized');
     });
@@ -594,7 +585,7 @@ describe('UserController', function () {
         },
         // runner
         async () => {
-          let result = await app.get('/api/v1/user/');
+          let result = await app.get('/api/v1/users');
           expect(result.statusCode).toEqual(404);
           expect(result.body).toEqual('User Organization Not Found');
         },
@@ -621,7 +612,7 @@ describe('UserController', function () {
         },
         // runner
         async () => {
-          let result = await app.get('/api/v1/user/');
+          let result = await app.get('/api/v1/users');
           expect(result.statusCode).toEqual(500);
           expect(result.body).toEqual('Internal Server Error');
         },
@@ -631,7 +622,7 @@ describe('UserController', function () {
     it('should succeed if user is not an admin (but should only list the current user)', async () => {
       let { user } = await factory.users.createAndLogin();
 
-      let result = await app.get('/api/v1/user/');
+      let result = await app.get('/api/v1/users');
       expect(result.statusCode).toEqual(200);
 
       let data = result.body.data;
@@ -720,7 +711,7 @@ describe('UserController', function () {
         organization,
       });
 
-      let result = await app.get('/api/v1/user/');
+      let result = await app.get('/api/v1/users');
       expect(result.statusCode).toEqual(200);
 
       let data = result.body.data;
@@ -832,7 +823,7 @@ describe('UserController', function () {
         organization,
       });
 
-      let result = await app.get('/api/v1/user/');
+      let result = await app.get('/api/v1/users');
       expect(result.statusCode).toEqual(200);
 
       let data = result.body.data;
@@ -946,7 +937,7 @@ describe('UserController', function () {
         organization,
       });
 
-      let result = await app.get('/api/v1/user/');
+      let result = await app.get('/api/v1/users');
       expect(result.statusCode).toEqual(200);
 
       let data = result.body.data;
@@ -1061,7 +1052,7 @@ describe('UserController', function () {
         organization,
       });
 
-      let result = await app.get('/api/v1/user/');
+      let result = await app.get('/api/v1/users');
       expect(result.statusCode).toEqual(200);
 
       let data = result.body.data;
@@ -1182,7 +1173,7 @@ describe('UserController', function () {
         organization: organization2,
       });
 
-      let result = await app.post('/api/v1/user/search', {
+      let result = await app.post('/api/v1/users', {
         data: {
           filter: {
             organizationID: organization2.id,
@@ -1302,7 +1293,7 @@ describe('UserController', function () {
       await user4.addTags(organization, [ 'group4', 'other' ]);
 
       // Search by user name
-      let result = await app.post('/api/v1/user/search', {
+      let result = await app.post('/api/v1/users', {
         data: {
           filter: {
             firstName: ['Test1', 'Test2'],
@@ -1328,7 +1319,7 @@ describe('UserController', function () {
       // to ensure they are properly
       // filtered out based on permissions
 
-      result = await app.post('/api/v1/user/search', {
+      result = await app.post('/api/v1/users', {
         data: {
           filter: {
             id: [
@@ -1359,7 +1350,7 @@ describe('UserController', function () {
       // First, select all user emails
       // to ensure they are properly
       // filtered out based on permissions
-      result = await app.post('/api/v1/user/search', {
+      result = await app.post('/api/v1/users', {
         data: {
           filter: {
             email: [
@@ -1387,7 +1378,7 @@ describe('UserController', function () {
       expect(data[1].roles).toEqual(['member']);
 
       // Search by tags
-      result = await app.post('/api/v1/user/search', {
+      result = await app.post('/api/v1/users', {
         data: {
           filter: {
             tags: [ 'group1' ],

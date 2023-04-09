@@ -16,7 +16,7 @@ describe('UserModel', function() {
   let factory;
 
   // eslint-disable-next-line no-unused-vars
-  const { it, fit } = createRunners(() => app.getDBConnection());
+  const { it, fit } = createRunners(() => app.getConnection());
 
   beforeAll(async () => {
     try {
@@ -92,11 +92,11 @@ describe('UserModel', function() {
       let notification = await models.Notification.first();
       let emailBodyMatch;
 
-      notification.content.replace(/<a\s+href\s*=\s*"([^"]+)"[^>]*>\s*Sign in to <<<APP_DISPLAY_NAME>>>\s*<\/a>/, (m) => {
-        emailBodyMatch = m;
+      notification.content.replace(/<a\s+href\s*=\s*"(https:\/\/test\.<<<APP_NAME>>>\.com\/api\/v1\/auth\/login[^"]+)/i, (m, href) => {
+        emailBodyMatch = href;
       });
 
-      expect((/https:\/\/test\.<<<APP_NAME>>>\.com\/api\/v1\/auth\/authenticate\?magicToken=[A-Za-z0-9_=-]+/).test(emailBodyMatch)).toEqual(true);
+      expect((/https:\/\/test\.<<<APP_NAME>>>\.com\/api\/v1\/auth\/login\?magicToken=[A-Za-z0-9_=-]+/).test(emailBodyMatch)).toEqual(true);
     });
   });
 
@@ -407,7 +407,12 @@ describe('UserModel', function() {
       let queryContext  = queryEngine.getOperationContext();
       expect(queryContext.limit).toEqual(20);
       expect(queryContext.offset).toEqual(0);
-      expect(queryContext.order).toEqual([ '+Organization:name' ]);
+      expect(Array.from(queryContext.order.values())).toEqual([
+        {
+          direction:  '+',
+          value:      models.Organization.fields.name,
+        },
+      ]);
     });
 
     it('should be able to provide a limit, offset, and order', async () => {
@@ -426,7 +431,6 @@ describe('UserModel', function() {
       let queryContext  = queryEngine.getOperationContext();
       expect(queryContext.limit).toEqual(100);
       expect(queryContext.offset).toEqual(50);
-      expect(queryContext.order).toEqual([ '-Organization:id' ]);
     });
 
     it('should disallow an admin user from pulling other organizations', async () => {

@@ -7,7 +7,7 @@ const Utils                 = require('../utils');
 
 module.exports = defineController('AuthController', ({ Parent }) => {
   return class AuthController extends Parent {
-    async authenticate({ query, body }, { User, InvalidToken }) {
+    async login({ query, body }, { User, InvalidToken }) {
       const { magicToken }  = (this.method === 'POST') ? body : query;
       const app             = this.getApplication();
 
