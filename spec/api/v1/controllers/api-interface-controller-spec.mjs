@@ -1,8 +1,8 @@
-// import {
-//   createTestApplication,
-//   createFactories,
-//   createRunners,
-// } from '../../../support/application.mjs';
+import {
+  createTestApplication,
+  createFactories,
+  createRunners,
+} from '../../../support/application.mjs';
 
 // describe('APIInterfaceController', function() {
 //   let app;

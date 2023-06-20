@@ -2,7 +2,7 @@ export default {
   application: {
     development: {
       salt: '<<<GENERATE_SALT>>>',
-      aws: {
+      aws:  {
         s3: {
           accessKeyID:      'yourAccessKeyID',
           secretAccessKey:  'yourSecretKey',

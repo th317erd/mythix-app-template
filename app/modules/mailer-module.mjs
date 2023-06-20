@@ -17,7 +17,7 @@ import { Modules } from 'mythix';
 //
 // Email sending is deliberately disabled in unit tests.
 
-class MailerModule extends Modules.BaseModule {
+export class MailerModule extends Modules.BaseModule {
   static getModuleName() {
     return 'MailerModule';
   }
@@ -100,7 +100,3 @@ class MailerModule extends Modules.BaseModule {
     return await this.deliverEmail(mailerConfig.domain, options);
   }
 }
-
-module.exports = {
-  MailerModule,
-};

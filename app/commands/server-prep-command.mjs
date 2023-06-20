@@ -1,13 +1,17 @@
-import Path from 'node:path';
 import { CLI } from 'mythix';
+import Path from 'node:path';
 
 const {
   Commands: {
-    Deploy,
+    DeployCommand,
   },
 } = CLI;
 
-export class ServerPrepCommand extends Deploy {
+export class ServerPrepCommand extends DeployCommand {
+  static getCommandName() {
+    return 'server-prep';
+  }
+
   async prepRemoteTarget(target, deployConfig) {
     let app     = this.getApplication();
     let appName = app.getApplicationName();

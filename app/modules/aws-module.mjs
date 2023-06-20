@@ -28,7 +28,7 @@ const {
 // fetching the module from the application, and interacting
 // with it: await application.getAWS().uploadToS3({ ... });
 
-class AWSModule extends Modules.BaseModule {
+export class AWSModule extends Modules.BaseModule {
   static getModuleName() {
     return 'AWSModule';
   }
@@ -151,7 +151,3 @@ class AWSModule extends Modules.BaseModule {
     }
   }
 }
-
-module.exports = {
-  AWSModule,
-};

@@ -5,7 +5,7 @@ import { Logger } from 'mythix';
 
 const APP_CONFIG = Nife.extend(true, {
   environment:  process.env.NODE_ENV || 'development',
-  logger: {
+  logger:       {
     level: Logger.DEBUG,
   },
   httpServer: {
@@ -21,7 +21,7 @@ const APP_CONFIG = Nife.extend(true, {
       afterLoginPageURL:  'https://<<<APP_NAME>>>.com/pages/home',
       magicLinkURL:       'https://<<<APP_NAME>>>.com/login',
       getHelpURL:         'https://gethelp.com/',
-      aws: {
+      aws:               {
         s3: {
           bucket: '<<<APP_NAME>>>-staging',
           region: 'us-west-1',

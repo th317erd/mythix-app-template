@@ -3,6 +3,8 @@ import getRoutes from './routes/index.mjs';
 import cookieParser from 'cookie-parser';
 import { PostgreSQLConnection } from 'mythix-orm-postgresql';
 
+import { COMMANDS } from './commands/index.mjs';
+
 import {
   AWSModule,
   MailerModule,
@@ -13,6 +15,13 @@ import APP_CONFIG from './config/index.mjs';
 export class Application extends Mythix.Application {
   static getName() {
     return '<<<APP_NAME>>>';
+  }
+
+  static getCommandList() {
+    return {
+      ...super.getCommandList(),
+      ...COMMANDS,
+    };
   }
 
   // Add our "mailer" and "aws" modules

@@ -39,6 +39,10 @@
     "xid-js": "^1.0.1"
   },
   "devDependencies": {
+    "@spothero/eslint-plugin-spothero": "github:spothero/eslint-plugin-spothero",
+    "colors": "^1.4.0",
+    "diff": "^5.1.0",
+    "eslint": "^8.42.0",
     "jasmine": "^5.0.2",
     "nyc": "^15.1.0"
   },
