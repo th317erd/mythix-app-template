@@ -1,6 +1,6 @@
 'use strict';
 
-const { defineTask } = require('mythix');
+import { defineTask } from 'mythix';
 
 const DEFAULT_WORKER_COUNT              = 4;
 const DEFAULT_WORKER_FREQUENCY_SECONDS  = 5;

@@ -1,40 +1,49 @@
-const Path                = require('path');
-const Mythix              = require('mythix');
-const getRoutes           = require('./routes');
-const cookieParser        = require('cookie-parser');
+import Mythix from 'mythix';
+import getRoutes from './routes/index.js';
+import cookieParser from 'cookie-parser';
+import { PostgreSQLConnection } from 'mythix-orm-postgresql';
 
-const {
+import {
   AWSModule,
   MailerModule,
-} = require('./modules');
+} from './modules/index.js';
 
-const { PostgreSQLConnection } = require('mythix-orm-postgresql');
+import APP_CONFIG from './config/index.js';
 
-class Application extends Mythix.Application {
-  static APP_NAME = '<<<APP_NAME>>>';
+export class Application extends Mythix.Application {
+  static getName() {
+    return '<<<APP_NAME>>>';
+  }
 
   // Add our "mailer" and "aws" modules
   // to this mythix application
-  static getDefaultModules() {
-    let defaultModules = Mythix.Application.getDefaultModules();
-
-    return defaultModules.concat([
-      MailerModule,
-      AWSModule,
-    ]);
+  static getModules() {
+    return {
+      ...super.getModules(),
+      mailer: MailerModule,
+      aws:    AWSModule,
+    };
   }
 
-  constructor(_opts) {
-    var opts = Object.assign({
-      rootPath: Path.resolve(__dirname),
+  constructor(options) {
+    const {
+      environment,
+      database,
+      logger,
+    } = APP_CONFIG;
+
+    super({
+      config: APP_CONFIG,
       httpServer: {
         middleware: [
           cookieParser(),
         ],
       },
-    }, _opts || {});
-
-    super(opts);
+      environment,
+      database,
+      logger,
+      ...(options || {}),
+    });
   }
 
   getRoutes(...args) {
@@ -73,7 +82,3 @@ class Application extends Mythix.Application {
     return connection;
   }
 }
-
-module.exports = {
-  Application,
-};

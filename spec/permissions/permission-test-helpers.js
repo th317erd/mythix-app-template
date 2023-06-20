@@ -109,7 +109,7 @@ function generateTests(descriptionTemplate, callback, shouldPassCallback) {
   }
 }
 
-module.exports = {
+export {
   ALL_ROLE_NAMES,
   setupTest,
   generateTests,

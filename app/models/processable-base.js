@@ -1,9 +1,9 @@
 'use strict';
 
-const Nife            = require('nife');
-const { DateTime }    = require('luxon');
-const { Types }       = require('mythix-orm');
-const { ModelBase }   = require('./model-base');
+import Nife from 'nife';
+import { DateTime } from 'luxon';
+import { Types } from 'mythix-orm';
+import { ModelBase } from './model-base.js';
 
 const STALE_LOCK_MINUTES          = 15;
 const MAX_FAIL_COUNT              = 50;

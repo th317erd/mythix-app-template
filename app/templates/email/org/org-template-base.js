@@ -1,6 +1,6 @@
 'use strict';
 
-const MasterEmailTemplate = require('../master-template');
+import MasterEmailTemplate from '../master-template.js';
 
 class OrgBaseTemplate extends MasterEmailTemplate {
   formatSingularRoleName(roleName) {

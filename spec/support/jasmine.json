@@ -1,6 +1,8 @@
 {
   "spec_dir": "spec",
   "spec_files": [
+    "!db-config.js",
+    "!sensitive.js",
     "**/*[sS]pec.?(m)js"
   ],
   "helpers": [

@@ -1,6 +1,6 @@
 'use strict';
 
-const OrgBaseTemplate = require('./org-template-base');
+import OrgBaseTemplate from './org-template-base.js';
 
 class OrgUserRolesUpdatedEmailTemplate extends OrgBaseTemplate {
   generateSubject() {

@@ -1,8 +1,8 @@
 'use strict';
 
-const Nife        = require('nife');
-const FormData    = require('form-data');
-const { Modules } = require('mythix');
+import Nife from 'nife';
+import FormData from 'form-data';
+import { Modules } from 'mythix';
 
 // Mythix uses a "module" system to extend its functionality.
 // "modules" can be thought of as plugins for mythix.

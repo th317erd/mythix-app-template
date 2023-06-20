@@ -1,7 +1,7 @@
 'use strict';
 
-const { OrganizationPermissions } = require('./organization-permissions');
-const { UserPermissions }         = require('./user-permissions');
+import { OrganizationPermissions } from './organization-permissions.js';
+import { UserPermissions } from './user-permissions.js';
 
 module.exports = {
   OrganizationPermissions,

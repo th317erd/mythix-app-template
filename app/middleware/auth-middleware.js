@@ -1,8 +1,8 @@
 'use strict';
 
-const Nife                = require('nife');
-const { HTTPErrors }      = require('mythix');
-const { PermissionBase }  = require('../permissions');
+import Nife from 'nife';
+import { HTTPErrors } from 'mythix';
+import { PermissionBase } from '../permissions.js';
 
 const {
   HTTPBaseError,

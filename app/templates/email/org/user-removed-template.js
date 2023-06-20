@@ -1,6 +1,6 @@
 'use strict';
 
-const OrgBaseTemplate = require('./org-template-base');
+import OrgBaseTemplate from './org-template-base.js';
 
 // NOTE: This template is unused for Beta
 

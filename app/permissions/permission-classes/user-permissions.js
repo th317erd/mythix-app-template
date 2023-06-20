@@ -1,7 +1,7 @@
 'use strict';
 
-const Nife = require('nife');
-const { PermissionBase } = require('../permission-base');
+import Nife from 'nife';
+import { PermissionBase } from '../permission-base.js';
 
 // This class handles all User permissions
 

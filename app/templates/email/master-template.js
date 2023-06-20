@@ -1,10 +1,10 @@
 /* eslint-disable no-magic-numbers */
 'use strict';
 
-const Nife          = require('nife');
-const mjmlToHTML    = require('mjml');
-const { HTTPUtils } = require('mythix');
-const Utils         = require('../../utils');
+import Nife from 'nife';
+import mjmlToHTML from 'mjml';
+import { HTTPUtils } from 'mythix';
+import Utils from '../../utils.js';
 
 // This defines the "master" template for all emails.
 // All email templates call this master template method,

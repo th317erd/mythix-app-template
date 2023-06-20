@@ -1,4 +1,4 @@
-const { defineController } = require('mythix');
+import { defineController } from 'mythix';
 
 // Please change the name of this controller to whatever you want
 module.exports = defineController('ExampleController', ({ Parent }) => {

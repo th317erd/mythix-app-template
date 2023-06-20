@@ -2,15 +2,15 @@
 
 /* global describe, beforeAll, afterAll, afterEach, expect, jasmine, spyOn */
 
-const TWT = require('mythix-twt');
+import TWT from 'mythix-twt';
 
-const {
+import {
   createTestApplication,
   createFactories,
   createRunners,
   PREFIXED_XID_REGEXP,
   URL_SAFE_BASE64_REGEXP,
-} = require('../../../support/application');
+} from '../../../support/application.js';
 
 describe('AuthController', function() {
   let app;

@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   'development': {
     'user':     '<<<APP_NAME>>>',
     'password': 'password',

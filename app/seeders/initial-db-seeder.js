@@ -1,6 +1,6 @@
 'use strict';
 
-const { DateTime } = require('luxon');
+import { DateTime } from 'luxon';
 
 /* global process */
 

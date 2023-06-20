@@ -2,19 +2,19 @@
 
 'use strict';
 
-const { SQLiteConnection }      = require('mythix-orm-sqlite');
-// const { PostgreSQLConnection }  = require('mythix-orm-postgresql');
-const { Application }           = require('../../app/application');
-const { createFactories }       = require('./factories');
+import { SQLiteConnection } from 'mythix-orm-sqlite';
+// import { PostgreSQLConnection } from 'mythix-orm-postgresql';
+import { Application } from '../../app/application.js';
+import { createFactories } from './factories/index.js';
 
-const {
+import {
   TestUtils,
-} = require('mythix');
+} from 'mythix';
 
-const {
+import {
   MailerModule,
   AWSModule,
-} = require('../../app/modules');
+} from '../../app/modules/index.js';
 
 // Here we extend the mailer module for unit tests
 // to disable the sending of any emails while unit
@@ -137,7 +137,7 @@ function createRunners(getConnection) {
   };
 }
 
-module.exports = {
+export {
   createFactories,
   createTestApplication,
   createRunners,

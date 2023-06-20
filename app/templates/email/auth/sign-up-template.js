@@ -1,7 +1,7 @@
 /* eslint-disable no-magic-numbers */
 'use strict';
 
-const MasterEmailTemplate = require('../master-template');
+import MasterEmailTemplate from '../master-template.js';
 
 class AuthSignUpEmailTemplate extends MasterEmailTemplate {
   generateSubject() {

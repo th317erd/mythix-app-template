@@ -4,17 +4,17 @@
 
 /* global describe, beforeAll, afterAll, afterEach, expect, jasmine, __dirname, spyOn, Buffer */
 
-const Path = require('node:path');
-const FileSystem = require('node:fs');
-const FormData = require('form-data');
-const { CryptoUtils } = require('mythix');
+import Path from 'node:path';
+import FileSystem from 'node:fs';
+import FormData from 'form-data';
+import { CryptoUtils } from 'mythix';
 
-const {
+import {
   createTestApplication,
   createFactories,
   createRunners,
   PREFIXED_XID_REGEXP,
-} = require('../../../support/application');
+} from '../../../support/application.js';
 
 describe('OrganizationController', function() {
   let app;

@@ -1,6 +1,6 @@
 'use strict';
 
-const HELP = require('./organization-routes-help');
+import HELP from './organization-routes-help.js';
 
 function organizationRoutes({ path, endpoint }) {
   endpoint('organizations', {

@@ -1,5 +1,5 @@
-const Utils = require('./app/utils');
+import Utils from './app/utils.js';
 
-module.exports = {
+export default {
   GENERATE_SALT: Utils.generateSalt,
 };

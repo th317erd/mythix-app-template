@@ -1,6 +1,6 @@
 'use strict';
 
-const HELP = require('./user-routes-help');
+import HELP from './user-routes-help.js';
 
 function userRoutes({ path, endpoint }) {
   endpoint('user', {

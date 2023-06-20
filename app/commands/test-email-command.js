@@ -2,9 +2,9 @@
 
 /* global __dirname */
 
-const Path              = require('node:path');
-const FileSystem        = require('node:fs');
-const { defineCommand } = require('mythix');
+import Path from 'node:path';
+import FileSystem from 'node:fs';
+import { defineCommand } from 'mythix';
 
 module.exports = defineCommand('test-email', ({ Parent }) => {
   return class TestEmailCommand extends Parent {

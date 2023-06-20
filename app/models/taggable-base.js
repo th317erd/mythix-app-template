@@ -1,7 +1,7 @@
 'use strict';
 
-const Nife            = require('nife');
-const { ModelBase }   = require('./model-base');
+import Nife from 'nife';
+import { ModelBase } from './model-base.js';
 
 class TaggableBase extends ModelBase {
   static _sanitizeTagName(tagName) {

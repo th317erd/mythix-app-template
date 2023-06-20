@@ -1,8 +1,8 @@
 'use strict';
 
-const OrgUserInvitationEmailTemplate    = require('./user-invited-template');
-const OrgUserRemovedEmailTemplate       = require('./user-removed-template');
-const OrgUserRolesUpdatedEmailTemplate  = require('./user-roles-updated-template');
+import OrgUserInvitationEmailTemplate from './user-invited-template.js';
+import OrgUserRemovedEmailTemplate from './user-removed-template.js';
+import OrgUserRolesUpdatedEmailTemplate from './user-roles-updated-template.js';
 
 module.exports = {
   OrgUserInvitationEmailTemplate,

@@ -1,11 +1,11 @@
 /* eslint-disable camelcase */
 'use strict';
 
-const Nife            = require('nife');
-const { DateTime }    = require('luxon');
-const { defineModel } = require('mythix');
-const { ModelBase }   = require('./model-base');
-const Utils           = require('../utils');
+import Nife from 'nife';
+import { DateTime } from 'luxon';
+import { defineModel } from 'mythix';
+import { ModelBase } from './model-base.js';
+import Utils from '../utils.js';
 
 module.exports = defineModel('Organization', ({ Parent, Types }) => {
   return class _Organization extends Parent {

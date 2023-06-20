@@ -1,6 +1,6 @@
 'use strict';
 
-const { getValues } = require('./factory-utils');
+import { getValues } from './factory-utils.js';
 
 async function create({ data, organization, addToOrganization, userRole }, callback) {
   const { User, Role } = this.getModels();
@@ -78,7 +78,7 @@ async function createAndLogin(args, callback) {
   return { ...result, sessionToken };
 }
 
-module.exports = {
+export {
   create,
   createWithOrganization,
   createAndLogin,

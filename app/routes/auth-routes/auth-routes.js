@@ -1,6 +1,6 @@
 'use strict';
 
-const HELP = require('./auth-routes-help');
+import HELP from './auth-routes-help.js';
 
 function authRoutes({ path }) {
   path('auth', ({ endpoint }) => {

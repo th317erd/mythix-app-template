@@ -1,8 +1,4 @@
-module.exports = {
-  httpServer: {
-    host: 'localhost',
-    port: 8001,
-  },
+export default {
   application: {
     development: {
       salt: '<<<GENERATE_SALT>>>',

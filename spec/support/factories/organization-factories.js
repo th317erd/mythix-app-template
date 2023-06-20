@@ -13,6 +13,6 @@ async function create({ data }, callback) {
   return { organization };
 }
 
-module.exports = {
+export {
   create,
 };

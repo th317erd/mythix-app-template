@@ -1,10 +1,10 @@
 'use strict';
 
-const Nife              = require('nife');
-const { defineModel }   = require('mythix');
-const { ModelBase }     = require('./model-base');
-const ApplicationRoles  = require('../roles');
-const Utils             = require('../utils');
+import Nife from 'nife';
+import { defineModel } from 'mythix';
+import { ModelBase } from './model-base.js';
+import ApplicationRoles from '../roles.js';
+import Utils from '../utils.js';
 
 // Role models contain only a "name" that is used
 // to define roles/permissions as user has.

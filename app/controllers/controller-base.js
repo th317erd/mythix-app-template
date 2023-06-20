@@ -1,10 +1,10 @@
 'use strict';
 
-const Nife                        = require('nife');
-const Mythix                      = require('mythix');
-const { Utils: MythixORMUtils }   = require('mythix-orm');
-const Utils                       = require('../utils');
-const { PermissionBase }          = require('../permissions');
+import Nife from 'nife';
+import Mythix from 'mythix';
+import { Utils: MythixORMUtils } from 'mythix-orm';
+import Utils from '../utils.js';
+import { PermissionBase } from '../permissions.js';
 
 // This is the base parent controller
 // that all other controllers inherit from.

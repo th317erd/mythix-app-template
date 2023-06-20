@@ -3,13 +3,13 @@
 
 /* global describe, beforeAll, afterAll, afterEach, expect, spyOn */
 
-const Nife = require('nife');
-const {
+import Nife from 'nife';
+import {
   createTestApplication,
   createFactories,
   createRunners,
   PREFIXED_XID_REGEXP,
-} = require('../../../support/application');
+} from '../../../support/application.js';
 
 describe('OrganizationModel', function() {
   let app;

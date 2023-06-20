@@ -1,7 +1,7 @@
 'use strict';
 
-const Nife  = require('nife');
-const xid   = require('xid-js');
+import Nife from 'nife';
+import xid from 'xid-js';
 
 const BASE_ID_LENGTH      = 20;
 const PREFIXED_XID_REGEXP = /^[A-Z]{3}_[0-9abcdefghjkmnpqrstvwxyz]{20}$/;

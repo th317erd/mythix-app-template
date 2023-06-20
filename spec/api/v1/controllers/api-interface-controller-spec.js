@@ -1,12 +1,8 @@
-'use strict';
-
-/* global describe, beforeAll, afterAll, afterEach, expect, jasmine */
-
-const {
+import {
   createTestApplication,
   createFactories,
   createRunners,
-} = require('../../../support/application');
+} from '../../../support/application.js';
 
 describe('APIInterfaceController', function() {
   let app;

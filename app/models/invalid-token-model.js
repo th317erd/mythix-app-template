@@ -1,14 +1,14 @@
 'use strict';
 
-const { DateTime}     = require('luxon');
-const TWT             = require('mythix-twt');
+import { DateTime} from 'luxon';
+import TWT from 'mythix-twt';
 const {
   defineModel,
   CryptoUtils,
 } = require('mythix');
 
-const { ModelBase }   = require('./model-base');
-const Utils           = require('../utils');
+import { ModelBase } from './model-base.js';
+import Utils from '../utils.js';
 
 // This model blacklists TWT
 // tokens, marking them as

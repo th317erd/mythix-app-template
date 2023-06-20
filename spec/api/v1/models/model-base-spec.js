@@ -2,14 +2,14 @@
 
 /* global describe, beforeAll, afterAll, afterEach, expect, fail */
 
-const {
+import {
   createTestApplication,
   createFactories,
   createRunners,
-} = require('../../../support/application');
+} from '../../../support/application.js';
 
-const Utils           = require('../../../../app/utils');
-const EmailTemplates  = require('../../../../app/templates/email');
+import Utils from '../../../../app/utils/index.js';
+import EmailTemplates from '../../../../app/templates/email.js';
 
 describe('ModelBase', function() {
   let app;

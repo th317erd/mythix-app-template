@@ -3,18 +3,18 @@
 /* eslint-disable camelcase */
 /* global describe, beforeAll, afterAll, afterEach, expect, jasmine */
 
-const Nife = require('nife');
-const { UserPermissions } = require('../../app/permissions');
-const {
+import Nife from 'nife';
+import { UserPermissions } from '../../app/permissions.js';
+import {
   createTestApplication,
   createFactories,
   createRunners,
-} = require('../support/application');
+} from '../support/application.js';
 
-const {
+import {
   ALL_ROLE_NAMES,
   generateTests: _generateTests,
-} = require('./permission-test-helpers');
+} from './permission-test-helpers.js';
 
 describe('UserPermissions', function() {
   let app;

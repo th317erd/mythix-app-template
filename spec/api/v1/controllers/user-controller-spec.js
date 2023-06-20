@@ -3,13 +3,13 @@
 /* eslint-disable no-magic-numbers */
 /* global describe, beforeAll, afterAll, afterEach, expect, jasmine */
 
-const Nife = require('nife');
-const {
+import Nife from 'nife';
+import {
   createTestApplication,
   createFactories,
   createRunners,
   PREFIXED_XID_REGEXP,
-} = require('../../../support/application');
+} from '../../../support/application.js';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 9999999;
 

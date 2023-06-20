@@ -1,9 +1,9 @@
 'use strict';
 
-const Nife                  = require('nife');
-const { defineController }  = require('mythix');
-const { ControllerBase }    = require('./controller-base.js');
-const { Controllers }       = require('mythix');
+import Nife from 'nife';
+import { defineController } from 'mythix';
+import { ControllerBase } from './controller-base.js';
+import { Controllers } from 'mythix';
 
 const CACHE = {};
 

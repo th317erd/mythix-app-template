@@ -2,9 +2,9 @@
 
 /* globals Buffer */
 
-const FileSystem    = require('node:fs');
-const { Readable }  = require('node:stream');
-const Nife          = require('nife');
+import FileSystem from 'node:fs';
+import { Readable } from 'node:stream';
+import Nife from 'nife';
 const {
   Modules,
   MimeUtils,

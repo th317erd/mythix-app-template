@@ -1,7 +1,7 @@
 'use strict';
 
-const { ControllerBase }  = require('./controller-base');
-const { authMiddleware }  = require('../middleware');
+import { ControllerBase } from './controller-base.js';
+import { authMiddleware } from '../middleware.js';
 
 // This controller is a parent controller.
 // Any child controller that inherits from this

@@ -1,8 +1,8 @@
 'use strict';
 
-const FactoryUtils                    = require('./factory-utils');
-const OrganizationFactories           = require('./organization-factories');
-const UserFactories                   = require('./user-factories');
+import FactoryUtils from './factory-utils.js';
+import OrganizationFactories from './organization-factories.js';
+import UserFactories from './user-factories.js';
 
 function rebindAllToApplication(application, scope) {
   const rebindMethod = (application, method) => {
@@ -51,6 +51,6 @@ function createFactories(application) {
   };
 }
 
-module.exports = {
+export {
   createFactories,
 };

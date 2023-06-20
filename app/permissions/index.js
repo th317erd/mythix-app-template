@@ -1,7 +1,7 @@
 'use strict';
 
-const { PermissionBase }  = require('./permission-base');
-const PermissionClasses   = require('./permission-classes');
+import { PermissionBase } from './permission-base.js';
+import PermissionClasses from './permission-classes.js';
 
 // This module is the framework for permission checking.
 // It works by instantiating permission classes by name.

@@ -1,8 +1,8 @@
 'use strict';
 
-const { defineModel } = require('mythix');
-const { ModelBase }   = require('./model-base');
-const Utils           = require('../utils');
+import { defineModel } from 'mythix';
+import { ModelBase } from './model-base.js';
+import Utils from '../utils.js';
 
 // This model is to have per-model meta information
 // stored in the DB. For example, this model is used

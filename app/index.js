@@ -1,4 +1,4 @@
-const { Application } = require('./application');
+import { Application } from './application.js';
 
 (async function() {
   const app = new Application({ exitOnShutdown: 0 });

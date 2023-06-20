@@ -1,14 +1,18 @@
-const Nife        = require('nife');
-const database    = require('./db-config');
-const sensitive   = require('./sensitive');
-const { Logger }  = require('mythix');
+import Nife from 'nife';
+import database from './db-config.js';
+import sensitive from './sensitive.js';
+import { Logger } from 'mythix';
 
-module.exports = Nife.extend(true, {
+const APP_CONFIG = Nife.extend(true, {
   environment:  process.env.NODE_ENV || 'development',
-  database,
   logger: {
     level: Logger.DEBUG,
   },
+  httpServer: {
+    host: 'localhost',
+    port: 8001,
+  },
+  database,
   application: {
     development: {
       domain:             '<<<APP_NAME>>>.com',
@@ -26,3 +30,5 @@ module.exports = Nife.extend(true, {
     },
   },
 }, sensitive);
+
+export default APP_CONFIG;

@@ -1,7 +1,7 @@
 'use strict';
 
-const { defineController }  = require('mythix');
-const { ControllerBase }    = require('./controller-base.js');
+import { defineController } from 'mythix';
+import { ControllerBase } from './controller-base.js';
 
 module.exports = defineController('HealthCheckController', ({ Parent }) => {
   return class HealthCheckController extends Parent {

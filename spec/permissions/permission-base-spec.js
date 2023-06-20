@@ -3,12 +3,12 @@
 /* eslint-disable camelcase */
 /* global describe, beforeAll, afterAll, afterEach, expect, jasmine */
 
-const { PermissionBase, UserPermissions, OrganizationPermissions } = require('../../app/permissions');
-const {
+import { PermissionBase, UserPermissions, OrganizationPermissions } from '../../app/permissions.js';
+import {
   createTestApplication,
   createFactories,
   createRunners,
-} = require('../support/application');
+} from '../support/application.js';
 
 describe('PermissionBase', function() {
   let app;

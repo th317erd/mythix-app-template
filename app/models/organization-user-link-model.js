@@ -1,8 +1,8 @@
 'use strict';
 
-const { defineModel }   = require('mythix');
-const { TaggableBase }  = require('./taggable-base');
-const Utils             = require('../utils');
+import { defineModel } from 'mythix';
+import { TaggableBase } from './taggable-base.js';
+import Utils from '../utils.js';
 
 // This model has two primary purposes:
 // 1) It links users to organizations, and

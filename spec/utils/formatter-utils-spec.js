@@ -2,7 +2,7 @@
 
 /* global describe, it, expect */
 
-const Utils = require('../../app/utils');
+import Utils from '../../app/utils.js';
 
 describe('formatter-utils', function() {
   describe('formatPhoneNumber', function() {

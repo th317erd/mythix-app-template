@@ -30,7 +30,7 @@ function getValues(...args) {
   return finalData;
 }
 
-module.exports = {
+export {
   resetUUIDCounter,
   getValue,
   getValues,

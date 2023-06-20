@@ -2,8 +2,8 @@
 
 /* global describe, it, expect */
 
-const Utils           = require('../../app/utils');
-const { PREFIXED_XID_REGEXP } = require('../support/application');
+import Utils from '../../app/utils.js';
+import { PREFIXED_XID_REGEXP } from '../support/application.js';
 
 describe('model-utils', function() {
   describe('XID', function() {

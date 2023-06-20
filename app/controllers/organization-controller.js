@@ -2,9 +2,9 @@
 
 /* global Buffer */
 
-const { defineController }    = require('mythix');
-const { ControllerAuthBase }  = require('./controller-auth-base.js');
-const Utils                   = require('../utils');
+import { defineController } from 'mythix';
+import { ControllerAuthBase } from './controller-auth-base.js';
+import Utils from '../utils.js';
 
 module.exports = defineController('OrganizationController', ({ Parent }) => {
   return class OrganizationController extends Parent {

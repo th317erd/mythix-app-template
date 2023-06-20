@@ -4,13 +4,13 @@
 /* eslint-disable camelcase */
 /* global describe, beforeAll, afterAll, afterEach, expect, jasmine, fail, spyOn */
 
-const { ControllerBase } = require('../../../../app/controllers/controller-base');
-const {
+import { ControllerBase } from '../../../../app/controllers/controller-base.js';
+import {
   createTestApplication,
   createFactories,
   createRunners,
-}  = require('../../../support/application');
-const { HTTPErrors } = require('mythix');
+} from '../../../support/application.js';
+import { HTTPErrors } from 'mythix';
 
 describe('ControllerBase', function() {
   let app;

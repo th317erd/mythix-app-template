@@ -1,6 +1,6 @@
-const { defineCommand } = require('mythix');
-const Utils             = require('../utils');
-const { seedDB }        = require('../seeders/initial-db-seeder');
+import { defineCommand } from 'mythix';
+import Utils from '../utils.js';
+import { seedDB } from '../seeders/initial-db-seeder.js';
 
 module.exports = defineCommand('shell', ({ Parent }) => {
   return class ShellCommand extends Parent {

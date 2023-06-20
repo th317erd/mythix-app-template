@@ -3,12 +3,13 @@
   "version": "2.9.0",
   "description": "<<<APP_DISPLAY_NAME>>>",
   "main": "app/index.js",
+  "type": "module",
   "scripts": {
     "coverage": "clear ; node ./node_modules/.bin/nyc ./node_modules/.bin/jasmine",
     "migrate": "mythix-cli migrate",
     "shell": "mythix-cli shell",
     "start": "node --inspect app/index.js",
-    "test": "./node_modules/.bin/jasmine"
+    "test": "clear ; ./node_modules/.bin/jasmine"
   },
   "repository": {
     "type": "git",
@@ -22,25 +23,23 @@
   },
   "homepage": "https://github.com/someuser/someproject#readme",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.309.0",
+    "@aws-sdk/client-s3": "^3.354.0",
     "cookie-parser": "^1.4.6",
     "form-data": "^4.0.0",
     "gm": "^1.25.0",
     "luxon": "^3.3.0",
-    "mjml": "^4.14.0",
-    "mythix": "^2.12.2",
-    "mythix-orm": "^1.14.0",
-    "mythix-orm-postgresql": "^1.12.0",
-    "mythix-orm-sqlite": "^1.12.0",
+    "mjml": "^4.14.1",
+    "mythix": "^3.0.0",
+    "mythix-orm": "^1.14.1",
+    "mythix-orm-postgresql": "^1.12.1",
+    "mythix-orm-sqlite": "^1.12.1",
     "mythix-twt": "^1.0.1",
     "nife": "^1.12.1",
-    "pg": "^8.10.0",
-    "pg-hstore": "^2.3.4",
     "uuid": "^9.0.0",
     "xid-js": "^1.0.1"
   },
   "devDependencies": {
-    "jasmine": "^4.6.0",
+    "jasmine": "^5.0.2",
     "nyc": "^15.1.0"
   },
   "nyc": {

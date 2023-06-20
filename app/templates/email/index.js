@@ -1,8 +1,8 @@
 'use strict';
 
-const MasterEmailTemplate = require('./master-template');
-const AuthTemplates       = require('./auth');
-const OrgTemplates        = require('./org');
+import MasterEmailTemplate from './master-template.js';
+import AuthTemplates from './auth.js';
+import OrgTemplates from './org.js';
 
 const {
   AuthSignInEmailTemplate,

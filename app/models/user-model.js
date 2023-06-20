@@ -1,20 +1,20 @@
 'use strict';
 
-const FileSystem          = require('node:fs');
-const { DateTime }        = require('luxon');
-const Nife                = require('nife');
-const TWT                 = require('mythix-twt');
+import FileSystem from 'node:fs';
+import { DateTime } from 'luxon';
+import Nife from 'nife';
+import TWT from 'mythix-twt';
 
 const {
   defineModel,
   CryptoUtils,
 } = require('mythix');
 
-const graphicsMagick      = require('gm');
-const { TaggableBase }    = require('./taggable-base');
-const { PermissionBase }  = require('../permissions');
-const Utils               = require('../utils');
-const EmailTemplates      = require('../templates/email');
+import graphicsMagick from 'gm';
+import { TaggableBase } from './taggable-base.js';
+import { PermissionBase } from '../permissions.js';
+import Utils from '../utils.js';
+import EmailTemplates from '../templates/email.js';
 
 // eslint-disable-next-line no-magic-numbers
 const AVATAR_SIZES  = [ 48, 196, 512 ];

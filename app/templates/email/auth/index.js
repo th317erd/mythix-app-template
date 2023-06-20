@@ -1,7 +1,7 @@
 'use strict';
 
-const AuthSignInEmailTemplate = require('./sign-in-template');
-const AuthSignUpEmailTemplate = require('./sign-up-template');
+import AuthSignInEmailTemplate from './sign-in-template.js';
+import AuthSignUpEmailTemplate from './sign-up-template.js';
 
 module.exports = {
   AuthSignInEmailTemplate,

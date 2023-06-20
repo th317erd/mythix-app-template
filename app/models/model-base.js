@@ -1,12 +1,12 @@
 'use strict';
 
-const Nife            = require('nife');
-const { Model }       = require('mythix');
+import Nife from 'nife';
+import { Model } from 'mythix';
 const {
   Types,
   Utils: MythixORMUtils,
 }                     = require('mythix-orm');
-const Utils           = require('../utils');
+import Utils from '../utils.js';
 
 // This is the base model class that all other
 // models inherit from. It provides common

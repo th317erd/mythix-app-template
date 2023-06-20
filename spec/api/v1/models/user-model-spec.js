@@ -3,12 +3,12 @@
 
 /* global describe, beforeAll, afterAll, afterEach, expect, spyOn */
 
-const {
+import {
   createTestApplication,
   createFactories,
   createRunners,
   PREFIXED_XID_REGEXP,
-} = require('../../../support/application');
+} from '../../../support/application.js';
 
 describe('UserModel', function() {
   let app;

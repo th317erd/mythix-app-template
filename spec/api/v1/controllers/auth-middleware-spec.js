@@ -3,17 +3,17 @@
 /* eslint-disable camelcase */
 /* global describe, beforeAll, afterAll, afterEach, expect, jasmine, spyOn */
 
-const Nife = require('nife');
-const TWT = require('mythix-twt');
+import Nife from 'nife';
+import TWT from 'mythix-twt';
 
-const {
+import {
   createTestApplication,
   createFactories,
   createRunners,
   URL_SAFE_BASE64_REGEXP,
-} = require('../../../support/application');
+} from '../../../support/application.js';
 
-const Permissions = require('../../../../app/permissions');
+import Permissions from '../../../../app/permissions.js';
 
 describe('AuthMiddleware', function() {
   let app;

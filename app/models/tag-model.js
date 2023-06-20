@@ -1,9 +1,9 @@
 'use strict';
 
-const { defineModel }   = require('mythix');
-const { ModelBase }     = require('./model-base');
-const { TaggableBase }  = require('./taggable-base');
-const Utils             = require('../utils');
+import { defineModel } from 'mythix';
+import { ModelBase } from './model-base.js';
+import { TaggableBase } from './taggable-base.js';
+import Utils from '../utils.js';
 
 // Tags (for users) are stored on the UserOrganizationLink
 // model, as they are per user/org combo.

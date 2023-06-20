@@ -1,9 +1,9 @@
 'use strict';
 
-const { DateTime }        = require('luxon');
-const { defineModel }     = require('mythix');
-const { ProcessableBase } = require('./processable-base');
-const Utils               = require('../utils');
+import { DateTime } from 'luxon';
+import { defineModel } from 'mythix';
+import { ProcessableBase } from './processable-base.js';
+import Utils from '../utils.js';
 
 // This model is designed so that all notifications
 // should be sent using this. This is so that

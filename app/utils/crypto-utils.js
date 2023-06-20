@@ -1,4 +1,4 @@
-const { CryptoUtils } = require('mythix');
+import { CryptoUtils } from 'mythix';
 
 const {
   toBase64,

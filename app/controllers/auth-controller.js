@@ -1,9 +1,9 @@
 'use strict';
 
-const Nife                  = require('nife');
-const { defineController }  = require('mythix');
-const { ControllerBase }    = require('./controller-base');
-const Utils                 = require('../utils');
+import Nife from 'nife';
+import { defineController } from 'mythix';
+import { ControllerBase } from './controller-base.js';
+import Utils from '../utils.js';
 
 module.exports = defineController('AuthController', ({ Parent }) => {
   return class AuthController extends Parent {
