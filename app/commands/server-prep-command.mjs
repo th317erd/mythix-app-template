@@ -1,6 +1,10 @@
 import { CLI } from 'mythix';
 import Path from 'node:path';
 
+import { fileURLToPath }  from 'node:url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = Path.dirname(__filename);
+
 const {
   Commands: {
     DeployCommand,
@@ -145,4 +149,4 @@ export class ServerPrepCommand extends DeployCommand {
       return 1;
     }
   }
-};
+}

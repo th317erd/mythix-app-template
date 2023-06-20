@@ -1,8 +1,10 @@
-/* global __dirname */
-
 import Path from 'node:path';
 import FileSystem from 'node:fs';
 import { CLI } from 'mythix';
+
+import { fileURLToPath }  from 'node:url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = Path.dirname(__filename);
 
 const { CommandBase } = CLI;
 

@@ -1,11 +1,14 @@
 /* eslint-disable max-classes-per-file */
 /* eslint-disable no-magic-numbers */
-/* global describe, beforeAll, afterAll, afterEach, expect, jasmine, __dirname, spyOn, Buffer */
 
 import Path from 'node:path';
 import FileSystem from 'node:fs';
 import FormData from 'form-data';
 import { CryptoUtils } from 'mythix';
+
+import { fileURLToPath }  from 'node:url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = Path.dirname(__filename);
 
 import {
   createTestApplication,
