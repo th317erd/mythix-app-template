@@ -1,7 +1,7 @@
 'use strict';
 
-import AuthSignInEmailTemplate from './sign-in-template.js';
-import AuthSignUpEmailTemplate from './sign-up-template.js';
+import AuthSignInEmailTemplate from './sign-in-template.mjs';
+import AuthSignUpEmailTemplate from './sign-up-template.mjs';
 
 module.exports = {
   AuthSignInEmailTemplate,

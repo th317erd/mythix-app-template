@@ -1,7 +1,7 @@
 'use strict';
 
-import { PermissionBase } from './permission-base.js';
-import PermissionClasses from './permission-classes.js';
+import { PermissionBase } from './permission-base.mjs';
+import PermissionClasses from './permission-classes.mjs';
 
 // This module is the framework for permission checking.
 // It works by instantiating permission classes by name.

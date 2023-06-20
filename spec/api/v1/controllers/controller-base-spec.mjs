@@ -4,12 +4,12 @@
 /* eslint-disable camelcase */
 /* global describe, beforeAll, afterAll, afterEach, expect, jasmine, fail, spyOn */
 
-import { ControllerBase } from '../../../../app/controllers/controller-base.js';
+import { ControllerBase } from '../../../../app/controllers/controller-base.mjs';
 import {
   createTestApplication,
   createFactories,
   createRunners,
-} from '../../../support/application.js';
+} from '../../../support/application.mjs';
 import { HTTPErrors } from 'mythix';
 
 describe('ControllerBase', function() {

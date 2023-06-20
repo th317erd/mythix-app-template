@@ -6,7 +6,7 @@ const {
   Types,
   Utils: MythixORMUtils,
 }                     = require('mythix-orm');
-import Utils from '../utils.js';
+import Utils from '../utils.mjs';
 
 // This is the base model class that all other
 // models inherit from. It provides common

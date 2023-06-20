@@ -1,7 +1,7 @@
 'use strict';
 
 import Nife from 'nife';
-import { PermissionBase } from '../permission-base.js';
+import { PermissionBase } from '../permission-base.mjs';
 
 // This class handles all Organization permissions
 

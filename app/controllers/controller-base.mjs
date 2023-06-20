@@ -3,8 +3,8 @@
 import Nife from 'nife';
 import Mythix from 'mythix';
 import { Utils: MythixORMUtils } from 'mythix-orm';
-import Utils from '../utils.js';
-import { PermissionBase } from '../permissions.js';
+import Utils from '../utils.mjs';
+import { PermissionBase } from '../permissions.mjs';
 
 // This is the base parent controller
 // that all other controllers inherit from.

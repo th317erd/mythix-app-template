@@ -11,10 +11,10 @@ const {
 } = require('mythix');
 
 import graphicsMagick from 'gm';
-import { TaggableBase } from './taggable-base.js';
-import { PermissionBase } from '../permissions.js';
-import Utils from '../utils.js';
-import EmailTemplates from '../templates/email.js';
+import { TaggableBase } from './taggable-base.mjs';
+import { PermissionBase } from '../permissions.mjs';
+import Utils from '../utils.mjs';
+import EmailTemplates from '../templates/email.mjs';
 
 // eslint-disable-next-line no-magic-numbers
 const AVATAR_SIZES  = [ 48, 196, 512 ];

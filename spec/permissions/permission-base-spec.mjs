@@ -3,12 +3,12 @@
 /* eslint-disable camelcase */
 /* global describe, beforeAll, afterAll, afterEach, expect, jasmine */
 
-import { PermissionBase, UserPermissions, OrganizationPermissions } from '../../app/permissions.js';
+import { PermissionBase, UserPermissions, OrganizationPermissions } from '../../app/permissions.mjs';
 import {
   createTestApplication,
   createFactories,
   createRunners,
-} from '../support/application.js';
+} from '../support/application.mjs';
 
 describe('PermissionBase', function() {
   let app;

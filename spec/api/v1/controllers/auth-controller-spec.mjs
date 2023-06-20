@@ -10,7 +10,7 @@ import {
   createRunners,
   PREFIXED_XID_REGEXP,
   URL_SAFE_BASE64_REGEXP,
-} from '../../../support/application.js';
+} from '../../../support/application.mjs';
 
 describe('AuthController', function() {
   let app;

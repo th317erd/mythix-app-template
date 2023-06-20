@@ -4,7 +4,7 @@
 import Nife from 'nife';
 import mjmlToHTML from 'mjml';
 import { HTTPUtils } from 'mythix';
-import Utils from '../../utils.js';
+import Utils from '../../utils.mjs';
 
 // This defines the "master" template for all emails.
 // All email templates call this master template method,

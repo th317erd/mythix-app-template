@@ -1,7 +1,7 @@
 'use strict';
 
-import { ControllerBase } from './controller-base.js';
-import { authMiddleware } from '../middleware.js';
+import { ControllerBase } from './controller-base.mjs';
+import { authMiddleware } from '../middleware.mjs';
 
 // This controller is a parent controller.
 // Any child controller that inherits from this

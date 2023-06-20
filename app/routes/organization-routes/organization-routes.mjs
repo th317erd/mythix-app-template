@@ -1,6 +1,6 @@
 'use strict';
 
-import HELP from './organization-routes-help.js';
+import HELP from './organization-routes-help.mjs';
 
 function organizationRoutes({ path, endpoint }) {
   endpoint('organizations', {

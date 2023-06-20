@@ -2,8 +2,8 @@
 
 import Nife from 'nife';
 import { defineController } from 'mythix';
-import { ControllerBase } from './controller-base.js';
-import Utils from '../utils.js';
+import { ControllerBase } from './controller-base.mjs';
+import Utils from '../utils.mjs';
 
 module.exports = defineController('AuthController', ({ Parent }) => {
   return class AuthController extends Parent {

@@ -1,8 +1,8 @@
 'use strict';
 
-import MasterEmailTemplate from './master-template.js';
-import AuthTemplates from './auth.js';
-import OrgTemplates from './org.js';
+import MasterEmailTemplate from './master-template.mjs';
+import AuthTemplates from './auth.mjs';
+import OrgTemplates from './org.mjs';
 
 const {
   AuthSignInEmailTemplate,

@@ -1,9 +1,9 @@
 'use strict';
 
 import { defineModel } from 'mythix';
-import { ModelBase } from './model-base.js';
-import { TaggableBase } from './taggable-base.js';
-import Utils from '../utils.js';
+import { ModelBase } from './model-base.mjs';
+import { TaggableBase } from './taggable-base.mjs';
+import Utils from '../utils.mjs';
 
 // Tags (for users) are stored on the UserOrganizationLink
 // model, as they are per user/org combo.

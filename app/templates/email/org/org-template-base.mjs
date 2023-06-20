@@ -1,6 +1,6 @@
 'use strict';
 
-import MasterEmailTemplate from '../master-template.js';
+import MasterEmailTemplate from '../master-template.mjs';
 
 class OrgBaseTemplate extends MasterEmailTemplate {
   formatSingularRoleName(roleName) {

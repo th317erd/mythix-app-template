@@ -1,6 +1,6 @@
 'use strict';
 
-import HELP from './auth-routes-help.js';
+import HELP from './auth-routes-help.mjs';
 
 function authRoutes({ path }) {
   path('auth', ({ endpoint }) => {

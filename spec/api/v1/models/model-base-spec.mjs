@@ -6,10 +6,10 @@ import {
   createTestApplication,
   createFactories,
   createRunners,
-} from '../../../support/application.js';
+} from '../../../support/application.mjs';
 
-import Utils from '../../../../app/utils/index.js';
-import EmailTemplates from '../../../../app/templates/email.js';
+import Utils from '../../../../app/utils/index.mjs';
+import EmailTemplates from '../../../../app/templates/email.mjs';
 
 describe('ModelBase', function() {
   let app;

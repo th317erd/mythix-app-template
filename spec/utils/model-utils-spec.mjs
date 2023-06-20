@@ -2,8 +2,8 @@
 
 /* global describe, it, expect */
 
-import Utils from '../../app/utils.js';
-import { PREFIXED_XID_REGEXP } from '../support/application.js';
+import Utils from '../../app/utils.mjs';
+import { PREFIXED_XID_REGEXP } from '../support/application.mjs';
 
 describe('model-utils', function() {
   describe('XID', function() {

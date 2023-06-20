@@ -1,7 +1,7 @@
 'use strict';
 
 import Nife from 'nife';
-import { ModelBase } from './model-base.js';
+import { ModelBase } from './model-base.mjs';
 
 class TaggableBase extends ModelBase {
   static _sanitizeTagName(tagName) {

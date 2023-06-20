@@ -7,8 +7,8 @@ const {
   CryptoUtils,
 } = require('mythix');
 
-import { ModelBase } from './model-base.js';
-import Utils from '../utils.js';
+import { ModelBase } from './model-base.mjs';
+import Utils from '../utils.mjs';
 
 // This model blacklists TWT
 // tokens, marking them as

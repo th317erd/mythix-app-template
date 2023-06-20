@@ -11,9 +11,9 @@ import {
   createFactories,
   createRunners,
   URL_SAFE_BASE64_REGEXP,
-} from '../../../support/application.js';
+} from '../../../support/application.mjs';
 
-import Permissions from '../../../../app/permissions.js';
+import Permissions from '../../../../app/permissions.mjs';
 
 describe('AuthMiddleware', function() {
   let app;

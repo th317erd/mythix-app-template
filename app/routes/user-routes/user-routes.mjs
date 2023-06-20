@@ -1,6 +1,6 @@
 'use strict';
 
-import HELP from './user-routes-help.js';
+import HELP from './user-routes-help.mjs';
 
 function userRoutes({ path, endpoint }) {
   endpoint('user', {

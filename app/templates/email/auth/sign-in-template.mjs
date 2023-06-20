@@ -1,7 +1,7 @@
 /* eslint-disable no-magic-numbers */
 'use strict';
 
-import MasterEmailTemplate from '../master-template.js';
+import MasterEmailTemplate from '../master-template.mjs';
 
 class AuthSignInEmailTemplate extends MasterEmailTemplate {
   generateSubject() {

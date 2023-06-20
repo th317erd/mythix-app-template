@@ -3,7 +3,7 @@
 import Nife from 'nife';
 import { DateTime } from 'luxon';
 import { Types } from 'mythix-orm';
-import { ModelBase } from './model-base.js';
+import { ModelBase } from './model-base.mjs';
 
 const STALE_LOCK_MINUTES          = 15;
 const MAX_FAIL_COUNT              = 50;

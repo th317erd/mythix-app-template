@@ -1,6 +1,6 @@
 'use strict';
 
-import { getValues } from './factory-utils.js';
+import { getValues } from './factory-utils.mjs';
 
 async function create({ data, organization, addToOrganization, userRole }, callback) {
   const { User, Role } = this.getModels();

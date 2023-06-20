@@ -1,6 +1,6 @@
 import { defineCommand } from 'mythix';
-import Utils from '../utils.js';
-import { seedDB } from '../seeders/initial-db-seeder.js';
+import Utils from '../utils.mjs';
+import { seedDB } from '../seeders/initial-db-seeder.mjs';
 
 module.exports = defineCommand('shell', ({ Parent }) => {
   return class ShellCommand extends Parent {

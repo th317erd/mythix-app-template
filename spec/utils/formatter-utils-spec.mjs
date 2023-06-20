@@ -2,7 +2,7 @@
 
 /* global describe, it, expect */
 
-import Utils from '../../app/utils.js';
+import Utils from '../../app/utils.mjs';
 
 describe('formatter-utils', function() {
   describe('formatPhoneNumber', function() {

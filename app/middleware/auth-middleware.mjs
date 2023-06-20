@@ -2,7 +2,7 @@
 
 import Nife from 'nife';
 import { HTTPErrors } from 'mythix';
-import { PermissionBase } from '../permissions.js';
+import { PermissionBase } from '../permissions.mjs';
 
 const {
   HTTPBaseError,

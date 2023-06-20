@@ -1,6 +1,6 @@
 import Nife from 'nife';
-import database from './db-config.js';
-import sensitive from './sensitive.js';
+import database from './db-config.mjs';
+import sensitive from './sensitive.mjs';
 import { Logger } from 'mythix';
 
 const APP_CONFIG = Nife.extend(true, {

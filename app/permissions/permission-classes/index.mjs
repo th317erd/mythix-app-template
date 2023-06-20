@@ -1,7 +1,7 @@
 'use strict';
 
-import { OrganizationPermissions } from './organization-permissions.js';
-import { UserPermissions } from './user-permissions.js';
+import { OrganizationPermissions } from './organization-permissions.mjs';
+import { UserPermissions } from './user-permissions.mjs';
 
 module.exports = {
   OrganizationPermissions,

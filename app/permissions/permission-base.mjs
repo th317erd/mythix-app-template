@@ -1,7 +1,7 @@
 'use strict';
 
 import Nife from 'nife';
-import Utils from '../utils.js';
+import Utils from '../utils.mjs';
 
 // PermissionBase class handles all permission requests.
 // It will instantiate a permission handler class based
@@ -70,7 +70,7 @@ class PermissionBase {
   // automatic and immediate.
   static getPermissionClass(opts) {
     const findPermissionClass = (scopeName) => {
-      import permissionClassMap from './permission-classes.js';
+      import permissionClassMap from './permission-classes.mjs';
       let klassNames            = Object.keys(permissionClassMap);
 
       for (let i = 0, il = klassNames.length; i < il; i++) {

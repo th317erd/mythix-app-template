@@ -4,8 +4,8 @@
 
 import { SQLiteConnection } from 'mythix-orm-sqlite';
 // import { PostgreSQLConnection } from 'mythix-orm-postgresql';
-import { Application } from '../../app/application.js';
-import { createFactories } from './factories/index.js';
+import { Application } from '../../app/application.mjs';
+import { createFactories } from './factories/index.mjs';
 
 import {
   TestUtils,
@@ -14,7 +14,7 @@ import {
 import {
   MailerModule,
   AWSModule,
-} from '../../app/modules/index.js';
+} from '../../app/modules/index.mjs';
 
 // Here we extend the mailer module for unit tests
 // to disable the sending of any emails while unit

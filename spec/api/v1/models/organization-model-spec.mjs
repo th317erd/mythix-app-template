@@ -9,7 +9,7 @@ import {
   createFactories,
   createRunners,
   PREFIXED_XID_REGEXP,
-} from '../../../support/application.js';
+} from '../../../support/application.mjs';
 
 describe('OrganizationModel', function() {
   let app;

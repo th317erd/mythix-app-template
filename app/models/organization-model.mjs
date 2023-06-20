@@ -4,8 +4,8 @@
 import Nife from 'nife';
 import { DateTime } from 'luxon';
 import { defineModel } from 'mythix';
-import { ModelBase } from './model-base.js';
-import Utils from '../utils.js';
+import { ModelBase } from './model-base.mjs';
+import Utils from '../utils.mjs';
 
 module.exports = defineModel('Organization', ({ Parent, Types }) => {
   return class _Organization extends Parent {

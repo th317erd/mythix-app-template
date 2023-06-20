@@ -2,13 +2,13 @@
   "name": "<<<APP_NAME>>>",
   "version": "2.9.0",
   "description": "<<<APP_DISPLAY_NAME>>>",
-  "main": "app/index.js",
+  "main": "app/index.mjs",
   "type": "module",
   "scripts": {
     "coverage": "clear ; node ./node_modules/.bin/nyc ./node_modules/.bin/jasmine",
     "migrate": "mythix-cli migrate",
     "shell": "mythix-cli shell",
-    "start": "node --inspect app/index.js",
+    "start": "node --inspect app/index.mjs",
     "test": "clear ; ./node_modules/.bin/jasmine"
   },
   "repository": {

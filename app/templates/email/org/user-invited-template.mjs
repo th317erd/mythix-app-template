@@ -1,6 +1,6 @@
 'use strict';
 
-import OrgBaseTemplate from './org-template-base.js';
+import OrgBaseTemplate from './org-template-base.mjs';
 
 // NOTE: This template is unused for Beta
 

@@ -1,14 +1,14 @@
 import Mythix from 'mythix';
-import getRoutes from './routes/index.js';
+import getRoutes from './routes/index.mjs';
 import cookieParser from 'cookie-parser';
 import { PostgreSQLConnection } from 'mythix-orm-postgresql';
 
 import {
   AWSModule,
   MailerModule,
-} from './modules/index.js';
+} from './modules/index.mjs';
 
-import APP_CONFIG from './config/index.js';
+import APP_CONFIG from './config/index.mjs';
 
 export class Application extends Mythix.Application {
   static getName() {

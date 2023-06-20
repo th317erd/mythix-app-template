@@ -4,17 +4,17 @@
 /* global describe, beforeAll, afterAll, afterEach, expect, jasmine */
 
 import Nife from 'nife';
-import { UserPermissions } from '../../app/permissions.js';
+import { UserPermissions } from '../../app/permissions.mjs';
 import {
   createTestApplication,
   createFactories,
   createRunners,
-} from '../support/application.js';
+} from '../support/application.mjs';
 
 import {
   ALL_ROLE_NAMES,
   generateTests: _generateTests,
-} from './permission-test-helpers.js';
+} from './permission-test-helpers.mjs';
 
 describe('UserPermissions', function() {
   let app;

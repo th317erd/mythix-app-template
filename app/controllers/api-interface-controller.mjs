@@ -2,7 +2,7 @@
 
 import Nife from 'nife';
 import { defineController } from 'mythix';
-import { ControllerBase } from './controller-base.js';
+import { ControllerBase } from './controller-base.mjs';
 import { Controllers } from 'mythix';
 
 const CACHE = {};

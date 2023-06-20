@@ -3,8 +3,8 @@
 /* global Buffer */
 
 import { defineController } from 'mythix';
-import { ControllerAuthBase } from './controller-auth-base.js';
-import Utils from '../utils.js';
+import { ControllerAuthBase } from './controller-auth-base.mjs';
+import Utils from '../utils.mjs';
 
 module.exports = defineController('OrganizationController', ({ Parent }) => {
   return class OrganizationController extends Parent {
