@@ -1,8 +1,6 @@
 /* eslint-disable key-spacing */
 
-'use strict';
-
-module.exports = {
+export default {
   getCurrentUser: {
     'description': 'This method will return the user data for the currently logged in user.',
     'example': 'await API.getCurrentUser();',

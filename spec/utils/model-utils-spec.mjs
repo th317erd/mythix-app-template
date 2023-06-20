@@ -1,8 +1,4 @@
-'use strict';
-
-/* global describe, it, expect */
-
-import Utils from '../../app/utils.mjs';
+import Utils from '../../app/utils/index.mjs';
 import { PREFIXED_XID_REGEXP } from '../support/application.mjs';
 
 describe('model-utils', function() {

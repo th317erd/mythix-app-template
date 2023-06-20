@@ -9,6 +9,8 @@ module.exports = {
   'globals': {
     'Buffer':     'readonly',
     'process':    'readonly',
+    'jasmine':    'readonly',
+    'spyOn':      'readonly',
     'afterAll':   'readonly',
     'afterEach':  'readonly',
     'beforeAll':  'readonly',

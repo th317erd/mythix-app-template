@@ -1,8 +1,6 @@
 /* eslint-disable key-spacing */
 
-'use strict';
-
-module.exports = {
+export default {
   login: {
     'description': 'This method will log a user in.',
     'data': [

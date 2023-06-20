@@ -1,3 +1,1 @@
-'use strict';
-
-module.exports = require('./organization-routes');
+export * from './organization-routes.mjs';

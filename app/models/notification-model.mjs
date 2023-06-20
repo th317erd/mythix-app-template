@@ -1,9 +1,7 @@
-'use strict';
-
 import { DateTime } from 'luxon';
-import { defineModel } from 'mythix';
+import { Types } from 'mythix';
 import { ProcessableBase } from './processable-base.mjs';
-import Utils from '../utils.mjs';
+import Utils from '../utils/index.mjs';
 
 // This model is designed so that all notifications
 // should be sent using this. This is so that
@@ -11,94 +9,93 @@ import Utils from '../utils.mjs';
 // also so that notifications are not lost on
 // shutdown/restart.
 
-module.exports = defineModel('Notification', ({ Parent, Types }) => {
-  return class _Notification extends Parent {
-    static fields = {
-      ...(Parent.fields || {}),
-      id: {
-        type:         Types.XID({ prefix: Utils.getModelIDPrefixFor('Notification') }),
-        defaultValue: Types.XID.Default.XID,
-        allowNull:    false,
-        primaryKey:   true,
-      },
-      type: {
-        type:         Types.STRING(32),
-        allowNull:    false,
-        index:        true,
-      },
-      category: {
-        type:         Types.STRING(64),
-        allowNull:    false,
-        index:        true,
-      },
-      subject: {
-        type:         Types.TEXT(128),
-        allowNull:    true,
-        index:        true,
-      },
-      content: {
-        type:         Types.TEXT(65565),
-        allowNull:    true,
-        index:        false,
-      },
-      deliverAt: {
-        type:         Types.DATETIME,
-        defaultValue: Types.DATETIME.Default.NOW,
-        allowNull:    false,
-        index:        true,
-      },
-      user: {
-        type:         Types.Model('User', ({ self }, { User }, userQuery) => {
-          return User.$.id.EQ(self.userID).MERGE(userQuery);
-        }),
-      },
-    };
+export class _Notification extends ProcessableBase {
+  static fields = {
+    ...(ProcessableBase.fields || {}),
+    id: {
+      type:         Types.XID({ prefix: Utils.getModelIDPrefixFor('Notification') }),
+      defaultValue: Types.XID.Default.XID,
+      allowNull:    false,
+      primaryKey:   true,
+    },
+    type: {
+      type:         Types.STRING(32),
+      allowNull:    false,
+      index:        true,
+    },
+    category: {
+      type:         Types.STRING(64),
+      allowNull:    false,
+      index:        true,
+    },
+    subject: {
+      type:         Types.TEXT(128),
+      allowNull:    true,
+      index:        true,
+    },
+    content: {
+      // eslint-disable-next-line no-magic-numbers
+      type:         Types.TEXT(65565),
+      allowNull:    true,
+      index:        false,
+    },
+    deliverAt: {
+      type:         Types.DATETIME,
+      defaultValue: Types.DATETIME.Default.NOW,
+      allowNull:    false,
+      index:        true,
+    },
+    user: {
+      type:         Types.Model('User', ({ self }, { User }, userQuery) => {
+        return User.$.id.EQ(self.userID).MERGE(userQuery);
+      }),
+    },
+  };
 
-    static async shouldProcess() {
-      return !(await this.areNotificationsPaused());
-    }
+  static async shouldProcess() {
+    return !(await this.areNotificationsPaused());
+  }
 
-    static processableQueryHelper(query) {
-      return query.AND[this.getModelName()]
+  static processableQueryHelper(query) {
+    return query.AND[this.getModelName()]
         .deliverAt
           .LTE(DateTime.now());
-    }
+  }
 
-    static async areNotificationsPaused() {
-      let { ModelMeta } = this.getModels();
+  static async areNotificationsPaused() {
+    let { ModelMeta } = this.getModels();
 
-      await this.getConnection().transaction(async () => {
-        let count = await ModelMeta.$.modelName.EQ('Notification').name.EQ('paused').value.EQ('true').count();
-        return (count > 0);
-      }, { lock: 'ModelMeta' });
-    }
+    await this.getConnection().transaction(async () => {
+      let count = await ModelMeta.$.modelName.EQ('Notification').name.EQ('paused').value.EQ('true').count();
+      return (count > 0);
+    }, { lock: 'ModelMeta' });
+  }
 
-    static async pauseNotifications() {
-      let { ModelMeta } = this.getModels();
+  static async pauseNotifications() {
+    let { ModelMeta } = this.getModels();
 
-      await this.getConnection().transaction(async () => {
-        let alreadyPaused = await ModelMeta.$.modelName.EQ('Notification').name.EQ('paused').ORDER('-ModelMeta:order').first();
-        if (alreadyPaused && alreadyPaused.value !== 'true') {
-          alreadyPaused.value = 'true';
-          await alreadyPaused.save();
+    await this.getConnection().transaction(async () => {
+      let alreadyPaused = await ModelMeta.$.modelName.EQ('Notification').name.EQ('paused').ORDER('-ModelMeta:order').first();
+      if (alreadyPaused && alreadyPaused.value !== 'true') {
+        alreadyPaused.value = 'true';
+        await alreadyPaused.save();
 
-          return;
-        }
+        return;
+      }
 
-        await ModelMeta.create({
-          modelName:  'Notification',
-          name:       'paused',
-          value:      'true',
-        });
-      }, { lock: 'ModelMeta' });
-    }
+      await ModelMeta.create({
+        modelName:  'Notification',
+        name:       'paused',
+        value:      'true',
+      });
+    }, { lock: 'ModelMeta' });
+  }
 
-    static async unpauseNotifications() {
-      let { ModelMeta } = this.getModels();
+  static async unpauseNotifications() {
+    let { ModelMeta } = this.getModels();
 
-      await this.getConnection().transaction(async () => {
-        await ModelMeta.$.modelName.EQ('Notification').name.EQ('paused').destroy();
-      }, { lock: 'ModelMeta' });
-    }
-  };
-}, ProcessableBase);
+    await this.getConnection().transaction(async () => {
+      await ModelMeta.$.modelName.EQ('Notification').name.EQ('paused').destroy();
+    }, { lock: 'ModelMeta' });
+  }
+}

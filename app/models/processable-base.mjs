@@ -1,15 +1,13 @@
-'use strict';
-
 import Nife from 'nife';
 import { DateTime } from 'luxon';
-import { Types } from 'mythix-orm';
+import { Types } from 'mythix';
 import { ModelBase } from './model-base.mjs';
 
 const STALE_LOCK_MINUTES          = 15;
 const MAX_FAIL_COUNT              = 50;
 const FAILURE_NEXT_RETRY_SECONDS  = 30;
 
-class ProcessableBase extends ModelBase {
+export class ProcessableBase extends ModelBase {
   static fields = {
     ...(ModelBase.fields || {}),
     order: {
@@ -169,7 +167,3 @@ class ProcessableBase extends ModelBase {
     }
   }
 }
-
-module.exports = {
-  ProcessableBase,
-};

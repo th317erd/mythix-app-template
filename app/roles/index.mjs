@@ -1,5 +1,3 @@
-'use strict';
-
 // This area of the application statically defines
 // all application roles available. The role
 // and permission system use these roles
@@ -8,9 +6,12 @@
 // Role models will fail to be created if the role
 // "name" is not specified here first.
 
-module.exports = [].concat(
-  require('./global-roles'),
-  require('./organizational-roles'),
+import GLOBAL_ROLES from './global-roles.mjs';
+import ORGANIZATION_ROLES from './organizational-roles.mjs';
+
+const ALL_ROLES = [].concat(
+  GLOBAL_ROLES,
+  ORGANIZATION_ROLES,
 ).sort((a, b) => {
   let x = a.priority;
   let y = b.priority;
@@ -20,3 +21,5 @@ module.exports = [].concat(
 
   return (x < y) ? -1 : 1;
 });
+
+export default ALL_ROLES;

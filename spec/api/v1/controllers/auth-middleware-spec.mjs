@@ -1,7 +1,4 @@
-'use strict';
-
 /* eslint-disable camelcase */
-/* global describe, beforeAll, afterAll, afterEach, expect, jasmine, spyOn */
 
 import Nife from 'nife';
 import TWT from 'mythix-twt';
@@ -13,7 +10,7 @@ import {
   URL_SAFE_BASE64_REGEXP,
 } from '../../../support/application.mjs';
 
-import Permissions from '../../../../app/permissions.mjs';
+import * as Permissions from '../../../../app/permissions/index.mjs';
 
 describe('AuthMiddleware', function() {
   let app;

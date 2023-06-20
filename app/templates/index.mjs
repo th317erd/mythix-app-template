@@ -1,6 +1,4 @@
-'use strict';
-
-const {
+import {
   // Master
   MasterEmailTemplate,
 
@@ -12,9 +10,9 @@ const {
   OrgUserInvitationEmailTemplate,
   OrgUserRemovedEmailTemplate,
   OrgUserRolesUpdatedEmailTemplate,
-} = require('./email');
+} from './email/index.mjs';
 
-module.exports = {
+export default {
   email: {
     // Master
     MasterEmailTemplate,

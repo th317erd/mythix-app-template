@@ -1,8 +1,6 @@
-'use strict';
-
-import FactoryUtils from './factory-utils.mjs';
-import OrganizationFactories from './organization-factories.mjs';
-import UserFactories from './user-factories.mjs';
+import * as FactoryUtils from './factory-utils.mjs';
+import * as OrganizationFactories from './organization-factories.mjs';
+import * as UserFactories from './user-factories.mjs';
 
 function rebindAllToApplication(application, scope) {
   const rebindMethod = (application, method) => {

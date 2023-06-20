@@ -1,8 +1,6 @@
-'use strict';
-
 import { getValues } from './factory-utils.mjs';
 
-async function create({ data, organization, addToOrganization, userRole }, callback) {
+export async function create({ data, organization, addToOrganization, userRole }, callback) {
   const { User, Role } = this.getModels();
 
   let userData = getValues({
@@ -29,7 +27,7 @@ async function create({ data, organization, addToOrganization, userRole }, callb
   return { user, organization, role };
 }
 
-async function createWithOrganization(args, callback) {
+export async function createWithOrganization(args, callback) {
   const { Organization } = this.getModels();
 
   let organization = args.organization;
@@ -51,7 +49,7 @@ async function createWithOrganization(args, callback) {
   );
 }
 
-async function createAndLogin(args, callback) {
+export async function createAndLogin(args, callback) {
   let result = await createWithOrganization.call(
     this,
     {
@@ -77,9 +75,3 @@ async function createAndLogin(args, callback) {
 
   return { ...result, sessionToken };
 }
-
-export {
-  create,
-  createWithOrganization,
-  createAndLogin,
-};

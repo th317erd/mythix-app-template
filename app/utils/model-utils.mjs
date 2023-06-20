@@ -1,5 +1,3 @@
-'use strict';
-
 import Nife from 'nife';
 import xid from 'xid-js';
 
@@ -23,11 +21,11 @@ const ID_PREFIX_TO_MODEL_NAME = Object.keys(MODEL_ID_PREFIXES).reduce((obj, mode
   return obj;
 }, {});
 
-function XID() {
+export function XID() {
   return xid.next();
 }
 
-function isValidID(value, modelName) {
+export function isValidID(value, modelName) {
   if (!value)
     return false;
 
@@ -40,7 +38,7 @@ function isValidID(value, modelName) {
   return PREFIXED_XID_REGEXP.test(value);
 }
 
-function getModelIDPrefixFor(modelName) {
+export function getModelIDPrefixFor(modelName) {
   let prefix = MODEL_ID_PREFIXES[modelName];
   if (prefix == null)
     throw new Error(`getModelIDPrefixFor: No prefix found for model "${modelName}".`);
@@ -48,7 +46,7 @@ function getModelIDPrefixFor(modelName) {
   return prefix;
 }
 
-function getModelNameFromIDPrefix(id) {
+export function getModelNameFromIDPrefix(id) {
   if (!Nife.instanceOf(id, 'string'))
     return;
 
@@ -57,14 +55,14 @@ function getModelNameFromIDPrefix(id) {
   return ID_PREFIX_TO_MODEL_NAME[prefix];
 }
 
-function getModelTypeAndIDFromID(id) {
+export function getModelTypeAndIDFromID(id) {
   return {
     type: getModelNameFromIDPrefix(id),
     id,
   };
 }
 
-function stripIDPrefix(value) {
+export function stripIDPrefix(value) {
   if (!Nife.instanceOf(value, 'string'))
     return { prefix: '', id: false };
 
@@ -77,7 +75,7 @@ function stripIDPrefix(value) {
   return { prefix: '', id: value };
 }
 
-function addIDPrefix(modelName, value) {
+export function addIDPrefix(modelName, value) {
   if (!Nife.instanceOf(value, 'string'))
     return value;
 
@@ -87,13 +85,3 @@ function addIDPrefix(modelName, value) {
   let { id } = stripIDPrefix(value);
   return `${getModelIDPrefixFor(modelName)}${id}`;
 }
-
-module.exports = {
-  XID,
-  isValidID,
-  getModelIDPrefixFor,
-  getModelNameFromIDPrefix,
-  getModelTypeAndIDFromID,
-  stripIDPrefix,
-  addIDPrefix,
-};

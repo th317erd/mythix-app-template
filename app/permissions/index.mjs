@@ -1,7 +1,12 @@
-'use strict';
+import {
+  PermissionBase,
+  setPermissionClasses,
+} from './permission-base.mjs';
 
-import { PermissionBase } from './permission-base.mjs';
-import PermissionClasses from './permission-classes.mjs';
+import * as PermissionClasses from './permission-classes/index.mjs';
+export * from './permission-classes/index.mjs';
+
+setPermissionClasses(PermissionClasses);
 
 // This module is the framework for permission checking.
 // It works by instantiating permission classes by name.
@@ -24,10 +29,9 @@ import PermissionClasses from './permission-classes.mjs';
 // User roles are one of the common return values from
 // permission checking methods.
 
-module.exports = Object.assign({},
-  PermissionClasses,
-  {
-    getPermissionClass: PermissionBase.getPermissionClass.bind(PermissionBase),
-    PermissionBase,
-  },
-);
+export const getPermissionClass = PermissionBase.getPermissionClass.bind(PermissionBase);
+
+export {
+  PermissionBase,
+};
+

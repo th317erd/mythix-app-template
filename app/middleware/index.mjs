@@ -1,8 +1,1 @@
-const {
-  authMiddleware,
-} = require('./auth-middleware');
-
-module.exports = {
-  // auth-middleware
-  authMiddleware,
-};
+export * from './auth-middleware.mjs';

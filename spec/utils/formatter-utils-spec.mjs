@@ -1,8 +1,4 @@
-'use strict';
-
-/* global describe, it, expect */
-
-import Utils from '../../app/utils.mjs';
+import Utils from '../../app/utils/index.mjs';
 
 describe('formatter-utils', function() {
   describe('formatPhoneNumber', function() {

@@ -1,6 +1,4 @@
-'use strict';
-
-async function create({ data }, callback) {
+export async function create({ data }, callback) {
   const { Organization } = this.getModels();
 
   let organization = await Organization.create(Object.assign({
@@ -12,7 +10,3 @@ async function create({ data }, callback) {
 
   return { organization };
 }
-
-export {
-  create,
-};

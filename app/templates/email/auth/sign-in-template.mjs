@@ -1,9 +1,8 @@
 /* eslint-disable no-magic-numbers */
-'use strict';
 
-import MasterEmailTemplate from '../master-template.mjs';
+import { MasterEmailTemplate } from '../master-template.mjs';
 
-class AuthSignInEmailTemplate extends MasterEmailTemplate {
+export class AuthSignInEmailTemplate extends MasterEmailTemplate {
   generateSubject() {
     return this.langTerm('email.auth.signIn.subject', '<<<APP_DISPLAY_NAME>>> Magic Login Link');
   }
@@ -34,5 +33,3 @@ class AuthSignInEmailTemplate extends MasterEmailTemplate {
     ]);
   }
 }
-
-module.exports = AuthSignInEmailTemplate;

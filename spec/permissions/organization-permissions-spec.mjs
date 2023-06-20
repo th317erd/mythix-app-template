@@ -1,9 +1,7 @@
-'use strict';
-
 /* global describe, beforeAll, afterAll, afterEach, expect, jasmine */
 
 import Nife from 'nife';
-import { OrganizationPermissions } from '../../app/permissions.mjs';
+import { OrganizationPermissions } from '../../app/permissions/index.mjs';
 import {
   createTestApplication,
   createFactories,
@@ -12,7 +10,7 @@ import {
 
 import {
   ALL_ROLE_NAMES,
-  generateTests: _generateTests,
+  generateTests as _generateTests,
 } from './permission-test-helpers.mjs';
 
 describe('OrganizationPermissions', function() {

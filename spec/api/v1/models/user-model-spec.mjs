@@ -1,6 +1,4 @@
 /* eslint-disable no-magic-numbers */
-'use strict';
-
 /* global describe, beforeAll, afterAll, afterEach, expect, spyOn */
 
 import {

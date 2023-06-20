@@ -1,3 +1,1 @@
-'use strict';
-
-module.exports = require('./auth-routes');
+export * from './auth-routes.mjs';

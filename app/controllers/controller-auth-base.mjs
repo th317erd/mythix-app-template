@@ -1,7 +1,5 @@
-'use strict';
-
 import { ControllerBase } from './controller-base.mjs';
-import { authMiddleware } from '../middleware.mjs';
+import { authMiddleware } from '../middleware/index.mjs';
 
 // This controller is a parent controller.
 // Any child controller that inherits from this
@@ -13,7 +11,7 @@ import { authMiddleware } from '../middleware.mjs';
 // controller to specify which endpoints should
 // skip authorization.
 
-class ControllerAuthBase extends ControllerBase {
+export class ControllerAuthBase extends ControllerBase {
   // Overload this in a child controller
   // to skip authorization for certain routes.
 
@@ -31,7 +29,3 @@ class ControllerAuthBase extends ControllerBase {
     ];
   }
 }
-
-module.exports = {
-  ControllerAuthBase,
-};

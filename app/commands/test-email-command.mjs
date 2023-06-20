@@ -1,5 +1,3 @@
-'use strict';
-
 /* global __dirname */
 
 import Path from 'node:path';
@@ -99,4 +97,4 @@ export class TestEmailCommand extends CommandBase {
     let { body } = await targetUser.renderEmail(templateName, data);
     FileSystem.writeFileSync(outputPath, body, 'utf8');
   }
-};
+}

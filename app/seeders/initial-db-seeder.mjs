@@ -1,9 +1,3 @@
-'use strict';
-
-import { DateTime } from 'luxon';
-
-/* global process */
-
 async function _createUser(models, { data, primaryRole, otherRoles, organization }) {
   const {
     User,
@@ -33,7 +27,7 @@ async function _createUser(models, { data, primaryRole, otherRoles, organization
 // It can be used by running: `mythix-cli shell` from
 // the command line, and then typing "await seedDB()"
 // into the shell.
-async function seedDB(app) {
+export async function seedDB(app) {
   const models = app.getModels();
   const { Organization } = models;
   const createUser = _createUser.bind(this, models);
@@ -58,7 +52,3 @@ async function seedDB(app) {
     organization,
   });
 }
-
-module.exports = {
-  seedDB,
-};

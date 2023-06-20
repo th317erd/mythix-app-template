@@ -1,5 +1,5 @@
 import { CLI } from 'mythix';
-import Utils from '../utils.mjs';
+import Utils from '../utils/index.mjs';
 import { seedDB } from '../seeders/initial-db-seeder.mjs';
 
 const {
@@ -23,4 +23,4 @@ export class ShellCommand extends _ShellCommand {
       Utils,
     });
   }
-};
+}

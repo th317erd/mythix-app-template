@@ -1,11 +1,9 @@
-'use strict';
-
 import Nife from 'nife';
 import { PermissionBase } from '../permission-base.mjs';
 
 // This class handles all User permissions
 
-class UserPermissions extends PermissionBase {
+export class UserPermissions extends PermissionBase {
   static getScopeName() {
     return 'User';
   }
@@ -100,7 +98,3 @@ class UserPermissions extends PermissionBase {
     return false;
   }
 }
-
-module.exports = {
-  UserPermissions,
-};

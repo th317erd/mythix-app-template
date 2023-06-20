@@ -1,3 +1,33 @@
+import {
+  CryptoUtils,
+} from 'mythix';
+
+import {
+  formatPhoneNumber,
+} from './formatter-utils.mjs';
+
+import {
+  ErrorBase,
+  ForbiddenError,
+  UnauthorizedError,
+  NotFoundError,
+  ValidationError,
+} from './errors.mjs';
+
+import {
+  XID,
+  isValidID,
+  getModelIDPrefixFor,
+  getModelNameFromIDPrefix,
+  getModelTypeAndIDFromID,
+  stripIDPrefix,
+  addIDPrefix,
+} from './model-utils.mjs';
+
+import {
+  langTerm,
+} from './i18n-utils.mjs';
+
 const {
   toBase64,
   convertBase64ToURLSafe,
@@ -14,21 +44,37 @@ const {
   MD5,
   SHA256,
   SHA512,
-} = require('./crypto-utils');
+} = CryptoUtils;
 
-const {
+export {
+  // crypto-utils
+  toBase64,
+  convertBase64ToURLSafe,
+  convertBase64FromURLSafe,
+  toURLSafeBase64,
+  fromURLSafeBase64,
+  getSaltProperties,
+  generateSalt,
+  encrypt,
+  decrypt,
+  hashToken,
+  randomBytes,
+  randomHash,
+  MD5,
+  SHA256,
+  SHA512,
+
+  // formatter-utils
   formatPhoneNumber,
-} = require('./formatter-utils');
 
-const {
+  // errors
   ErrorBase,
   ForbiddenError,
   UnauthorizedError,
   NotFoundError,
   ValidationError,
-} = require('./errors');
 
-const {
+  // model-utils
   XID,
   isValidID,
   getModelIDPrefixFor,
@@ -36,13 +82,12 @@ const {
   getModelTypeAndIDFromID,
   stripIDPrefix,
   addIDPrefix,
-} = require('./model-utils');
 
-const {
+  // i18n-utils
   langTerm,
-} = require('./i18n-utils');
+};
 
-module.exports = {
+export default {
   // crypto-utils
   toBase64,
   convertBase64ToURLSafe,

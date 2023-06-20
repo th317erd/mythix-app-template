@@ -1,9 +1,2 @@
-'use strict';
-
-import AuthSignInEmailTemplate from './sign-in-template.mjs';
-import AuthSignUpEmailTemplate from './sign-up-template.mjs';
-
-module.exports = {
-  AuthSignInEmailTemplate,
-  AuthSignUpEmailTemplate,
-};
+export * from './sign-in-template.mjs';
+export * from './sign-up-template.mjs';

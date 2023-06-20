@@ -1,10 +1,7 @@
-'use strict';
-
 /* eslint-disable camelcase */
-/* global describe, beforeAll, afterAll, afterEach, expect, jasmine */
 
 import Nife from 'nife';
-import { UserPermissions } from '../../app/permissions.mjs';
+import { UserPermissions } from '../../app/permissions/index.mjs';
 import {
   createTestApplication,
   createFactories,
@@ -13,7 +10,7 @@ import {
 
 import {
   ALL_ROLE_NAMES,
-  generateTests: _generateTests,
+  generateTests as _generateTests,
 } from './permission-test-helpers.mjs';
 
 describe('UserPermissions', function() {

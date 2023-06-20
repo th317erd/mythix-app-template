@@ -1,6 +1,4 @@
-'use strict';
-
-module.exports = [
+export default [
   // Organizational
   {
     // superadmin = highest level admin for an organization (must target an organization)

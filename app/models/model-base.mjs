@@ -1,18 +1,12 @@
-'use strict';
-
 import Nife from 'nife';
-import { Model } from 'mythix';
-const {
-  Types,
-  Utils: MythixORMUtils,
-}                     = require('mythix-orm');
-import Utils from '../utils.mjs';
+import { Model, Types, MythixORMUtils } from 'mythix';
+import Utils from '../utils/index.mjs';
 
 // This is the base model class that all other
 // models inherit from. It provides common
 // functionality between all models.
 
-class ModelBase extends Model {
+export class ModelBase extends Model {
   static fields = {
     createdAt: {
       type:         Types.DATETIME,
@@ -225,7 +219,3 @@ class ModelBase extends Model {
     };
   }
 }
-
-module.exports = {
-  ModelBase,
-};

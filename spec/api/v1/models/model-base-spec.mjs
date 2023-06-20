@@ -1,7 +1,3 @@
-'use strict';
-
-/* global describe, beforeAll, afterAll, afterEach, expect, fail */
-
 import {
   createTestApplication,
   createFactories,
@@ -9,7 +5,7 @@ import {
 } from '../../../support/application.mjs';
 
 import Utils from '../../../../app/utils/index.mjs';
-import EmailTemplates from '../../../../app/templates/email.mjs';
+import * as EmailTemplates from '../../../../app/templates/email/index.mjs';
 
 describe('ModelBase', function() {
   let app;

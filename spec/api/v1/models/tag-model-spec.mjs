@@ -1,5 +1,3 @@
-'use strict';
-
 /* global describe, beforeAll, afterAll, afterEach, expect */
 
 import {

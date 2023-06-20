@@ -1,5 +1,3 @@
-'use strict';
-
 let uuid = 1;
 
 function resetUUIDCounter() {

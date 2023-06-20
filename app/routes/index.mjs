@@ -1,7 +1,5 @@
 /* eslint-disable key-spacing */
 
-'use strict';
-
 // This module defines all application routes.
 // The "name" property on routes tells mythix
 // to generate this route when generating API
@@ -11,19 +9,19 @@
 // interface generator to provide help
 // for each generated API interface method.
 
-const {
+import {
   authRoutes,
-} = require('./auth-routes');
+} from './auth-routes/index.mjs';
 
-const {
+import {
   userRoutes,
-} = require('./user-routes');
+} from './user-routes/index.mjs';
 
-const {
+import {
   organizationRoutes,
-} = require('./organization-routes');
+} from './organization-routes/index.mjs';
 
-module.exports = function({ path }) {
+export function getRoutes({ path }) {
   path('api', ({ path }) => {
     path('v1', (context) => {
       const { endpoint } = context;
@@ -36,4 +34,4 @@ module.exports = function({ path }) {
       organizationRoutes.call(this, context);
     });
   });
-};
+}

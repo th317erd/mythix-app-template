@@ -1,9 +1,7 @@
-'use strict';
-
 import Nife from 'nife';
 import { ModelBase } from './model-base.mjs';
 
-class TaggableBase extends ModelBase {
+export class TaggableBase extends ModelBase {
   static _sanitizeTagName(tagName) {
     if (!tagName)
       return;
@@ -127,7 +125,3 @@ class TaggableBase extends ModelBase {
     return await query.destroy(options);
   }
 }
-
-module.exports = {
-  TaggableBase,
-};

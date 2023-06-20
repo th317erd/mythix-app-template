@@ -1,17 +1,17 @@
-'use strict';
-
 import Nife from 'nife';
-import Mythix from 'mythix';
-import { Utils: MythixORMUtils } from 'mythix-orm';
-import Utils from '../utils.mjs';
-import { PermissionBase } from '../permissions.mjs';
+import {
+  ControllerBase as _ControllerBase,
+  MythixORMUtils,
+} from 'mythix';
+import Utils from '../utils/index.mjs';
+import { PermissionBase } from '../permissions/index.mjs';
 
 // This is the base parent controller
 // that all other controllers inherit from.
 // It just provides common functionality
 // for all other controllers.
 
-class ControllerBase extends Mythix.ControllerBase {
+export class ControllerBase extends _ControllerBase {
   constructor(...args) {
     super(...args);
 
@@ -327,7 +327,3 @@ class ControllerBase extends Mythix.ControllerBase {
     return finalFiles;
   }
 }
-
-module.exports = {
-  ControllerBase,
-};

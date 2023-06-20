@@ -1,39 +1,32 @@
-'use strict';
-
-import { defineTask } from 'mythix';
+import { DateTime } from 'luxon';
+import { TaskBase } from 'mythix';
 
 const DEFAULT_WORKER_COUNT              = 4;
 const DEFAULT_WORKER_FREQUENCY_SECONDS  = 5;
 
-module.exports = defineTask('NotificationSenderTask', ({ application, Parent, time }) => {
-  const workerCount = application.getConfigValue('application.{environment}.tasks.NotificationSenderTask.workers', DEFAULT_WORKER_COUNT, 'integer');
+export class NotificationSenderTask extends TaskBase {
+  static getWorkerCount() {
+    return DEFAULT_WORKER_COUNT;
+  }
 
-  return class BatchQueueWebhooks extends Parent {
-    static workers    = workerCount;
+  static nextRun() {
+    return DateTime.now().plus({ seconds: DEFAULT_WORKER_FREQUENCY_SECONDS });
+  }
 
-    static frequency  = time.seconds(DEFAULT_WORKER_FREQUENCY_SECONDS * workerCount);
+  async execute() {
+    let { Notification } = this.getModels();
 
-    static startDelay = time.seconds(DEFAULT_WORKER_FREQUENCY_SECONDS);
+    await Notification.getBatchToProcess(this.getRunID(), async (notification, user) => {
+      let application = this.getApplication();
 
-    static keepAlive  = true;
-
-    static enabled    = true;
-
-    async execute() {
-      let { Notification } = this.getModels();
-
-      await Notification.getBatchToProcess(this.getRunID(), async (notification, user) => {
-        let application = this.getApplication();
-
-        if (notification.type === 'email') {
-          let mailer = application.getMailer();
-          await mailer.sendEmail({
-            to:       user.email,
-            subject:  notification.subject,
-            message:  notification.content,
-          });
-        }
-      });
-    }
-  };
-});
+      if (notification.type === 'email') {
+        let mailer = application.getMailer();
+        await mailer.sendEmail({
+          to:       user.email,
+          subject:  notification.subject,
+          message:  notification.content,
+        });
+      }
+    });
+  }
+}

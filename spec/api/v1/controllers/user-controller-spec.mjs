@@ -1,5 +1,3 @@
-'use strict';
-
 /* eslint-disable no-magic-numbers */
 /* global describe, beforeAll, afterAll, afterEach, expect, jasmine */
 
@@ -300,7 +298,7 @@ describe('UserController', function () {
       // Should work without an organizationID being provided
       app.setDefaultHeader('X-Organization-ID', undefined);
 
-      let result = await app.get(`/api/v1/user`);
+      let result = await app.get('/api/v1/user');
       expect(result.statusCode).toEqual(200);
 
       let data = result.body.data;

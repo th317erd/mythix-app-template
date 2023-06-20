@@ -1,8 +1,6 @@
-'use strict';
-
 import HELP from './auth-routes-help.mjs';
 
-function authRoutes({ path }) {
+export function authRoutes({ path }) {
   path('auth', ({ endpoint }) => {
     endpoint('login', {
       name:       'login',
@@ -33,7 +31,3 @@ function authRoutes({ path }) {
     });
   });
 }
-
-module.exports = {
-  authRoutes,
-};

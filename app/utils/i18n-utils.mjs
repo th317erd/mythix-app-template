@@ -1,8 +1,6 @@
-'use strict';
-
 // This is just a shim for now, awaiting future I18N services.
 
-function langTerm(key, defaultValue, _options) {
+export function langTerm(key, defaultValue, _options) {
   let options = _options || {};
   let {
     params,
@@ -25,7 +23,3 @@ function langTerm(key, defaultValue, _options) {
 
   return value;
 }
-
-module.exports = {
-  langTerm,
-};

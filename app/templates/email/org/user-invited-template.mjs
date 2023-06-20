@@ -1,10 +1,6 @@
-'use strict';
+import { OrgBaseTemplate } from './org-template-base.mjs';
 
-import OrgBaseTemplate from './org-template-base.mjs';
-
-// NOTE: This template is unused for Beta
-
-class OrgUserInvitationEmailTemplate extends OrgBaseTemplate {
+export class OrgUserInvitationEmailTemplate extends OrgBaseTemplate {
   generateSubject() {
     let {
       organization,
@@ -41,5 +37,3 @@ class OrgUserInvitationEmailTemplate extends OrgBaseTemplate {
     ]);
   }
 }
-
-module.exports = OrgUserInvitationEmailTemplate;

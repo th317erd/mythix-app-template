@@ -1,6 +1,4 @@
 /* eslint-disable no-magic-numbers */
-'use strict';
-
 /* eslint-disable camelcase */
 /* global describe, beforeAll, afterAll, afterEach, expect, jasmine, fail, spyOn */
 

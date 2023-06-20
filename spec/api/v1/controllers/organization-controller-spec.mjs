@@ -1,7 +1,5 @@
 /* eslint-disable max-classes-per-file */
 /* eslint-disable no-magic-numbers */
-'use strict';
-
 /* global describe, beforeAll, afterAll, afterEach, expect, jasmine, __dirname, spyOn, Buffer */
 
 import Path from 'node:path';

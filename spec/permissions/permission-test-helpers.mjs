@@ -1,8 +1,6 @@
 /* eslint-disable no-loop-func */
 /* eslint-disable key-spacing */
 
-'use strict';
-
 const ALL_ROLE_NAMES = [ 'masteradmin', 'support', 'superadmin', 'admin', 'member' ];
 
 async function setupTest(primaryUserRole, secondaryUserRole, secondaryOrg) {

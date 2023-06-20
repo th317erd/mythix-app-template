@@ -1,8 +1,8 @@
-'use strict';
+/* eslint-disable no-magic-numbers */
 
-import OrgBaseTemplate from './org-template-base.mjs';
+import { OrgBaseTemplate } from './org-template-base.mjs';
 
-class OrgUserRolesUpdatedEmailTemplate extends OrgBaseTemplate {
+export class OrgUserRolesUpdatedEmailTemplate extends OrgBaseTemplate {
   generateSubject() {
     let {
       organization,
@@ -144,5 +144,3 @@ class OrgUserRolesUpdatedEmailTemplate extends OrgBaseTemplate {
     ]);
   }
 }
-
-module.exports = OrgUserRolesUpdatedEmailTemplate;

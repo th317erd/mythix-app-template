@@ -1,8 +1,6 @@
-'use strict';
-
 import HELP from './user-routes-help.mjs';
 
-function userRoutes({ path, endpoint }) {
+export function userRoutes({ path, endpoint }) {
   endpoint('user', {
     requiresOrgID:  false,
     name:           'getCurrentUser',
@@ -72,7 +70,3 @@ function userRoutes({ path, endpoint }) {
     });
   });
 }
-
-module.exports = {
-  userRoutes,
-};

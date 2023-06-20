@@ -1,8 +1,6 @@
-'use strict';
-
 import HELP from './organization-routes-help.mjs';
 
-function organizationRoutes({ path, endpoint }) {
+export function organizationRoutes({ path, endpoint }) {
   endpoint('organizations', {
     requiresOrgID:  false,
     name:           'createOrganization',
@@ -91,7 +89,3 @@ function organizationRoutes({ path, endpoint }) {
     });
   });
 }
-
-module.exports = {
-  organizationRoutes,
-};

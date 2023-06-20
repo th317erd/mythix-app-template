@@ -1,19 +1,15 @@
-'use strict';
-
-/* globals Buffer */
-
 import FileSystem from 'node:fs';
 import { Readable } from 'node:stream';
 import Nife from 'nife';
-const {
-  Modules,
+import {
+  ModuleBase,
   MimeUtils,
-} = require('mythix');
+} from 'mythix';
 
-const {
+import {
   S3Client,
   PutObjectCommand,
-} = require('@aws-sdk/client-s3');
+} from '@aws-sdk/client-s3';
 
 // Documentation: https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/index.html
 
@@ -28,7 +24,7 @@ const {
 // fetching the module from the application, and interacting
 // with it: await application.getAWS().uploadToS3({ ... });
 
-export class AWSModule extends Modules.BaseModule {
+export class AWSModule extends ModuleBase {
   static getModuleName() {
     return 'AWSModule';
   }

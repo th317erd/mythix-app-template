@@ -1,7 +1,5 @@
-'use strict';
-
 import Nife from 'nife';
-import Utils from '../utils.mjs';
+import Utils from '../utils/index.mjs';
 
 // PermissionBase class handles all permission requests.
 // It will instantiate a permission handler class based
@@ -22,7 +20,13 @@ import Utils from '../utils.mjs';
 // are considered "denials". If a permission handler throws
 // an error that will also count as a denial.
 
-class PermissionBase {
+let permissionClasses = {};
+
+export function setPermissionClasses(klasses) {
+  permissionClasses = klasses;
+}
+
+export class PermissionBase {
   // Get operation name (permission method checker name)
   // from the provided options or string.
   static getOperation(opts) {
@@ -70,12 +74,11 @@ class PermissionBase {
   // automatic and immediate.
   static getPermissionClass(opts) {
     const findPermissionClass = (scopeName) => {
-      import permissionClassMap from './permission-classes.mjs';
-      let klassNames            = Object.keys(permissionClassMap);
+      let klassNames = Object.keys(permissionClasses);
 
       for (let i = 0, il = klassNames.length; i < il; i++) {
         let klassName       = klassNames[i];
-        let Klass           = permissionClassMap[klassName];
+        let Klass           = permissionClasses[klassName];
         let classScopeName  = Klass.getScopeName();
 
         if (classScopeName === scopeName)
@@ -197,7 +200,3 @@ class PermissionBase {
     return userID;
   }
 }
-
-module.exports = {
-  PermissionBase,
-};

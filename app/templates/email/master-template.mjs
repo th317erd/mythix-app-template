@@ -1,10 +1,9 @@
 /* eslint-disable no-magic-numbers */
-'use strict';
 
 import Nife from 'nife';
 import mjmlToHTML from 'mjml';
 import { HTTPUtils } from 'mythix';
-import Utils from '../../utils.mjs';
+import Utils from '../../utils/index.mjs';
 
 // This defines the "master" template for all emails.
 // All email templates call this master template method,
@@ -27,7 +26,7 @@ const FONT_FAMILY             = 'sans-serif';
 const BORDER_RADIUS           = 8;
 const ICON_FONT               = 'Font Awesome 6 Free';
 
-class MasterEmailTemplate {
+export class MasterEmailTemplate {
   static SCALE_FACTOR = SCALE_FACTOR;
 
   static PRIMARY_COLOR = PRIMARY_COLOR;
@@ -536,5 +535,3 @@ class MasterEmailTemplate {
     return result.html;
   }
 }
-
-module.exports = MasterEmailTemplate;

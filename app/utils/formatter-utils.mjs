@@ -1,6 +1,4 @@
-'use strict';
-
-function formatPhoneNumber(phoneNumber, target) {
+export function formatPhoneNumber(phoneNumber, target) {
   // TODO: @I18N
 
   let numberRaw = ('' + phoneNumber).replace(/\D/g, '');
@@ -17,7 +15,3 @@ function formatPhoneNumber(phoneNumber, target) {
 
   return phone;
 }
-
-module.exports = {
-  formatPhoneNumber,
-};

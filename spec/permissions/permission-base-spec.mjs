@@ -1,9 +1,11 @@
-'use strict';
-
 /* eslint-disable camelcase */
-/* global describe, beforeAll, afterAll, afterEach, expect, jasmine */
 
-import { PermissionBase, UserPermissions, OrganizationPermissions } from '../../app/permissions.mjs';
+import {
+  PermissionBase,
+  UserPermissions,
+  OrganizationPermissions,
+} from '../../app/permissions/index.mjs';
+
 import {
   createTestApplication,
   createFactories,

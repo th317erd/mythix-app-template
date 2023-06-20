@@ -1,11 +1,9 @@
-'use strict';
-
 import Nife from 'nife';
 import { PermissionBase } from '../permission-base.mjs';
 
 // This class handles all Organization permissions
 
-class OrganizationPermissions extends PermissionBase {
+export class OrganizationPermissions extends PermissionBase {
   static getScopeName() {
     return 'Organization';
   }
@@ -138,7 +136,3 @@ class OrganizationPermissions extends PermissionBase {
     return false;
   }
 }
-
-module.exports = {
-  OrganizationPermissions,
-};

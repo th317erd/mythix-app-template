@@ -1,4 +1,4 @@
-'use strict';
+/* eslint-disable max-classes-per-file */
 
 // These error classes are designed to be thrown
 // from anywhere in the application. These are
@@ -8,7 +8,7 @@
 // to catch these errors, and convert them to
 // controller error calls.
 
-class ErrorBase extends Error {
+export class ErrorBase extends Error {
   constructor(message, code) {
     super(message);
 
@@ -23,34 +23,26 @@ class ErrorBase extends Error {
   }
 }
 
-class ForbiddenError extends ErrorBase {
+export class ForbiddenError extends ErrorBase {
   constructor(message, code) {
     super(message || 'Forbidden', code || 'operation-not-permitted');
   }
 }
 
-class UnauthorizedError extends ErrorBase {
+export class UnauthorizedError extends ErrorBase {
   constructor(message, code) {
     super(message || 'Unauthorized', code || 'unauthorized');
   }
 }
 
-class NotFoundError extends ErrorBase {
+export class NotFoundError extends ErrorBase {
   constructor(message, code) {
     super(message || 'Not Found', code || 'not-found');
   }
 }
 
-class ValidationError extends ErrorBase {
+export class ValidationError extends ErrorBase {
   constructor(message, code) {
     super(message || 'Validation Error', code || 'validation-error');
   }
 }
-
-module.exports = {
-  ErrorBase,
-  ForbiddenError,
-  UnauthorizedError,
-  NotFoundError,
-  ValidationError,
-};

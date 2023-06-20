@@ -1,6 +1,4 @@
-'use strict';
-
-module.exports = [
+export default [
   // Non-organizational
   {
     // masteradmin  = root level user, they can do anything, for any organization

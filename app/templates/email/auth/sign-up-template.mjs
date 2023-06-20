@@ -1,17 +1,16 @@
 /* eslint-disable no-magic-numbers */
-'use strict';
 
-import MasterEmailTemplate from '../master-template.mjs';
+import { MasterEmailTemplate } from '../master-template.mjs';
 
-class AuthSignUpEmailTemplate extends MasterEmailTemplate {
+export class AuthSignUpEmailTemplate extends MasterEmailTemplate {
   generateSubject() {
     return this.langTerm('email.auth.signUp.subject', '<<<APP_DISPLAY_NAME>>> Sign up Link');
   }
 
   async render() {
     let {
-      targetUser,
-      organization,
+      // targetUser,
+      // organization,
       magicLinkURL,
     } = this.getData();
 
@@ -40,5 +39,3 @@ class AuthSignUpEmailTemplate extends MasterEmailTemplate {
     ]);
   }
 }
-
-module.exports = AuthSignUpEmailTemplate;

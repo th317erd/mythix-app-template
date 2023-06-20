@@ -1,8 +1,10 @@
-import Mythix from 'mythix';
-import getRoutes from './routes/index.mjs';
+import Nife from 'nife';
+import { Application as MythixApplication } from 'mythix';
+import { getRoutes } from './routes/index.mjs';
 import cookieParser from 'cookie-parser';
 import { PostgreSQLConnection } from 'mythix-orm-postgresql';
-
+import * as Controllers from './controllers/index.mjs';
+import * as Models from './models/index.mjs';
 import { COMMANDS } from './commands/index.mjs';
 
 import {
@@ -12,7 +14,7 @@ import {
 
 import APP_CONFIG from './config/index.mjs';
 
-export class Application extends Mythix.Application {
+export class Application extends MythixApplication {
   static getName() {
     return '<<<APP_NAME>>>';
   }
@@ -34,16 +36,18 @@ export class Application extends Mythix.Application {
     };
   }
 
-  constructor(options) {
+  constructor(_options) {
     const {
       environment,
       database,
       logger,
     } = APP_CONFIG;
 
-    super({
-      config: APP_CONFIG,
-      httpServer: {
+    let options = Nife.extend(true, {
+      controllers: Controllers,
+      config:      APP_CONFIG,
+      models:      Models,
+      httpServer:  {
         middleware: [
           cookieParser(),
         ],
@@ -51,8 +55,9 @@ export class Application extends Mythix.Application {
       environment,
       database,
       logger,
-      ...(options || {}),
-    });
+    }, (_options || {}));
+
+    super(options);
   }
 
   getRoutes(...args) {

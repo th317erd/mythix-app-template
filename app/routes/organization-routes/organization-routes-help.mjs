@@ -1,8 +1,6 @@
 /* eslint-disable key-spacing */
 
-'use strict';
-
-module.exports = {
+export default {
   getOrganization: {
     'description': 'This method will return the specified organization data.',
     'params': [

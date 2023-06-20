@@ -1,3 +1,1 @@
-'use strict';
-
-module.exports = require('./user-routes');
+export * from './user-routes.mjs';

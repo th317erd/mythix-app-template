@@ -1,7 +1,5 @@
 /* eslint-disable max-classes-per-file */
 
-'use strict';
-
 import { SQLiteConnection } from 'mythix-orm-sqlite';
 // import { PostgreSQLConnection } from 'mythix-orm-postgresql';
 import { Application } from '../../app/application.mjs';

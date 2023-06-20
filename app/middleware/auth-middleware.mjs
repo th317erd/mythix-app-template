@@ -1,8 +1,6 @@
-'use strict';
-
 import Nife from 'nife';
 import { HTTPErrors } from 'mythix';
-import { PermissionBase } from '../permissions.mjs';
+import { PermissionBase } from '../permissions/index.mjs';
 
 const {
   HTTPBaseError,
@@ -27,7 +25,7 @@ const {
 // If everything checks out, then the "user"
 // property will be set upon the "request" itself.
 
-async function authMiddleware(request, response, next) {
+export async function authMiddleware(request, response, next) {
   const getOrganizationID = () => {
     // Try to pull from the header
     let organizationIDHeader = request.headers['x-organization-id'];
@@ -118,7 +116,3 @@ async function authMiddleware(request, response, next) {
     throw new HTTPInternalServerError();
   }
 }
-
-module.exports = {
-  authMiddleware,
-};

@@ -1,8 +1,6 @@
-'use strict';
+import { MasterEmailTemplate } from '../master-template.mjs';
 
-import MasterEmailTemplate from '../master-template.mjs';
-
-class OrgBaseTemplate extends MasterEmailTemplate {
+export class OrgBaseTemplate extends MasterEmailTemplate {
   formatSingularRoleName(roleName) {
     if (roleName.match(/^[aoiue]/i))
       return `an ${roleName}`;
@@ -24,5 +22,3 @@ class OrgBaseTemplate extends MasterEmailTemplate {
     return roleNames.map((roleName) => this.formatRoleName(organizationName, roleName));
   }
 }
-
-module.exports = OrgBaseTemplate;

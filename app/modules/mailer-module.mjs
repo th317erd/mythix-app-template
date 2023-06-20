@@ -1,8 +1,5 @@
-'use strict';
-
 import Nife from 'nife';
-import FormData from 'form-data';
-import { Modules } from 'mythix';
+import { ModuleBase } from 'mythix';
 
 // Mythix uses a "module" system to extend its functionality.
 // "modules" can be thought of as plugins for mythix.
@@ -17,7 +14,7 @@ import { Modules } from 'mythix';
 //
 // Email sending is deliberately disabled in unit tests.
 
-export class MailerModule extends Modules.BaseModule {
+export class MailerModule extends ModuleBase {
   static getModuleName() {
     return 'MailerModule';
   }
@@ -72,7 +69,7 @@ export class MailerModule extends Modules.BaseModule {
   }
 
   async start() {
-    let mailerConfig  = this.mailerConfig = this.getMailerConfig();
+    // let mailerConfig  = this.mailerConfig = this.getMailerConfig();
     // create your mail client here
     // let mailerLib     = new MyMailer();
     // let client        = this.client = mailerLib.client(mailerConfig);
