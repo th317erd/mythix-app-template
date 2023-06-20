@@ -1,5 +1,3 @@
-/* global describe, beforeAll, afterAll, afterEach, expect, jasmine */
-
 import Nife from 'nife';
 import { OrganizationPermissions } from '../../app/permissions/index.mjs';
 import {

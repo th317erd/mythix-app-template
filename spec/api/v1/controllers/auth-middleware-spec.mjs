@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 /* eslint-disable camelcase */
 
 import Nife from 'nife';
@@ -14,7 +15,7 @@ import * as Permissions from '../../../../app/permissions/index.mjs';
 
 describe('AuthMiddleware', function() {
   let app;
-  let models;
+  // let models;
   let factory;
 
   // eslint-disable-next-line no-unused-vars
@@ -23,7 +24,7 @@ describe('AuthMiddleware', function() {
   beforeAll(async () => {
     app = await createTestApplication();
     factory = createFactories(app);
-    models = app.getModels();
+    // models = app.getModels();
   });
 
   afterAll(async () => {

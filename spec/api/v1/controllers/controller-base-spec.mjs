@@ -1,6 +1,5 @@
 /* eslint-disable no-magic-numbers */
 /* eslint-disable camelcase */
-/* global describe, beforeAll, afterAll, afterEach, expect, jasmine, fail, spyOn */
 
 import { ControllerBase } from '../../../../app/controllers/controller-base.mjs';
 import {
