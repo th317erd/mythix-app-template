@@ -18,7 +18,7 @@ describe('APIInterfaceController', function() {
     models = app.getModels();
     factory = createFactories(app);
 
-    let apiResponse = await app.get('/api/v1/client-interface.mjs', {
+    let apiResponse = await app.get('/api/v1/client-interface.js', {
       data: {
         domain:       app.getDefaultURL(),
         environment:  'node',
@@ -27,8 +27,10 @@ describe('APIInterfaceController', function() {
       },
     });
 
+    let body = apiResponse.body.toString('utf8');
+
     // eslint-disable-next-line no-eval
-    API = eval(apiResponse.body);
+    API = eval(body);
     await API.loaded();
   });
 
