@@ -107,4 +107,21 @@ export class Application extends MythixApplication {
 
     return connection;
   }
+
+  async userLogin(email) {
+    let {
+      User,
+    } = this.getModels();
+
+    let user = await User.where.email.EQ(email).first();
+    if (!user)
+      throw new Error(`User "${email}" not found`);
+
+    let { sessionToken } = await user.generateSessionToken({
+      skipMFA:      true,
+      isSeedToken:  false,
+    });
+
+    console.log(`https://${this.getConfigValue('application.{environment}.domain', 'local.genesis-forge.com')}/?page=login&magicToken=${sessionToken}`);
+  }
 }
