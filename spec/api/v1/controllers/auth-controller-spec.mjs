@@ -1,3 +1,5 @@
+/* eslint-disable no-magic-numbers */
+
 import TWT from 'mythix-twt';
 
 import {
@@ -32,8 +34,6 @@ describe('AuthController', function() {
     jasmine.clock().uninstall();
     await app.truncateAllTables();
   });
-
-  const fetchValues = (args) => args;
 
   describe('authenticate', () => {
     describe('GET', () => {
