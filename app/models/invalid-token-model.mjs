@@ -19,7 +19,7 @@ const {
 // can purge the token from the database
 // to keep things clean.
 
-export class _InvalidToken extends ModelBase {
+export class InvalidToken extends ModelBase {
   static fields = {
     ...(ModelBase.fields || {}),
     id: {

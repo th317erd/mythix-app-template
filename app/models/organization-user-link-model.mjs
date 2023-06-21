@@ -19,7 +19,7 @@ import Utils from '../utils/index.mjs';
 // as ".png" images, regardless of their
 // original format when uploaded.
 
-export class _OrganizationUserLink extends TaggableBase {
+export class OrganizationUserLink extends TaggableBase {
   static fields = {
     ...(TaggableBase.fields || {}),
     id: {

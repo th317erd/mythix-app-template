@@ -17,7 +17,7 @@ import Utils from '../utils/index.mjs';
 // if that "name" is first defined as a role inside
 // ApplicationRoles.
 
-export class _Role extends ModelBase {
+export class Role extends ModelBase {
   static ApplicationRoles = ApplicationRoles;
 
   static fields = {

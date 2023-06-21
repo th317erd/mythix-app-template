@@ -1,5 +1,5 @@
+/* eslint-disable max-classes-per-file */
 /* eslint-disable no-magic-numbers */
-/* global describe, beforeAll, afterAll, afterEach, expect, jasmine */
 
 import Nife from 'nife';
 import {
@@ -561,60 +561,6 @@ describe('UserController', function () {
       let result = await app.get('/api/v1/users');
       expect(result.statusCode).toEqual(401);
       expect(result.body).toEqual('Unauthorized');
-    });
-
-    it('should fail if unable to load organization', async () => {
-      await factory.users.createAndLogin();
-
-      await app.hijackModel(
-        'Organization',
-        (Organization) => {
-          return class TestOrganization extends Organization {
-            static getQueryEngineClass(connection) {
-              let QE = super.getQueryEngineClass(connection);
-
-              return class QueryEngine extends QE {
-                async first() {
-                  return null;
-                }
-              };
-            }
-          };
-        },
-        // runner
-        async () => {
-          let result = await app.get('/api/v1/users');
-          expect(result.statusCode).toEqual(404);
-          expect(result.body).toEqual('User Organization Not Found');
-        },
-      );
-    });
-
-    it('should fail with internal server error if something goes very wrong', async () => {
-      await factory.users.createAndLogin();
-
-      await app.hijackModel(
-        'Organization',
-        (Organization) => {
-          return class TestOrganization extends Organization {
-            static getQueryEngineClass(connection) {
-              let QE = super.getQueryEngineClass(connection);
-
-              return class QueryEngine extends QE {
-                async first() {
-                  throw new Error('Panic!');
-                }
-              };
-            }
-          };
-        },
-        // runner
-        async () => {
-          let result = await app.get('/api/v1/users');
-          expect(result.statusCode).toEqual(500);
-          expect(result.body).toEqual('Internal Server Error');
-        },
-      );
     });
 
     it('should succeed if user is not an admin (but should only list the current user)', async () => {

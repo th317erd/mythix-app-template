@@ -6,7 +6,7 @@ import { Types } from 'mythix';
 import { ModelBase } from './model-base.mjs';
 import Utils from '../utils/index.mjs';
 
-export class _Organization extends ModelBase {
+export class Organization extends ModelBase {
   static fields = {
     ...(ModelBase.fields || {}),
     id: {

@@ -11,7 +11,7 @@ import Utils from '../utils/index.mjs';
 // rolls-back before we decide to send out notifications
 // or not.
 
-export class _ModelMeta extends ModelBase {
+export class ModelMeta extends ModelBase {
   static fields = {
     ...(ModelBase.fields || {}),
     id: {

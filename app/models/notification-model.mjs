@@ -9,7 +9,7 @@ import Utils from '../utils/index.mjs';
 // also so that notifications are not lost on
 // shutdown/restart.
 
-export class _Notification extends ProcessableBase {
+export class Notification extends ProcessableBase {
   static fields = {
     ...(ProcessableBase.fields || {}),
     id: {

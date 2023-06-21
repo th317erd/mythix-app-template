@@ -44,6 +44,14 @@ class TestAWSModule extends AWSModule {
 // This is to swap out the mailer module with
 // our unit test specific mailer module above
 class _TestApplicationShim extends Application {
+  constructor(_opts) {
+    let opts = _opts || {};
+    super({
+      ...opts,
+      bindToProcessSignals: false,
+    });
+  }
+
   static getDefaultModules() {
     let defaultModules = Application.getDefaultModules();
 
@@ -108,7 +116,6 @@ const PREFIXED_XID_REGEXP     = /^[A-Z]{3}_[0-9abcdefghjkmnpqrstvwxyz]{20}$/;
 const URL_SAFE_BASE64_REGEXP  = /^[A-Za-z0-9_=-]+$/;
 const SHA512_REGEXP           = /[a-f0-9]{64}/;
 
-/* global it, fit */
 const _it = it;
 const _fit = fit;
 

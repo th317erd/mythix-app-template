@@ -1,5 +1,3 @@
-/* global describe, beforeAll, afterAll, afterEach, expect, jasmine, spyOn */
-
 import TWT from 'mythix-twt';
 
 import {

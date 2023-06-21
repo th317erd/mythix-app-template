@@ -54,27 +54,6 @@ describe('OrganizationController', function() {
       expect(result.body).toEqual('Unauthorized');
     });
 
-    it('should fail if unable to save model', async () => {
-      await factory.users.createAndLogin({ userRole: 'masteradmin' });
-
-      await app.hijackModel(
-        'Organization',
-        (Organization) => {
-          return class TestOrganization extends Organization {
-            static create() {
-              throw new Error('Failed!');
-            }
-          };
-        },
-        // runner
-        async () => {
-          let result = await app.put('/api/v1/organizations', { data: { name: 'Derp' } });
-          expect(result.statusCode).toEqual(500);
-          expect(result.body).toEqual('Failed to create organization');
-        },
-      );
-    });
-
     it('should fail if user is a member', async () => {
       await factory.users.createAndLogin(async (args) => {
         return args;

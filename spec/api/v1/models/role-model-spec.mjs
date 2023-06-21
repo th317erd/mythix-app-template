@@ -1,5 +1,4 @@
 /* eslint-disable no-magic-numbers */
-/* global describe, beforeAll, afterAll, afterEach, expect, expectAsync */
 
 import {
   createTestApplication,

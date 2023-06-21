@@ -1,5 +1,4 @@
 import FileSystem from 'node:fs';
-import { DateTime } from 'luxon';
 import Nife from 'nife';
 import TWT from 'mythix-twt';
 
@@ -12,7 +11,6 @@ import graphicsMagick from 'gm';
 import { TaggableBase } from './taggable-base.mjs';
 import { PermissionBase } from '../permissions/index.mjs';
 import Utils from '../utils/index.mjs';
-import EmailTemplates from '../templates/index.mjs';
 
 // eslint-disable-next-line no-magic-numbers
 const AVATAR_SIZES  = [ 48, 196, 512 ];
@@ -29,7 +27,7 @@ const TWT_SCOPE_MAP = {
   'u':  'user',
 };
 
-export class _User extends TaggableBase {
+export class User extends TaggableBase {
   static fields = {
     ...(TaggableBase.fields || {}),
     id: {
@@ -550,74 +548,5 @@ export class _User extends TaggableBase {
 
     // Reset query to go through organization links
     return await this._getOrganizations.call(this, query, options);
-  }
-
-  getEmailTemplateClassFromTemplateName(templateName) {
-    let nameParts = templateName.replace(/^\/+/, '').replace(/EmailTemplate$/, '').split(/[^a-zA-Z0-9]/);
-    let name      = nameParts.map((part) => Nife.capitalize(part)).join('');
-
-    name = `${name}EmailTemplate`;
-
-    let templateClass = EmailTemplates[name];
-    if (!templateClass)
-      throw new Error(`ModelBase::getEmailTemplateClassFromTemplateName: No template named "${name}" found.`);
-
-    return templateClass;
-  }
-
-  async renderEmail(templateName, _data) {
-    let application   = this.getApplication();
-    let TemplateClass = this.getEmailTemplateClassFromTemplateName(templateName);
-    let data          = Object.assign({}, _data || {});
-
-    let templateInstance  = new TemplateClass(application, data);
-    let body              = await templateInstance.render();
-    let subject           = templateInstance.generateSubject();
-
-    return { body, subject };
-  }
-
-  async sendEmail(templateName, data, options) {
-    let {
-      body,
-      subject,
-    } = await this.renderEmail(templateName, { ...data, targetUser: this, to: this.email });
-
-    let { Notification } = this.getModels();
-    if (data.resend) {
-      let currentNotification = await Notification.where
-          .userID
-            .EQ(this.id)
-          .type
-            .EQ('email')
-          .category
-            .EQ(templateName)
-          .successAt
-            .EQ(null)
-          .lockedAt
-            .EQ(null)
-          .lockedBy
-            .EQ(null)
-          .first(null, options);
-
-      if (currentNotification) {
-        currentNotification.setAttributes({
-          subject:    data.subject || subject,
-          content:    body,
-          deliverAt:  data.deliverAt || DateTime.now().plus({ minute: 1 }),
-        });
-
-        return await currentNotification.save(options);
-      }
-    }
-
-    return await Notification.create({
-      userID:     this.id,
-      type:       'email',
-      category:   templateName,
-      subject:    data.subject || subject,
-      content:    body,
-      deliverAt:  data.deliverAt || DateTime.now().plus({ seconds: 1 }),
-    }, options);
   }
 }

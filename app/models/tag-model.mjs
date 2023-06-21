@@ -7,7 +7,7 @@ import Utils from '../utils/index.mjs';
 // Tags (for users) are stored on the UserOrganizationLink
 // model, as they are per user/org combo.
 
-export class _Tag extends TaggableBase {
+export class Tag extends TaggableBase {
   static fields = {
     ...(TaggableBase.fields || {}),
     id: {

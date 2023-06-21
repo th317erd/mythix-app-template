@@ -23,11 +23,13 @@ describe('APIInterfaceController', function() {
         domain:       app.getDefaultURL(),
         environment:  'node',
         globalName:   'none',
+        type:         'module',
       },
     });
 
     // eslint-disable-next-line no-eval
     API = eval(apiResponse.body);
+    await API.loaded();
   });
 
   afterAll(async () => {

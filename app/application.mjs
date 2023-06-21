@@ -44,9 +44,7 @@ export class Application extends MythixApplication {
     } = APP_CONFIG;
 
     let options = Nife.extend(true, {
-      controllers: Controllers,
       config:      APP_CONFIG,
-      models:      Models,
       httpServer:  {
         middleware: [
           cookieParser(),
@@ -62,6 +60,20 @@ export class Application extends MythixApplication {
 
   getRoutes(...args) {
     return getRoutes.apply(this, args);
+  }
+
+  getAppControllerClasses() {
+    return {
+      ...super.getAppControllerClasses(),
+      ...Controllers,
+    };
+  }
+
+  getAppModelClasses(connection) {
+    return this.bindModels(connection, {
+      ...super.getAppModelClasses(connection),
+      ...Models,
+    });
   }
 
   getSalt() {
