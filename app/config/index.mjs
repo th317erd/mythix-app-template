@@ -6,7 +6,7 @@ import { Logger } from 'mythix';
 const APP_CONFIG = Nife.extend(true, {
   environment:  process.env.NODE_ENV || 'development',
   logger:       {
-    level: Logger.DEBUG,
+    level: Logger.LEVEL_DEBUG,
   },
   httpServer: {
     host: 'localhost',

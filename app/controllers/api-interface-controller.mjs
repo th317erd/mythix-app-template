@@ -11,6 +11,11 @@ const CACHE = {};
 
 export class APIInterfaceController extends ControllerBase {
   async get({ query }) {
+    const sendResponse = (content) => {
+      this.setHeader('Content-Type', 'text/javascript; charset=UTF-8');
+      return content;
+    };
+
     let options = this.getParams({
       'domain':       (value) => value.trim(),
       'mode':         (value) => value.trim(),
@@ -18,6 +23,7 @@ export class APIInterfaceController extends ControllerBase {
       'globalName':   (value) => value.trim(),
       'cacheKey':     (value) => value.trim(),
       'cache':        (value) => value.trim(),
+      'type':         (value) => value.trim(),
     }, [ query ]);
 
     if (!options.mode)
@@ -36,9 +42,9 @@ export class APIInterfaceController extends ControllerBase {
       if (!cached)
         cached = CACHE[options.cacheKey] = Controllers.generateClientAPIInterface(this.getApplication(), options);
 
-      return cached;
+      return sendResponse(cached);
     } else {
-      return Controllers.generateClientAPIInterface(this.getApplication(), options);
+      return sendResponse(Controllers.generateClientAPIInterface(this.getApplication(), options));
     }
   }
 }

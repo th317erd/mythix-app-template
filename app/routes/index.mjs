@@ -26,7 +26,7 @@ export function getRoutes({ path }) {
     path('v1', (context) => {
       const { endpoint } = context;
 
-      endpoint('client-interface.mjs', 'APIInterfaceController.get');
+      endpoint('client-interface.js', 'APIInterfaceController.get');
       endpoint('health', 'HealthCheckController.health');
 
       authRoutes.call(this, context);
