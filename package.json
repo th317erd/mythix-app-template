@@ -29,7 +29,7 @@
     "gm": "^1.25.0",
     "luxon": "^3.3.0",
     "mjml": "^4.14.1",
-    "mythix": "^3.0.0",
+    "mythix": "^4.0.1",
     "mythix-orm": "^1.14.1",
     "mythix-orm-postgresql": "^1.12.1",
     "mythix-orm-sqlite": "^1.12.1",
@@ -42,7 +42,7 @@
     "@spothero/eslint-plugin-spothero": "github:spothero/eslint-plugin-spothero",
     "colors": "^1.4.0",
     "diff": "^5.1.0",
-    "eslint": "^8.42.0",
+    "eslint": "^8.43.0",
     "jasmine": "^5.0.2",
     "nyc": "^15.1.0"
   },
