@@ -1,9 +1,10 @@
-import Nife from 'nife';
 import {
   ControllerBase as _ControllerBase,
   MythixORMUtils,
 } from 'mythix';
-import Utils from '../utils/index.mjs';
+
+import Nife               from 'nife';
+import Utils              from '../utils/index.mjs';
 import { PermissionBase } from '../permissions/index.mjs';
 
 // This is the base parent controller

@@ -1,8 +1,8 @@
-import Nife from 'nife';
-import { Types } from 'mythix';
-import { ModelBase } from './model-base.mjs';
+import Nife             from 'nife';
+import { Types }        from 'mythix';
+import { ModelBase }    from './model-base.mjs';
 import ApplicationRoles from '../roles/index.mjs';
-import Utils from '../utils/index.mjs';
+import Utils            from '../utils/index.mjs';
 
 // Role models contain only a "name" that is used
 // to define roles/permissions as user has.

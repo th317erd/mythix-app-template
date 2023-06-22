@@ -1,11 +1,14 @@
-import Nife from 'nife';
-import { Application as MythixApplication } from 'mythix';
-import { getRoutes } from './routes/index.mjs';
-import cookieParser from 'cookie-parser';
+import {
+  Application as MythixApplication,
+} from 'mythix';
+
+import Nife                     from 'nife';
+import { getRoutes }            from './routes/index.mjs';
+import cookieParser             from 'cookie-parser';
 import { PostgreSQLConnection } from 'mythix-orm-postgresql';
-import * as Controllers from './controllers/index.mjs';
-import * as Models from './models/index.mjs';
-import { COMMANDS } from './commands/index.mjs';
+import * as Controllers         from './controllers/index.mjs';
+import * as Models              from './models/index.mjs';
+import { COMMANDS }             from './commands/index.mjs';
 
 import {
   AWSModule,

@@ -1,6 +1,6 @@
-import { Types } from 'mythix';
+import { Types }        from 'mythix';
 import { TaggableBase } from './taggable-base.mjs';
-import Utils from '../utils/index.mjs';
+import Utils            from '../utils/index.mjs';
 
 // This model has two primary purposes:
 // 1) It links users to organizations, and

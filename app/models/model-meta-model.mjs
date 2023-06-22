@@ -1,6 +1,6 @@
-import { Types } from 'mythix';
-import { ModelBase } from './model-base.mjs';
-import Utils from '../utils/index.mjs';
+import { Types }      from 'mythix';
+import { ModelBase }  from './model-base.mjs';
+import Utils          from '../utils/index.mjs';
 
 // This model is to have per-model meta information
 // stored in the DB. For example, this model is used

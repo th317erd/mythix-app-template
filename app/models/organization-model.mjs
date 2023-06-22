@@ -1,10 +1,10 @@
 /* eslint-disable camelcase */
 
-import Nife from 'nife';
-import { DateTime } from 'luxon';
-import { Types } from 'mythix';
-import { ModelBase } from './model-base.mjs';
-import Utils from '../utils/index.mjs';
+import Nife           from 'nife';
+import { DateTime }   from 'luxon';
+import { Types }      from 'mythix';
+import { ModelBase }  from './model-base.mjs';
+import Utils          from '../utils/index.mjs';
 
 export class Organization extends ModelBase {
   static fields = {

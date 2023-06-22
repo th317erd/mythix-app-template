@@ -6,7 +6,7 @@
 // Role models will fail to be created if the role
 // "name" is not specified here first.
 
-import GLOBAL_ROLES from './global-roles.mjs';
+import GLOBAL_ROLES       from './global-roles.mjs';
 import ORGANIZATION_ROLES from './organizational-roles.mjs';
 
 const ALL_ROLES = [].concat(

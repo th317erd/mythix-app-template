@@ -1,6 +1,7 @@
-import FileSystem from 'node:fs';
+import FileSystem   from 'node:fs';
 import { Readable } from 'node:stream';
-import Nife from 'nife';
+import Nife         from 'nife';
+
 import {
   ModuleBase,
   MimeUtils,

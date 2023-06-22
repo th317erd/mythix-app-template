@@ -1,6 +1,6 @@
-import Nife from 'nife';
+import Nife               from 'nife';
 import { ControllerBase } from './controller-base.mjs';
-import { Controllers } from 'mythix';
+import { Controllers }    from 'mythix';
 
 const CACHE = {};
 

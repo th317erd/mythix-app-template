@@ -1,4 +1,4 @@
-import Nife from 'nife';
+import Nife               from 'nife';
 import { PermissionBase } from '../permission-base.mjs';
 
 // This class handles all User permissions

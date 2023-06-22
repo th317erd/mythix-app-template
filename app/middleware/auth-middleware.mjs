@@ -1,5 +1,5 @@
-import Nife from 'nife';
-import { HTTPErrors } from 'mythix';
+import Nife               from 'nife';
+import { HTTPErrors }     from 'mythix';
 import { PermissionBase } from '../permissions/index.mjs';
 
 const {

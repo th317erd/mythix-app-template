@@ -1,8 +1,8 @@
 /* eslint-disable no-magic-numbers */
 
-import { Types } from 'mythix';
+import { Types }        from 'mythix';
 import { TaggableBase } from './taggable-base.mjs';
-import Utils from '../utils/index.mjs';
+import Utils            from '../utils/index.mjs';
 
 // Tags (for users) are stored on the UserOrganizationLink
 // model, as they are per user/org combo.

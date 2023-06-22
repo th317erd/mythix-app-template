@@ -1,9 +1,9 @@
-import { DateTime} from 'luxon';
-import TWT from 'mythix-twt';
+import { DateTime}              from 'luxon';
+import TWT                      from 'mythix-twt';
 import { Utils as MythixUtils } from 'mythix';
-import { Types } from 'mythix';
-import { ModelBase } from './model-base.mjs';
-import Utils from '../utils/index.mjs';
+import { Types }                from 'mythix';
+import { ModelBase }            from './model-base.mjs';
+import Utils                    from '../utils/index.mjs';
 
 const {
   CryptoUtils,

@@ -1,8 +1,13 @@
-import { DateTime } from 'luxon';
-import Nife from 'nife';
-import { Model, Types, MythixORMUtils } from 'mythix';
-import Utils from '../utils/index.mjs';
-import * as EmailTemplates from '../templates/email/index.mjs';
+import {
+  Model,
+  Types,
+  MythixORMUtils,
+} from 'mythix';
+
+import { DateTime }         from 'luxon';
+import Nife                 from 'nife';
+import Utils                from '../utils/index.mjs';
+import * as EmailTemplates  from '../templates/email/index.mjs';
 
 // This is the base model class that all other
 // models inherit from. It provides common

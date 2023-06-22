@@ -1,6 +1,6 @@
-import Nife from 'nife';
+import Nife                   from 'nife';
 import { ControllerAuthBase } from './controller-auth-base.mjs';
-import Utils from '../utils/index.mjs';
+import Utils                  from '../utils/index.mjs';
 
 export class UserController extends ControllerAuthBase {
   async update({ params, body }) {

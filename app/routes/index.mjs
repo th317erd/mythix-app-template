@@ -9,17 +9,9 @@
 // interface generator to provide help
 // for each generated API interface method.
 
-import {
-  authRoutes,
-} from './auth-routes/index.mjs';
-
-import {
-  userRoutes,
-} from './user-routes/index.mjs';
-
-import {
-  organizationRoutes,
-} from './organization-routes/index.mjs';
+import { authRoutes }         from './auth-routes/index.mjs';
+import { userRoutes }         from './user-routes/index.mjs';
+import { organizationRoutes } from './organization-routes/index.mjs';
 
 export function getRoutes({ path }) {
   path('api', ({ path }) => {

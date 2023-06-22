@@ -1,6 +1,6 @@
-import Nife from 'nife';
+import Nife               from 'nife';
 import { ControllerBase } from './controller-base.mjs';
-import Utils from '../utils/index.mjs';
+import Utils              from '../utils/index.mjs';
 
 export class AuthController extends ControllerBase {
   async login({ query, body }, { User, InvalidToken }) {

@@ -29,7 +29,7 @@
     "gm": "^1.25.0",
     "luxon": "^3.3.0",
     "mjml": "^4.14.1",
-    "mythix": "^4.0.1",
+    "mythix": "^4.0.2",
     "mythix-orm": "^1.14.1",
     "mythix-orm-postgresql": "^1.12.1",
     "mythix-orm-sqlite": "^1.12.1",

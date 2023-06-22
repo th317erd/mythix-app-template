@@ -1,4 +1,4 @@
-import Nife from 'nife';
+import Nife           from 'nife';
 import { ModuleBase } from 'mythix';
 
 // Mythix uses a "module" system to extend its functionality.

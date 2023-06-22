@@ -1,5 +1,5 @@
-import Nife from 'nife';
-import Utils from '../utils/index.mjs';
+import Nife   from 'nife';
+import Utils  from '../utils/index.mjs';
 
 // PermissionBase class handles all permission requests.
 // It will instantiate a permission handler class based

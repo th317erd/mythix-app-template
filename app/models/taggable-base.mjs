@@ -1,5 +1,5 @@
-import Nife from 'nife';
-import { ModelBase } from './model-base.mjs';
+import Nife           from 'nife';
+import { ModelBase }  from './model-base.mjs';
 
 export class TaggableBase extends ModelBase {
   static _sanitizeTagName(tagName) {

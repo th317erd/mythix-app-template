@@ -1,7 +1,7 @@
-import { DateTime } from 'luxon';
-import { Types } from 'mythix';
-import { ProcessableBase } from './processable-base.mjs';
-import Utils from '../utils/index.mjs';
+import { DateTime }         from 'luxon';
+import { Types }            from 'mythix';
+import { ProcessableBase }  from './processable-base.mjs';
+import Utils                from '../utils/index.mjs';
 
 // This model is designed so that all notifications
 // should be sent using this. This is so that
