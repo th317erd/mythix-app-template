@@ -5,8 +5,4 @@
   compress
   notifempty
   create 0666 syslog adm
-  sharedscripts
-  postrotate
-    service rsyslog restart
-  endscript
 }
