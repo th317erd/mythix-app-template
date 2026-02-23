@@ -4,6 +4,9 @@
   "description": "<<<APP_DISPLAY_NAME>>>",
   "main": "app/index.mjs",
   "type": "module",
+  "engines": {
+    "node": ">=22.5.0"
+  },
   "scripts": {
     "coverage": "clear ; node ./node_modules/.bin/nyc ./node_modules/.bin/jasmine",
     "migrate": "mythix-cli migrate",
@@ -29,10 +32,10 @@
     "gm": "^1.25.0",
     "luxon": "^3.3.0",
     "mjml": "^4.14.1",
-    "mythix": "^4.0.3",
-    "mythix-orm": "^1.14.1",
-    "mythix-orm-postgresql": "^1.12.1",
-    "mythix-orm-sqlite": "^1.12.1",
+    "mythix": "^4.1.0",
+    "mythix-orm": "^1.15.0",
+    "mythix-orm-postgresql": "^1.13.0",
+    "mythix-orm-sqlite": "^3.0.0",
     "mythix-twt": "^1.0.1",
     "nife": "^1.12.1",
     "uuid": "^9.0.0",
